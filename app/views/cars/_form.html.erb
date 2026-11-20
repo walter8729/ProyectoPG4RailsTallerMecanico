@@ -1,4 +1,4 @@
-<%= form_with(model: car, class: "form-card") do |form| %>
+<%= form_with(model: car, class: "form-card", style: "max-width: 650px;") do |form| %>
   <% if car.errors.any? %>
     <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
       <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
@@ -10,15 +10,163 @@
     </div>
   <% end %>
 
-  <div class="form-fila">
-    <%= form.label :customer_id, "Cliente *" %>
-    <%= form.collection_select :customer_id,
-          @customers,
-          :id,
-          :full_name,
-          { prompt: "Seleccioná un cliente" },
-          { required: true, class: car.errors[:customer].any? ? "field-invalid" : nil } %>
+  <!-- Buscador y selector de Cliente con desplegable hacia abajo y estilo del sistema -->
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <label for="customer_search_input" style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a; margin: 0;">
+        Cliente Propietario *
+      </label>
+      <%= link_to "Ver lista de clientes →", clientes_path, style: "font-size: 0.8rem; color: #1e3a8a; text-decoration: underline;" %>
+    </div>
+
+    <% 
+      current_customer = @customers.find { |c| c.id == car.customer_id }
+      current_customer_label = if current_customer
+        tipo = current_customer.document_type.presence || "DOC"
+        "#{current_customer.full_name} (#{tipo}: #{current_customer.document_number})"
+      else
+        ""
+      end
+    %>
+
+    <!-- Campo oculto real que envía customer_id a Rails -->
+    <%= form.hidden_field :customer_id, id: "car_customer_id_real", value: car.customer_id, required: true %>
+
+    <!-- Contenedor del buscador con dropdown hacia abajo -->
+    <div style="position: relative;" id="customer_picker_container">
+      <div style="position: relative; display: flex; align-items: center;">
+        <input type="text"
+               id="customer_search_input"
+               autocomplete="off"
+               placeholder="Buscar por nombre, apellido, CI, RUC o pasaporte..."
+               value="<%= current_customer_label %>"
+               onfocus="abrirDropdownClientes()"
+               oninput="filtrarOpcionesClientes(this.value)"
+               class="<%= 'field-invalid' if car.errors[:customer].any? %>"
+               style="width: 100%; height: 44px; padding: 10px 38px 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
+        
+        <button type="button"
+                onclick="toggleDropdownClientes()"
+                style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center;"
+                title="Desplegar clientes">
+          <svg style="width: 18px; height: 18px;" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+            <path d="M5 7.5L10 12.5L15 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Menú desplegable hacia abajo con el tema visual del sistema -->
+      <div id="customer_dropdown_menu"
+           style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; max-height: 250px; overflow-y: auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); z-index: 50;">
+        <div id="customer_options_list">
+          <% @customers.each do |c| %>
+            <% tipo = c.document_type.presence || "DOC" %>
+            <% text_label = "#{c.full_name} (#{tipo}: #{c.document_number})" %>
+            <% search_terms = "#{c.first_name} #{c.last_name} #{c.document_number} #{c.document_type} #{c.phone} #{c.email}".downcase %>
+            <div class="customer-option-item"
+                 data-id="<%= c.id %>"
+                 data-label="<%= text_label %>"
+                 data-search="<%= search_terms %>"
+                 onclick="seleccionarCliente('<%= c.id %>', '<%= j text_label %>')"
+                 style="padding: 10px 14px; font-size: 0.88rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.1s ease;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span style="font-weight: 600; color: #1e3a8a;"><%= c.full_name %></span>
+                <span style="font-size: 0.78rem; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-weight: 500;">
+                  <%= tipo %>: <%= c.document_number %>
+                </span>
+              </div>
+              <% if c.phone.present? || c.email.present? %>
+                <div style="font-size: 0.8rem; color: #6b7280; margin-top: 2px;">
+                  <%= [c.phone, c.email].reject(&:blank?).join(" • ") %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div id="customer_no_results" style="display: none; padding: 14px; text-align: center; color: #9ca3af; font-size: 0.85rem;">
+          No se encontraron clientes coincidentes.
+        </div>
+      </div>
+    </div>
+
+    <div id="customer_selected_feedback" style="margin-top: 6px; font-size: 0.8rem; min-height: 18px;">
+      <% if current_customer %>
+        <span style="color: #059669; font-weight: 500;">✓ Seleccionado: <%= current_customer_label %></span>
+      <% else %>
+        <span style="color: #6b7280;">Hacé clic o escribí para buscar en la lista de clientes.</span>
+      <% end %>
+    </div>
   </div>
+
+  <style>
+    .customer-option-item:hover {
+      background-color: #eff6ff !important;
+      color: #1e3a8a !important;
+    }
+  </style>
+
+  <script>
+    function abrirDropdownClientes() {
+      var menu = document.getElementById("customer_dropdown_menu");
+      if (menu) menu.style.display = "block";
+    }
+
+    function cerrarDropdownClientes() {
+      var menu = document.getElementById("customer_dropdown_menu");
+      if (menu) menu.style.display = "none";
+    }
+
+    function toggleDropdownClientes() {
+      var menu = document.getElementById("customer_dropdown_menu");
+      if (menu.style.display === "block") {
+        cerrarDropdownClientes();
+      } else {
+        abrirDropdownClientes();
+        document.getElementById("customer_search_input").focus();
+      }
+    }
+
+    function filtrarOpcionesClientes(query) {
+      abrirDropdownClientes();
+      var q = query.toLowerCase().trim();
+      var items = document.querySelectorAll(".customer-option-item");
+      var visibleCount = 0;
+
+      items.forEach(function(item) {
+        var haystack = item.getAttribute("data-search") || "";
+        if (q === "" || haystack.indexOf(q) !== -1) {
+          item.style.display = "block";
+          visibleCount++;
+        } else {
+          item.style.display = "none";
+        }
+      });
+
+      var noResults = document.getElementById("customer_no_results");
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? "block" : "none";
+      }
+
+      if (q === "") {
+        document.getElementById("car_customer_id_real").value = "";
+        document.getElementById("customer_selected_feedback").innerHTML = "<span style='color: #6b7280;'>Hacé clic o escribí para buscar en la lista de clientes.</span>";
+      }
+    }
+
+    function seleccionarCliente(id, label) {
+      document.getElementById("car_customer_id_real").value = id;
+      document.getElementById("customer_search_input").value = label;
+      document.getElementById("customer_selected_feedback").innerHTML = "<span style='color: #059669; font-weight: 500;'>✓ Seleccionado: " + label + "</span>";
+      cerrarDropdownClientes();
+    }
+
+    document.addEventListener("click", function(e) {
+      var container = document.getElementById("customer_picker_container");
+      if (container && !container.contains(e.target)) {
+        cerrarDropdownClientes();
+      }
+    });
+  </script>
 
   <div class="form-fila">
     <%= form.label :brand, "Marca *" %>
