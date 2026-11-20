@@ -185,29 +185,19 @@
           class: ("field-invalid" if order.errors[:delivery_date].any?) %>
   </div>
 
-  <!-- Script nativo para validación en Frontend de Fecha de Entrega > Fecha Ingreso -->
+  <!-- Script nativo para validación en Frontend de Fecha de Entrega >= Fecha Ingreso -->
   <script>
-    function sumarUnDia(fechaStr) {
-      if (!fechaStr) return "";
-      var d = new Date(fechaStr + "T00:00:00");
-      d.setDate(d.getDate() + 1);
-      var year = d.getFullYear();
-      var month = String(d.getMonth() + 1).padStart(2, "0");
-      var day = String(d.getDate()).padStart(2, "0");
-      return year + "-" + month + "-" + day;
-    }
-
     function actualizarMinFechaEntrega() {
       var ingresoInput = document.getElementById("order_order_date");
       var entregaInput = document.getElementById("order_delivery_date");
       if (!ingresoInput || !entregaInput) return;
 
-      var minEntrega = sumarUnDia(ingresoInput.value);
-      entregaInput.min = minEntrega;
+      // La fecha de entrega mínima permitida es el mismo día de ingreso
+      entregaInput.min = ingresoInput.value;
 
-      // Si la fecha de entrega ya cargada es menor o igual, alertar y limpiar
-      if (entregaInput.value && entregaInput.value <= ingresoInput.value) {
-        entregaInput.setCustomValidity("La fecha de entrega debe ser posterior a la fecha de ingreso.");
+      // Si la fecha de entrega cargada es estrictamente anterior, alertar
+      if (entregaInput.value && entregaInput.value < ingresoInput.value) {
+        entregaInput.setCustomValidity("La fecha de entrega no puede ser anterior a la fecha de ingreso.");
       } else {
         entregaInput.setCustomValidity("");
       }
@@ -218,8 +208,8 @@
       var entregaInput = document.getElementById("order_delivery_date");
       if (!ingresoInput || !entregaInput) return;
 
-      if (entregaInput.value && ingresoInput.value && entregaInput.value <= ingresoInput.value) {
-        entregaInput.setCustomValidity("La fecha de entrega debe ser posterior a la fecha de ingreso.");
+      if (entregaInput.value && ingresoInput.value && entregaInput.value < ingresoInput.value) {
+        entregaInput.setCustomValidity("La fecha de entrega no puede ser anterior a la fecha de ingreso.");
         entregaInput.reportValidity();
       } else {
         entregaInput.setCustomValidity("");

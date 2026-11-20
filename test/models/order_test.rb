@@ -5,21 +5,21 @@ class OrderTest < ActiveSupport::TestCase
     @car = cars(:one)
   end
 
-  test "valida que fecha de entrega sea posterior a fecha de ingreso" do
+  test "valida que fecha de entrega no sea anterior a la fecha de ingreso" do
     order = Order.new(
       car: @car,
       order_date: Date.current,
-      delivery_date: Date.current,
+      delivery_date: Date.yesterday,
       status: "Pendiente"
     )
     assert_not order.valid?
-    assert_includes order.errors[:delivery_date], "debe ser posterior a la fecha de ingreso (#{Date.current.strftime('%d/%m/%Y')})"
+    assert_includes order.errors[:delivery_date], "no puede ser anterior a la fecha de ingreso (#{Date.current.strftime('%d/%m/%Y')})"
 
-    # Con fecha anterior también debe ser inválido
-    order.delivery_date = Date.yesterday
-    assert_not order.valid?
+    # Entrega el mismo día debe ser VÁLIDA (servicios rápidos / entrega en el día)
+    order.delivery_date = Date.current
+    assert order.valid?
 
-    # Con fecha estrictamente posterior debe ser válido
+    # Entrega posterior también es VÁLIDA
     order.delivery_date = Date.tomorrow
     assert order.valid?
   end

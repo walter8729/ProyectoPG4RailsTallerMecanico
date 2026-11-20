@@ -27,12 +27,12 @@ class Order < ApplicationRecord
 
   private
 
-  # Validación en backend: la fecha de entrega debe ser estrictamente mayor a la fecha de ingreso
+  # Validación en backend: la fecha de entrega debe ser igual o posterior a la fecha de ingreso
   def delivery_date_must_be_after_order_date
     return if delivery_date.blank? || order_date.blank?
 
-    if delivery_date <= order_date
-      errors.add(:delivery_date, "debe ser posterior a la fecha de ingreso (#{order_date.strftime('%d/%m/%Y')})")
+    if delivery_date < order_date
+      errors.add(:delivery_date, "no puede ser anterior a la fecha de ingreso (#{order_date.strftime('%d/%m/%Y')})")
     end
   end
 end
