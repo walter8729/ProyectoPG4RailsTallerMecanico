@@ -113,8 +113,10 @@
           <td><%= order.customer&.full_name %></td>
           <td><%= order_status_badge(order.status) %></td>
           <td><strong>₲ <%= number_with_delimiter(order.total) %></strong></td>
-          <td class="tabla-acciones">
-            <%= link_to "Ver", order_path(order), class: "tabla-link" %>
+          <td>
+            <div class="tabla-acciones">
+              <%= link_to icon_eye, order_path(order), class: "btn-accion btn-accion-ver", title: "Ver detalle de la orden" %>
+            </div>
           </td>
         </tr>
       <% end %>
