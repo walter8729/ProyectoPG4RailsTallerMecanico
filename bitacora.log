@@ -217,3 +217,12 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * app/views/customers/_cars.html.erb: Partial actualizado con estructura moderna (div.tabla-acciones, icon_pencil, icon_order_add).
 - Tests: 30 tests, 51 assertions, 0 failures, 0 errors, 0 skips.
 - Commit: 2a2af75.
+
+[2026-11-20 14:45:00] FAVICON Y LOGO DE LA APLICACIÓN ACTUALIZADOS CON ÍCONO DE AUTOS
+- public/icon.svg: Reemplazado ícono de placeholder por el ícono vectorial del auto del sistema con fondo circular azul corporativo (#1e3a8a).
+- public/favicon.svg: Copia idéntica en formato SVG para navegadores modernos.
+- public/icon.png: Generado en alta resolución (512x512) con el mismo diseño.
+- public/favicon.ico: Generado a partir del mismo diseño para compatibilidad universal con navegadores antiguos.
+- app/views/layouts/application.html.erb:
+  * Agregado soporte para favicon.ico, icon.svg e icon.png.
+- Suite de tests: 30 tests con 51 assertions pasando al 100% (0 fallos).
