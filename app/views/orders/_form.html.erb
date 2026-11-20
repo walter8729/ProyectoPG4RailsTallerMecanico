@@ -10,15 +10,69 @@
     </div>
   <% end %>
 
-  <div class="form-fila">
-    <%= form.label :car_id, "Vehículo *" %>
-    <%= form.collection_select :car_id,
-          @cars,
-          :id,
-          ->(car) { "#{car.plate} - #{car.brand} #{car.model} (#{car.customer&.full_name})" },
-          { prompt: "Seleccioná el vehículo del cliente" },
-          { required: true, class: ("field-invalid" if order.errors[:car_id].any?) } %>
+  <!-- Buscador y selector de Vehículo -->
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <span style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a;">Vehículo del Cliente *</span>
+      <%= link_to "Ver lista completa de autos →", cars_path, style: "font-size: 0.8rem; color: #1e3a8a; text-decoration: underline;" %>
+    </div>
+
+    <!-- Filtro rápido por GET (sin alterar el formulario de la orden) -->
+    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+      <input type="text"
+             id="filtro_rapido_auto"
+             placeholder="Filtrar por placa, marca, modelo, CI o cliente..."
+             value="<%= params[:car_q] %>"
+             oninput="filtrarVehiculosEnTiempoReal(this.value)"
+             style="flex: 1; height: 38px; padding: 6px 12px; font-size: 0.875rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff;">
+      <% if params[:car_q].present? %>
+        <%= link_to "Limpiar", order.persisted? ? edit_order_path(order) : new_order_path, class: "btn btn-secundario", style: "height: 38px; padding: 0 12px; font-size: 0.85rem; display: inline-flex; align-items: center;" %>
+      <% end %>
+    </div>
+
+    <div>
+      <select name="order[car_id]"
+              id="order_car_id"
+              required="required"
+              class="<%= 'field-invalid' if order.errors[:car_id].any? %>"
+              style="width: 100%; height: 44px; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
+        <option value="">-- Seleccioná el vehículo del cliente (<%= @cars.size %> disponibles) --</option>
+        <% @cars.each do |car| %>
+          <% cliente_doc = car.customer ? " [Doc: #{car.customer.document_number}]" : "" %>
+          <% label_text = "#{car.plate} - #{car.brand} #{car.model} #{car.year} (#{car.customer&.full_name}#{cliente_doc})" %>
+          <option value="<%= car.id %>"
+                  data-search="<%= "#{car.plate} #{car.brand} #{car.model} #{car.year} #{car.chassis} #{car.customer&.full_name} #{car.customer&.document_number}".downcase %>"
+                  <%= "selected" if order.car_id == car.id %>>
+            <%= label_text %>
+          </option>
+        <% end %>
+      </select>
+    </div>
   </div>
+
+  <script>
+    function filtrarVehiculosEnTiempoReal(texto) {
+      var query = texto.toLowerCase().trim();
+      var select = document.getElementById("order_car_id");
+      if (!select) return;
+
+      var options = select.querySelectorAll("option");
+      var firstVisible = null;
+
+      for (var i = 1; i < options.length; i++) {
+        var opt = options[i];
+        var haystack = (opt.getAttribute("data-search") || opt.text).toLowerCase();
+        if (query === "" || haystack.indexOf(query) !== -1) {
+          opt.hidden = false;
+          opt.disabled = false;
+          if (!firstVisible) firstVisible = opt;
+        } else {
+          opt.hidden = true;
+          opt.disabled = true;
+        }
+      }
+    }
+  </script>
 
   <div class="form-fila">
     <%= form.label :order_date, "Fecha Ingreso *" %>

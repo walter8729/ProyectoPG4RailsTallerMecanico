@@ -24,7 +24,8 @@ class OrdersController < ApplicationController
   end
 
   def new
-    @order = Order.new(order_date: Date.current, status: "Pendiente")
+    car_id = params[:car_id].presence
+    @order = Order.new(car_id: car_id, order_date: Date.current, status: "Pendiente")
   end
 
   def edit
@@ -76,7 +77,17 @@ class OrdersController < ApplicationController
   end
 
   def load_form_collections
-    @cars = Car.includes(:customer).ordered
+    cars_scope = Car.includes(:customer).ordered
+
+    if params[:car_q].present?
+      q = "%#{params[:car_q]}%".downcase
+      cars_scope = cars_scope.joins(:customer).where(
+        "lower(cars.plate) LIKE :q OR lower(cars.brand) LIKE :q OR lower(cars.model) LIKE :q OR CAST(cars.year AS TEXT) LIKE :q OR lower(cars.chassis) LIKE :q OR lower(customers.first_name) LIKE :q OR lower(customers.last_name) LIKE :q OR lower(customers.document_number) LIKE :q",
+        q: q
+      )
+    end
+
+    @cars = cars_scope
     @services = Service.ordered
     @mechanics = Mechanic.ordered
   end

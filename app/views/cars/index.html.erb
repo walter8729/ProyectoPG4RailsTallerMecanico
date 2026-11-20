@@ -38,6 +38,7 @@
           <td><%= car.customer&.full_name %></td>
           <td>
             <div class="tabla-acciones">
+              <%= link_to icon_order_add, new_order_path(car_id: car.id), class: "btn-accion btn-accion-orden", title: "Crear nueva orden para este vehículo" %>
               <%= link_to icon_pencil, edit_car_path(car), class: "btn-accion btn-accion-editar", title: "Editar auto" %>
               <%= button_to icon_trash, car_path(car),
                             method: :delete,

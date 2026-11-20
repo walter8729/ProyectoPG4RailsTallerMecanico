@@ -135,6 +135,16 @@
   color: #1e40af;
 }
 
+.btn-accion-orden {
+  color: #047857;
+}
+
+.btn-accion-orden:hover {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
 .btn-accion-borrar {
   color: #dc2626;
 }
