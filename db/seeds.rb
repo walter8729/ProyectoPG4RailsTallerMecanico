@@ -87,13 +87,54 @@ customers_raw = [
   { doc: "5.645.294", last: "Cardozo Cantero", first: "Fernando Julián" }
 ]
 
+encarnacion_addresses = [
+  "Avda. Gaspar Rodríguez de Francia e/ Mariscal Estigarribia, B° Centro",
+  "Juan León Mallorquín c/ Carlos Antonio López, B° Centro",
+  "Mariscal López e/ Villarrica, B° Centro",
+  "Avda. Costanera República del Paraguay c/ Curupayty, B° San Roque",
+  "Independencia Nacional c/ Lomas Valentinas, B° San Roque",
+  "Constitución Nacional e/ Antequera, B° Centro",
+  "Avda. Irrazábal c/ Cerro Corá, B° Buena Vista",
+  "Ruta PY01 km 2.5 c/ Los Inmigrantes, B° Ka'aguy Rory",
+  "Calle San Blas e/ 14 de Mayo, B° Buena Vista",
+  "Avda. Japón c/ General Cabañas, B° San Blas",
+  "Capitán del Puerto e/ Sargento Reverchon, B° Pacú Cuá",
+  "Avda. Caballero c/ Tomás Romero Pereira, B° San Pedro",
+  "Calle 29 de Septiembre c/ Boquerón, B° San Pedro (Etapa 1)",
+  "Avda. Ucrania c/ Los Lapachos, B° San Pedro (Etapa 4)",
+  "Calle Las Residentas c/ Curupayty, B° Santa María",
+  "Ruta PY06 km 3.5 c/ Los Pioneros, B° Santa María",
+  "Calle 1° de Mayo e/ Guaraní, B° Chaipé",
+  "Avda. Matiauda c/ Calle 3, B° San Isidro (Etapa 2)",
+  "Calle 8 e/ Avda. Costanera Sur, B° San Isidro (Etapa 5)",
+  "Calle Juana María de Lara c/ Coronel Bogado, B° Bernardino Caballero",
+  "Avda. Perimetral Este c/ Los Pinos, B° Ita Paso",
+  "Calle Fulgencio Yegros c/ Monseñor Wiessen, B° Catedral",
+  "Avda. Augusto Roa Bastos c/ Las Palmeras, B° Carmelitas",
+  "Calle Capitán Miranda c/ 25 de Mayo, B° Ciudad Nueva",
+  "Calle 14 de Mayo c/ Iturbe, B° Centro",
+  "Calle Honorio González c/ Cerro Corá, B° Centro",
+  "Avda. Costanera Padre Bolik c/ Los Tilos, B° Bolik",
+  "Calle Curupayty e/ General Artigas, B° San Roque",
+  "Calle Capitán Bado c/ Posadas, B° Inmaculada",
+  "Calle Los Laureles c/ Los Sauces, B° Ka'aguy Rory",
+  "Avda. Víctor Matiauda c/ Ruta 1, B° San Isidro",
+  "Calle Serafina Dávalos c/ 10 de Agosto, B° Santa Rosa",
+  "Calle Padre Kreusser c/ Antequera, B° Centro",
+  "Calle Jorge Memmel c/ Carlos Antonio López, B° Centro",
+  "Calle Constitución c/ Curupayty, B° Buena Vista",
+  "Calle Coronel Luis Irrazábal c/ Lomas Valentinas, B° San Roque",
+  "Calle General Gamarra c/ 25 de Mayo, B° Pacú Cuá",
+  "Calle Monseñor Cedzich c/ Villarrica, B° Catedral"
+]
+
 created_customers = customers_raw.each_with_index.map do |c, i|
   clean_doc = c[:doc].delete(".")
   slug_name = c[:first].parameterize(separator: ".")
   slug_last = c[:last].parameterize(separator: ".")
   email = "#{slug_name}.#{slug_last}@gmail.com"
   phone = "0981 #{rand(100..999)} #{rand(100..999)}"
-  address = "Asunción, Calle #{i + 1} e/ #{c[:last]}"
+  address = encarnacion_addresses[i % encarnacion_addresses.size]
 
   Customer.create!(
     document_type: "CI",
