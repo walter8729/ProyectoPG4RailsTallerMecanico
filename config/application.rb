@@ -21,7 +21,9 @@ module TallerMecanico
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    # Idioma y localización por defecto en Español (Paraguay)
+    config.i18n.default_locale = :es
+    config.time_zone = "Asuncion"
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end
