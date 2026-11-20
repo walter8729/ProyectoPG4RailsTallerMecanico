@@ -5,14 +5,12 @@
 
 
 
-<%= form_with url: clientes_path, method: :get, local: true, class: "form-fila" do |form| %>
-  <div>
-    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por nombre, apellido, documento o teléfono" %>
-    <%= form.submit "Buscar"%>
-    <% if params[:q].present? %>
-      <%= link_to "Ver todos", clientes_path %>
-    <% end %>
-  </div>
+<%= form_with url: clientes_path, method: :get, local: true, class: "barra-busqueda" do |form| %>
+  <%= form.text_field :q, value: params[:q], placeholder: "Buscar por nombre, apellido, documento o teléfono" %>
+  <%= form.submit "Buscar", class: "btn" %>
+  <% if params[:q].present? %>
+    <%= link_to "Ver todos", clientes_path, class: "link-limpiar" %>
+  <% end %>
 <% end %>
 
 

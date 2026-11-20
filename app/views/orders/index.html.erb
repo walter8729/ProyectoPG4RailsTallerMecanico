@@ -4,14 +4,14 @@
       button_url: new_order_path %>
 
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px;">
-  <%= form_with url: orders_path, method: :get, local: true, style: "display: flex; align-items: center; gap: 10px; margin: 0; flex: 1; max-width: 520px;" do |form| %>
-    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por placa, chasis, cliente u observaciones", style: "height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 14px; flex: 1; font-size: 0.95rem;" %>
+  <%= form_with url: orders_path, method: :get, local: true, class: "barra-busqueda", style: "margin-bottom: 0; flex: 1;" do |form| %>
+    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por placa, chasis, cliente u observaciones" %>
     <% if params[:status].present? %>
       <%= form.hidden_field :status, value: params[:status] %>
     <% end %>
-    <%= form.submit "Buscar", class: "btn", style: "cursor: pointer;" %>
+    <%= form.submit "Buscar", class: "btn" %>
     <% if params[:q].present? || params[:status].present? %>
-      <%= link_to "Limpiar filtros", orders_path, style: "color: #1e3a8a; text-decoration: underline; font-size: 0.875rem; white-space: nowrap;" %>
+      <%= link_to "Limpiar filtros", orders_path, class: "link-limpiar" %>
     <% end %>
   <% end %>
 
