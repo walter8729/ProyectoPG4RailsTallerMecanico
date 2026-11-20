@@ -76,13 +76,13 @@
 
 .tabla th:last-child,
 .tabla td:last-child {
-  width: 160px;
-  text-align: right;
+  width: 140px;
+  text-align: center;
 }
 
 .tabla-acciones {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: 8px;
 }
