@@ -43,7 +43,7 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.expect(car: [ :brand, :model, :year, :plate, :color, :customer_id ])
+    params.expect(car: [ :brand, :model, :year, :plate, :color, :customer_id, :chassis, :mileage ])
   end
 
   def load_customers_for_form

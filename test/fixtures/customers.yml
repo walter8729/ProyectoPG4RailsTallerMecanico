@@ -2,8 +2,12 @@ one:
   first_name: Juan
   last_name: Pérez
   phone: "11 1234-5678"
+  document_type: "CI"
+  document_number: "1234567"
 
 two:
   first_name: Ana
   last_name: García
   phone: "11 9876-5432"
+  document_type: "CI"
+  document_number: "7654321"

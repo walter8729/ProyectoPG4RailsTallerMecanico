@@ -3,6 +3,8 @@ one:
   model: Corolla
   year: 2020
   plate: ABC123
+  chassis: CHASSIS001
+  mileage: 50000
   color: Rojo
   customer: one
 
@@ -11,5 +13,7 @@ two:
   model: Focus
   year: 2018
   plate: XYZ789
+  chassis: CHASSIS002
+  mileage: 75000
   color: Azul
   customer: two

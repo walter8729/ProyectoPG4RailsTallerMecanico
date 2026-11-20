@@ -23,6 +23,8 @@ class CarsControllerTest < ActionDispatch::IntegrationTest
           color: "Blanco",
           model: "Cronos",
           plate: "NEW001",
+          chassis: "CHASISNEW001",
+          mileage: 15000,
           year: 2022,
           customer_id: customers(:one).id
         }
@@ -52,6 +54,7 @@ class CarsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy car" do
+    @car.orders.destroy_all
     assert_difference("Car.count", -1) do
       delete car_url(@car)
     end

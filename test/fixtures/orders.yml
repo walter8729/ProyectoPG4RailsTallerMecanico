@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  car: one
+  order_date: 2026-11-19
+  delivery_date: 2026-11-19
+  status: Pendiente
+  notes: Mantenimiento general
+  total: 0
+
+two:
+  car: two
+  order_date: 2026-11-19
+  delivery_date: 2026-11-19
+  status: En Proceso
+  notes: Revision de frenos
+  total: 0

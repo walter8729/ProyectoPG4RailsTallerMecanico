@@ -22,19 +22,19 @@ Cliente (1) ----< (N) Auto (1) ----< (N) Orden (1) ----< (N) DetalleOrden (N) >-
 ## 2. Fases de Ejecución Paso a Paso
 
 ### Fase 1: Base de Datos y Modelos (Migraciones y Validaciones)
-- [ ] **Paso 1.1: Actualizar `customers`**
+- [x] **Paso 1.1: Actualizar `customers`**
   - Campos a agregar: `document_type` (CI, RUC, Extranjero), `document_number` (único, no nulo), `email`, `address`.
   - Validaciones en `Customer`: presencia de `first_name`, `last_name`, `document_type`, `document_number`, `phone`. Unicidad de `document_number`. Formato de `email` opcional.
-- [ ] **Paso 1.2: Actualizar `cars`**
+- [x] **Paso 1.2: Actualizar `cars`**
   - Campos a agregar: `chassis` (VIN único, no nulo), `mileage` (entero >= 0, no nulo).
   - Validaciones en `Car`: presencia de `brand`, `model`, `year`, `plate`, `chassis`, `mileage`, `customer_id`. Unicidad de `plate` y `chassis`. `mileage` >= 0, `year` válido.
-- [ ] **Paso 1.3: Crear Modelos y Migraciones Nuevas**
+- [x] **Paso 1.3: Crear Modelos y Migraciones Nuevas**
   - `Service`: `name` (string), `description` (text/string), `price` (integer >= 0).
   - `Mechanic`: `first_name` (string), `last_name` (string), `specialty` (string), `phone` (string).
   - `Order`: `car_id` (FK), `order_date` (date), `delivery_date` (date, nullable), `status` (string: Pendiente, En Proceso, Completada), `notes` (text/string), `total` (integer >= 0, default 0).
   - `OrderDetail`: `order_id` (FK), `service_id` (FK), `quantity` (integer >= 1), `unit_price` (integer >= 0), `subtotal` (integer >= 0).
   - `Assignment`: `order_id` (FK), `mechanic_id` (FK), `assigned_at` (date).
-- [ ] **Paso 1.4: Lógica de Negocio y Callbacks de Cálculo**
+- [x] **Paso 1.4: Lógica de Negocio y Callbacks de Cálculo**
   - En `OrderDetail`: cálculo automático de `subtotal = quantity * unit_price`.
   - En `Order`: recálculo automático de `total` al guardar/modificar items (`order_details`).
   - Configuración de `accepts_nested_attributes_for` en `Order` para agregar servicios y mecánicos de manera integrada.

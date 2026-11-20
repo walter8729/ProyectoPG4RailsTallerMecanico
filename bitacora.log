@@ -14,3 +14,17 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - Creado: PlanDesdeSchema.md con el plan paso a paso detallado.
 - Creado: bitacora.log para registro continuo de cambios.
 ================================================================================
+
+[2026-11-19 22:44:00] FASE 1: BASE DE DATOS Y MODELOS COMPLETADA
+- Migraciones ejecutadas:
+  * 20261120013744_add_details_to_customers.rb (document_type, document_number único, email, address)
+  * 20261120013818_add_details_to_cars.rb (chassis único, mileage)
+  * 20261120013848_create_services.rb (name, description, price)
+  * 20261120013905_create_mechanics.rb (first_name, last_name, specialty, phone)
+  * 20261120013921_create_orders.rb (car_id, order_date, delivery_date, status, notes, total)
+  * 20261120013938_create_order_details.rb (order_id, service_id, quantity, unit_price, subtotal)
+  * 20261120013955_create_assignments.rb (order_id, mechanic_id, assigned_at)
+- Modelos configurados con relaciones, validaciones de presencia, rangos y unicidad:
+  * Customer, Car, Service, Mechanic, Order, OrderDetail, Assignment.
+- Lógica de cálculo en Guaraníes: OrderDetail calcula subtotal automático y Order recalcula total.
+- Fixtures actualizados y suites de test ejecutadas con éxito (8/8 pasados).
