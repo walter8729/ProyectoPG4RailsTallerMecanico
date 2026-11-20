@@ -30,10 +30,11 @@
           <td><span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;"><%= mechanic.specialty %></span></td>
           <td><%= mechanic.phone %></td>
           <td class="tabla-acciones">
-            <%= link_to "Editar", edit_mechanic_path(mechanic), class: "tabla-link" %>
-            <%= button_to "Borrar", mechanic_path(mechanic),
+            <%= link_to icon_pencil, edit_mechanic_path(mechanic), class: "btn-accion btn-accion-editar", title: "Editar mecánico" %>
+            <%= button_to icon_trash, mechanic_path(mechanic),
                   method: :delete,
-                  class: "tabla-link tabla-link-borrar",
+                  class: "btn-accion btn-accion-borrar",
+                  title: "Borrar mecánico",
                   form: { onsubmit: "return confirm('¿Desea borrar este mecánico?')" } %>
           </td>
         </tr>

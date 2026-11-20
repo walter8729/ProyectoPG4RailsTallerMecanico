@@ -84,11 +84,62 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .tabla-acciones form {
   margin: 0;
+}
+
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  padding: 0;
+  text-decoration: none;
+}
+
+.btn-accion:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.btn-accion-ver {
+  color: #0284c7;
+}
+
+.btn-accion-ver:hover {
+  background: #e0f2fe;
+  border-color: #bae6fd;
+  color: #0369a1;
+}
+
+.btn-accion-editar {
+  color: #1e3a8a;
+}
+
+.btn-accion-editar:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.btn-accion-borrar {
+  color: #dc2626;
+}
+
+.btn-accion-borrar:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
 }
 
 .tabla-link {

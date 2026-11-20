@@ -33,10 +33,11 @@
           <td><%= customer.phone %></td>
           <td><%= customer.email.presence || "-" %></td>
           <td class="tabla-acciones">
-            <%= link_to "Editar", edit_cliente_path(customer), class: "tabla-link" %>
-            <%= button_to "Borrar", cliente_path(customer),
+            <%= link_to icon_pencil, edit_cliente_path(customer), class: "btn-accion btn-accion-editar", title: "Editar cliente" %>
+            <%= button_to icon_trash, cliente_path(customer),
                   method: :delete,
-                  class: "tabla-link tabla-link-borrar",
+                  class: "btn-accion btn-accion-borrar",
+                  title: "Borrar cliente",
                   form: { onsubmit: "return confirm('¿Borrar este cliente?')" } %>
           </td>
         </tr>

@@ -28,10 +28,11 @@
           <td><%= service.description.presence || "-" %></td>
           <td>₲ <%= number_with_delimiter(service.price) %></td>
           <td class="tabla-acciones">
-            <%= link_to "Editar", edit_service_path(service), class: "tabla-link" %>
-            <%= button_to "Borrar", service_path(service),
+            <%= link_to icon_pencil, edit_service_path(service), class: "btn-accion btn-accion-editar", title: "Editar servicio" %>
+            <%= button_to icon_trash, service_path(service),
                   method: :delete,
-                  class: "tabla-link tabla-link-borrar",
+                  class: "btn-accion btn-accion-borrar",
+                  title: "Borrar servicio",
                   form: { onsubmit: "return confirm('¿Desea borrar este servicio?')" } %>
           </td>
         </tr>

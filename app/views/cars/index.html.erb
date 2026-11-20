@@ -37,10 +37,11 @@
           <td><%= number_with_delimiter(car.mileage) %> km</td>
           <td><%= car.customer&.full_name %></td>
           <td class="tabla-acciones">
-            <%= link_to "Editar", edit_car_path(car), class: "tabla-link" %>
-            <%= button_to "Borrar", car_path(car),
+            <%= link_to icon_pencil, edit_car_path(car), class: "btn-accion btn-accion-editar", title: "Editar auto" %>
+            <%= button_to icon_trash, car_path(car),
                           method: :delete,
-                          class: "tabla-link tabla-link-borrar",
+                          class: "btn-accion btn-accion-borrar",
+                          title: "Borrar auto",
                           form: { onsubmit: "return confirm('¿Borrar este auto?')" } %>
           </td>
         </tr>
