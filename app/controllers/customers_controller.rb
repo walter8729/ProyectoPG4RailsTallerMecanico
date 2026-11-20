@@ -27,11 +27,11 @@ class CustomersController < ApplicationController
   end
 
   def edit
-    @customer = Customer.includes(:cars).find(params[:id])
+    @customer = Customer.includes(:cars).find(params.expect(:id))
   end
 
   def update
-    @customer = Customer.find(params[:id])
+    @customer = Customer.find(params.expect(:id))
     if @customer.update(customer_params)
       redirect_to clientes_path, notice: "Cliente actualizado correctamente."
     else
@@ -40,7 +40,7 @@ class CustomersController < ApplicationController
   end
 
   def destroy
-    @customer = Customer.find(params[:id])
+    @customer = Customer.find(params.expect(:id))
     if @customer.destroy
       redirect_to clientes_path, notice: "Cliente eliminado correctamente.", status: :see_other
     else
@@ -51,6 +51,6 @@ class CustomersController < ApplicationController
   private
 
   def customer_params
-    params.require(:customer).permit(:first_name, :last_name, :phone, :document_type, :document_number, :email, :address)
+    params.expect(customer: [ :first_name, :last_name, :phone, :document_type, :document_number, :email, :address ])
   end
 end

@@ -48,10 +48,10 @@ class ServicesController < ApplicationController
   private
 
   def set_service
-    @service = Service.find(params[:id])
+    @service = Service.find(params.expect(:id))
   end
 
   def service_params
-    params.require(:service).permit(:name, :description, :price)
+    params.expect(service: [ :name, :description, :price ])
   end
 end

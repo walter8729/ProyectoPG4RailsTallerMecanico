@@ -79,3 +79,20 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Se validó que todos los módulos cuenten con buscador, validaciones en frontend y backend, y paginación Pagy.
   * Se ejecutó la suite completa de pruebas: 28 tests con 45 assertions y 0 errores/fallos.
   * Todas las tareas de PlanDesdeSchema.md completadas.
+
+[2026-11-19 23:08:30] UNIFICACIÓN DE STRONG PARAMETERS CON PARAMS.EXPECT (RAILS 8)
+- CustomersController:
+  * customer_params: params.expect(customer: [ :first_name, :last_name, :phone, :document_type, :document_number, :email, :address ])
+  * params.expect(:id) en edit, update y destroy.
+- ServicesController:
+  * service_params: params.expect(service: [ :name, :description, :price ])
+  * params.expect(:id) en set_service.
+- MechanicsController:
+  * mechanic_params: params.expect(mechanic: [ :first_name, :last_name, :specialty, :phone ])
+  * params.expect(:id) en set_mechanic.
+- OrdersController:
+  * order_params: params.expect(order: [ :car_id, :order_date, :delivery_date, :status, :notes ])
+  * params.expect(:id) en set_order.
+- CarsController:
+  * Ya mantenía params.expect(car: [...]) y params.expect(:id).
+- Test suites ejecutadas: 28 tests con 0 fallos.

@@ -51,10 +51,10 @@ class MechanicsController < ApplicationController
   private
 
   def set_mechanic
-    @mechanic = Mechanic.find(params[:id])
+    @mechanic = Mechanic.find(params.expect(:id))
   end
 
   def mechanic_params
-    params.require(:mechanic).permit(:first_name, :last_name, :specialty, :phone)
+    params.expect(mechanic: [ :first_name, :last_name, :specialty, :phone ])
   end
 end

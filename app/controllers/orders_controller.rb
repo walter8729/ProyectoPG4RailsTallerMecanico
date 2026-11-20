@@ -72,7 +72,7 @@ class OrdersController < ApplicationController
   private
 
   def set_order
-    @order = Order.find(params[:id])
+    @order = Order.find(params.expect(:id))
   end
 
   def load_form_collections
@@ -82,7 +82,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:car_id, :order_date, :delivery_date, :status, :notes)
+    params.expect(order: [ :car_id, :order_date, :delivery_date, :status, :notes ])
   end
 
   def sync_associations
