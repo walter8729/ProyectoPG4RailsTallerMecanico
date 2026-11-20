@@ -1,72 +1,131 @@
 <div class="mb-8">
-  <h1 class="text-2xl font-bold text-gray-900">Bienvenido al Taller Mecánico</h1>
-  <p class="text-gray-500 mt-1">Panel general del sistema de gestión del taller.</p>
+  <h1 class="text-2xl font-bold text-gray-900">Panel Principal del Taller Mecánico</h1>
+  <p class="text-gray-500 mt-1">Resumen general de operaciones, clientes, vehículos y facturación.</p>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-  <div class="p-4 border border-gray-200 rounded-lg bg-white">
+<!-- Métricas Principales -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="p-4 border border-gray-200 rounded-lg bg-white shadow-xs">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-blue-50 text-blue-800">
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
       </div>
       <div>
         <p class="text-xl font-bold text-gray-900"><%= @customers_count %></p>
-        <p class="text-sm text-gray-500">Clientes registrados</p>
+        <p class="text-xs text-gray-500 font-medium">Clientes registrados</p>
       </div>
     </div>
   </div>
 
-  <div class="p-4 border border-gray-200 rounded-lg bg-white">
+  <div class="p-4 border border-gray-200 rounded-lg bg-white shadow-xs">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-teal-50 text-teal-700">
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V9l2-5h10l2 5v8M5 9h14"/></svg>
+      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-amber-50 text-amber-700">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.9 2 11.2 2 11.5V16c0 .6.4 1 1 1h2m14 0a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0m-10 0a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0"/></svg>
       </div>
       <div>
         <p class="text-xl font-bold text-gray-900"><%= @cars_count %></p>
-        <p class="text-sm text-gray-500">Autos registrados</p>
+        <p class="text-xs text-gray-500 font-medium">Vehículos registrados</p>
       </div>
     </div>
   </div>
 
-</div>
-
-<div>
-  <h2 class="text-lg font-semibold text-gray-900 mb-3">Accesos rápidos</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    <%= link_to clientes_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-teal-600 hover:bg-teal-50 transition-colors group" do %>
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 group-hover:bg-teal-100 group-hover:text-teal-700">
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-        </div>
-        <div>
-          <p class="font-medium text-gray-900">Clientes</p>
-          <p class="text-sm text-gray-500">Ver y administrar clientes</p>
-        </div>
+  <div class="p-4 border border-gray-200 rounded-lg bg-white shadow-xs">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-700">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
       </div>
-    <% end %>
-
-    <%= link_to cars_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-teal-600 hover:bg-teal-50 transition-colors group" do %>
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 group-hover:bg-teal-100 group-hover:text-teal-700">
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V9l2-5h10l2 5v8M5 9h14"/></svg>
-        </div>
-        <div>
-          <p class="font-medium text-gray-900">Autos</p>
-          <p class="text-sm text-gray-500">Ver y administrar autos</p>
-        </div>
+      <div>
+        <p class="text-xl font-bold text-gray-900"><%= @pending_orders_count + @in_progress_orders_count %></p>
+        <p class="text-xs text-gray-500 font-medium">Órdenes en taller (<%= @pending_orders_count %> pend. / <%= @in_progress_orders_count %> proc.)</p>
       </div>
-    <% end %>
+    </div>
+  </div>
 
-    <div class="p-4 border border-gray-200 border-dashed rounded-lg bg-gray-50">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400">
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.5 6h9m-9 6h9m-9 6h9M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg>
-        </div>
-        <div>
-          <p class="font-medium text-gray-500">Órdenes de trabajo</p>
-          <p class="text-sm text-gray-400">Próximamente</p>
-        </div>
+  <div class="p-4 border border-gray-200 rounded-lg bg-white shadow-xs">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+      </div>
+      <div>
+        <p class="text-xl font-bold text-gray-900">₲ <%= number_with_delimiter(@total_billed) %></p>
+        <p class="text-xs text-gray-500 font-medium">Total facturado (<%= @completed_orders_count %> completadas)</p>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Accesos Rápidos -->
+<div class="mb-10">
+  <h2 class="text-lg font-semibold text-gray-900 mb-3">Módulos del Sistema</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+    <%= link_to clientes_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-blue-700 hover:bg-blue-50/50 transition-colors group" do %>
+      <div class="font-semibold text-gray-900 group-hover:text-blue-900">Clientes</div>
+      <p class="text-xs text-gray-500 mt-1">Cédula, RUC, contacto</p>
+    <% end %>
+
+    <%= link_to cars_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-blue-700 hover:bg-blue-50/50 transition-colors group" do %>
+      <div class="font-semibold text-gray-900 group-hover:text-blue-900">Autos</div>
+      <p class="text-xs text-gray-500 mt-1">Placa, chasis, km</p>
+    <% end %>
+
+    <%= link_to orders_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-blue-700 hover:bg-blue-50/50 transition-colors group" do %>
+      <div class="font-semibold text-gray-900 group-hover:text-blue-900">Órdenes</div>
+      <p class="text-xs text-gray-500 mt-1">Trabajos y facturación</p>
+    <% end %>
+
+    <%= link_to services_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-blue-700 hover:bg-blue-50/50 transition-colors group" do %>
+      <div class="font-semibold text-gray-900 group-hover:text-blue-900">Servicios</div>
+      <p class="text-xs text-gray-500 mt-1">Tarifario de servicios</p>
+    <% end %>
+
+    <%= link_to mechanics_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-blue-700 hover:bg-blue-50/50 transition-colors group" do %>
+      <div class="font-semibold text-gray-900 group-hover:text-blue-900">Mecánicos</div>
+      <p class="text-xs text-gray-500 mt-1">Personal y especialidades</p>
+    <% end %>
+  </div>
+</div>
+
+<!-- Últimas Órdenes Ingresadas -->
+<div class="tabla-wrap">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <h2 class="text-lg font-semibold text-gray-900">Últimas Órdenes Registradas</h2>
+    <%= link_to "Ver todas las órdenes →", orders_path, style: "color: #1e3a8a; font-weight: 500; font-size: 0.9rem;" %>
+  </div>
+
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nro.</th>
+        <th>Fecha</th>
+        <th>Vehículo</th>
+        <th>Cliente</th>
+        <th>Estado</th>
+        <th>Total (PYG)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_orders.each do |order| %>
+        <tr>
+          <td><strong>#<%= order.id %></strong></td>
+          <td><%= order.order_date.strftime("%d/%m/%Y") if order.order_date %></td>
+          <td><%= order.car.plate %> (<%= order.car.brand %> <%= order.car.model %>)</td>
+          <td><%= order.customer&.full_name %></td>
+          <td><%= order_status_badge(order.status) %></td>
+          <td><strong>₲ <%= number_with_delimiter(order.total) %></strong></td>
+          <td class="tabla-acciones">
+            <%= link_to "Ver", order_path(order), class: "tabla-link" %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @recent_orders.empty? %>
+        <tr>
+          <td colspan="7" style="text-align: center; color: #6b7280; padding: 20px;">
+            No hay órdenes recientes registradas.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+

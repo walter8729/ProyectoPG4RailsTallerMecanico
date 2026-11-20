@@ -86,16 +86,16 @@ Cliente (1) ----< (N) Auto (1) ----< (N) Orden (1) ----< (N) DetalleOrden (N) >-
 ---
 
 ### Fase 5: Dashboard y Métricas de Inicio (`home#index`)
-- [ ] **Paso 5.1: Métricas en Vivo**
+- [x] **Paso 5.1: Métricas en Vivo**
   - Contador de órdenes activas (Pendientes / En Proceso).
   - Total facturado en el mes (en Guaraníes).
   - Cantidad de autos y clientes registrados.
-- [ ] **Paso 5.2: Accesos rápidos**
+- [x] **Paso 5.2: Accesos rápidos**
   - Tabla de últimas órdenes ingresadas y alertas de entregas pendientes.
 
 ---
 
 ### Fase 6: Pruebas, Verificación y Limpieza Final
-- [ ] Ejecución de tests (`bin/rails test`).
-- [ ] Verificación de navegación y paginación en todos los módulos.
-- [ ] Verificación de registro completo en `bitacora.log`.
+- [x] Ejecución de tests (`bin/rails test`).
+- [x] Verificación de navegación y paginación en todos los módulos.
+- [x] Verificación de registro completo en `bitacora.log`.

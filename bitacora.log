@@ -69,3 +69,13 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - Helper OrdersHelper para renderizar badges visuales de estado.
 - Barra lateral (Sidebar) actualizada con acceso directo a Órdenes.
 - Tests unitarios y de integración para órdenes creados y pasando al 100% (28/28 tests en total).
+
+[2026-11-19 23:02:00] FASE 5 Y FASE 6: DASHBOARD, MÉTRICAS Y VERIFICACIÓN FINAL
+- HomeController y Vista Home actualizados:
+  * Tarjetas de métricas en tiempo real: Clientes registrados, Autos registrados, Órdenes en curso (Pendientes y En Proceso) y Total facturado en Guaraníes (PYG).
+  * Panel de accesos directos a los 5 módulos: Clientes, Autos, Órdenes, Servicios y Mecánicos.
+  * Tabla de últimas órdenes ingresadas con estado y enlace directo al detalle.
+- Verificación de consistencia del sistema:
+  * Se validó que todos los módulos cuenten con buscador, validaciones en frontend y backend, y paginación Pagy.
+  * Se ejecutó la suite completa de pruebas: 28 tests con 45 assertions y 0 errores/fallos.
+  * Todas las tareas de PlanDesdeSchema.md completadas.
