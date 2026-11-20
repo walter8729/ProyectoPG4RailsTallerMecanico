@@ -197,3 +197,23 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - test/models/order_test.rb:
   * Tests actualizados comprobando que el mismo día es válido y días anteriores son inválidos.
 - Suite de tests: 30 tests con 51 assertions pasando al 100% (0 fallos).
+
+[2026-11-20 14:30:00] AUDITORÍA UX/UI Y CORRECCIONES (Leyes de UX)
+- Auditoría realizada contra 8 Leyes de UX: Jakob, Fitts, Hick, Miller, Efecto Estética-Usabilidad, Posición en Serie, Tesler, Prägnanz.
+- Correcciones de ALTA PRIORIDAD (Jakob / Tesler):
+  * config/routes.rb: Agregada ruta GET clientes/:id → customers#show (as: :cliente). Mecánicos ya usaban resources y se habilitó show.
+  * app/controllers/customers_controller.rb: Agregada acción show, create/update redirigen a cliente_path.
+  * app/views/customers/show.html.erb: CREADO. Vista de detalle con 2 tarjetas (Datos, Resumen) + partial _cars.
+  * app/controllers/mechanics_controller.rb: Agregada acción show, create/update redirigen a mechanic_path.
+  * app/views/mechanics/show.html.erb: CREADO. Vista de detalle con 2 tarjetas (Datos, Resumen de Actividad) + partial _orders.
+  * app/views/customers/index.html.erb: Agregado icon_eye → cliente_path (ver detalle).
+  * app/views/mechanics/index.html.erb: Agregado icon_eye → mechanic_path (ver detalle).
+  * app/views/orders/show.html.erb: Banner amarillo guía "Paso 2: Agregá los servicios" cuando orden sin detalles.
+- Correcciones de MEDIA PRIORIDAD (Hick / Fitts / Miller):
+  * app/views/orders/index.html.erb: Etiqueta "Filtrar por estado:" y separación visual de filtros de búsqueda.
+  * app/assets/stylesheets/application.css: Clase .btn-accion-borrar (separación visual botón destructivo, Ley Fitts).
+  * app/assets/stylesheets/application.css: Clases .form-grupo-separador y .form-grupo-titulo (agrupación campos, Ley Miller).
+  * app/views/customers/_form.html.erb: Formulario reestructurado en 3 grupos: Identificación | Datos Personales | Contacto.
+  * app/views/customers/_cars.html.erb: Partial actualizado con estructura moderna (div.tabla-acciones, icon_pencil, icon_order_add).
+- Tests: 30 tests, 51 assertions, 0 failures, 0 errors, 0 skips.
+- Commit: 2a2af75.
