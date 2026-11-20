@@ -20,6 +20,7 @@ class MechanicsController < ApplicationController
   end
 
   def edit
+    @mechanic = Mechanic.includes(orders: [:car, :customer]).find(params.expect(:id))
   end
 
   def create

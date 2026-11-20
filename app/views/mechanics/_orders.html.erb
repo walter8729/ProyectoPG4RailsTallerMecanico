@@ -1,0 +1,47 @@
+<section class="mt-8">
+  <div class="flex items-center justify-between gap-4 mb-4">
+    <h2 class="text-lg font-semibold text-gray-900">Órdenes de Trabajo Asignadas (<%= mechanic.orders.size %>)</h2>
+  </div>
+
+  <% if mechanic.orders.any? %>
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Nro. Orden</th>
+            <th>Fecha Ingreso</th>
+            <th>Vehículo</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Total (PYG)</th>
+            <th style="width: 80px; text-align: center;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% mechanic.orders.ordered.each do |order| %>
+            <tr>
+              <td><strong>#<%= order.id %></strong></td>
+              <td><%= order.order_date.strftime("%d/%m/%Y") if order.order_date %></td>
+              <td>
+                <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;"><%= order.car.plate %></span>
+                <span style="margin-left: 6px;"><%= order.car.brand %> <%= order.car.model %></span>
+              </td>
+              <td><%= order.customer&.full_name %></td>
+              <td><%= order_status_badge(order.status) %></td>
+              <td><strong>₲ <%= number_with_delimiter(order.total) %></strong></td>
+              <td>
+                <div class="tabla-acciones">
+                  <%= link_to icon_eye, order_path(order), class: "btn-accion btn-accion-ver", title: "Ver detalle de la orden" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p style="color: #6b7280; font-size: 0.95rem; background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb;">
+      Este mecánico aún no tiene órdenes de trabajo asignadas.
+    </p>
+  <% end %>
+</section>
