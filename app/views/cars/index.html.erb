@@ -36,13 +36,15 @@
           <td><code style="font-size: 0.8rem; background: #f3f4f6; padding: 2px 4px; border-radius: 4px;"><%= car.chassis %></code></td>
           <td><%= number_with_delimiter(car.mileage) %> km</td>
           <td><%= car.customer&.full_name %></td>
-          <td class="tabla-acciones">
-            <%= link_to icon_pencil, edit_car_path(car), class: "btn-accion btn-accion-editar", title: "Editar auto" %>
-            <%= button_to icon_trash, car_path(car),
-                          method: :delete,
-                          class: "btn-accion btn-accion-borrar",
-                          title: "Borrar auto",
-                          form: { onsubmit: "return confirm('¿Borrar este auto?')" } %>
+          <td>
+            <div class="tabla-acciones">
+              <%= link_to icon_pencil, edit_car_path(car), class: "btn-accion btn-accion-editar", title: "Editar auto" %>
+              <%= button_to icon_trash, car_path(car),
+                            method: :delete,
+                            class: "btn-accion btn-accion-borrar",
+                            title: "Borrar auto",
+                            form: { onsubmit: "return confirm('¿Borrar este auto?')" } %>
+            </div>
           </td>
         </tr>
       <% end %>

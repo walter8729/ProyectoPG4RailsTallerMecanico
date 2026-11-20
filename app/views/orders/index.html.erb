@@ -52,14 +52,16 @@
             <% end %>
           </td>
           <td><strong>₲ <%= number_with_delimiter(order.total) %></strong></td>
-          <td class="tabla-acciones">
-            <%= link_to icon_eye, order_path(order), class: "btn-accion btn-accion-ver", title: "Ver detalle de la orden" %>
-            <%= link_to icon_pencil, edit_order_path(order), class: "btn-accion btn-accion-editar", title: "Editar orden" %>
-            <%= button_to icon_trash, order_path(order),
-                  method: :delete,
-                  class: "btn-accion btn-accion-borrar",
-                  title: "Borrar orden",
-                  form: { onsubmit: "return confirm('¿Desea borrar esta orden?')" } %>
+          <td>
+            <div class="tabla-acciones">
+              <%= link_to icon_eye, order_path(order), class: "btn-accion btn-accion-ver", title: "Ver detalle de la orden" %>
+              <%= link_to icon_pencil, edit_order_path(order), class: "btn-accion btn-accion-editar", title: "Editar orden" %>
+              <%= button_to icon_trash, order_path(order),
+                    method: :delete,
+                    class: "btn-accion btn-accion-borrar",
+                    title: "Borrar orden",
+                    form: { onsubmit: "return confirm('¿Desea borrar esta orden?')" } %>
+            </div>
           </td>
         </tr>
       <% end %>
