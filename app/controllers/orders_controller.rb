@@ -96,28 +96,5 @@ class OrdersController < ApplicationController
     elsif params.key?(:mechanic_ids)
       @order.assignments.destroy_all
     end
-
-    # Sincronizar servicios (detalles)
-    if params[:order_services].present?
-      @order.order_details.destroy_all
-      params[:order_services].each do |_idx, item|
-        service_id = item[:service_id]
-        quantity = item[:quantity].to_i
-        next if service_id.blank? || quantity <= 0
-
-        service = Service.find_by(id: service_id)
-        next unless service
-
-        unit_price = item[:unit_price].present? ? item[:unit_price].to_i : service.price
-        subtotal = quantity * unit_price
-
-        @order.order_details.create!(
-          service_id: service.id,
-          quantity: quantity,
-          unit_price: unit_price,
-          subtotal: subtotal
-        )
-      end
-    end
   end
 end

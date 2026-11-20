@@ -79,9 +79,13 @@
   </div>
 </div>
 
-<!-- Desglose de Servicios y Montos -->
-<div class="tabla-wrap">
-  <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 12px;">Servicios Realizados</h3>
+<!-- Desglose de Servicios y Montos (100% Rails puro) -->
+<div class="tabla-wrap" style="margin-bottom: 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+    <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin: 0;">Servicios Realizados</h3>
+    <span style="font-size: 0.85rem; color: #6b7280;">Podés agregar y quitar servicios a esta orden usando el formulario inferior.</span>
+  </div>
+
   <table class="tabla">
     <thead>
       <tr>
@@ -89,6 +93,7 @@
         <th style="width: 120px; text-align: center;">Cantidad</th>
         <th style="width: 180px; text-align: right;">Precio Unitario</th>
         <th style="width: 180px; text-align: right;">Subtotal (PYG)</th>
+        <th style="width: 80px; text-align: center;"></th>
       </tr>
     </thead>
     <tbody>
@@ -103,12 +108,21 @@
           <td style="text-align: center;"><%= detail.quantity %></td>
           <td style="text-align: right;">₲ <%= number_with_delimiter(detail.unit_price) %></td>
           <td style="text-align: right;"><strong>₲ <%= number_with_delimiter(detail.subtotal) %></strong></td>
+          <td>
+            <div class="tabla-acciones">
+              <%= button_to icon_trash, order_order_detail_path(@order, detail),
+                    method: :delete,
+                    class: "btn-accion btn-accion-borrar",
+                    title: "Quitar servicio de la orden",
+                    form: { onsubmit: "return confirm('¿Quitar este servicio de la orden?')" } %>
+            </div>
+          </td>
         </tr>
       <% end %>
       <% if @order.order_details.empty? %>
         <tr>
-          <td colspan="4" style="text-align: center; color: #6b7280; padding: 24px;">
-            No se han registrado servicios en esta orden.
+          <td colspan="5" style="text-align: center; color: #6b7280; padding: 24px;">
+            Aún no se han agregado servicios a esta orden. Agregá uno a continuación.
           </td>
         </tr>
       <% end %>
@@ -116,10 +130,35 @@
     <tfoot>
       <tr style="background: #f8fafc; font-size: 1.15rem;">
         <td colspan="3" style="text-align: right; font-weight: 700; padding: 16px;">TOTAL ORDEN:</td>
-        <td style="text-align: right; font-weight: 800; color: #1e3a8a; padding: 16px;">
+        <td colspan="2" style="text-align: right; font-weight: 800; color: #1e3a8a; padding: 16px;">
           ₲ <%= number_with_delimiter(@order.total) %>
         </td>
       </tr>
     </tfoot>
   </table>
+</div>
+
+<!-- Formulario Rails puro para agregar servicios a la orden -->
+<div class="form-card" style="max-width: 100%; background: #f8fafc; border: 1px dashed #cbd5e1; margin-bottom: 24px;">
+  <h4 style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">+ Agregar Servicio a esta Orden</h4>
+  <%= form_with model: [@order, OrderDetail.new], url: order_order_details_path(@order), local: true, style: "display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;" do |f| %>
+    <div style="flex: 3; min-width: 250px;">
+      <%= f.label :service_id, "Seleccionar Servicio", style: "display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px;" %>
+      <%= f.collection_select :service_id,
+            Service.ordered,
+            :id,
+            ->(s) { "#{s.name} - ₲ #{number_with_delimiter(s.price)}" },
+            { prompt: "-- Elegir del catálogo de servicios --" },
+            { required: true, style: "width: 100%; height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0 12px; background-color: #fff;" } %>
+    </div>
+
+    <div style="flex: 1; min-width: 100px; max-width: 130px;">
+      <%= f.label :quantity, "Cantidad", style: "display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px;" %>
+      <%= f.number_field :quantity, value: 1, min: 1, required: true, style: "width: 100%; height: 42px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0 12px; background-color: #fff;" %>
+    </div>
+
+    <div>
+      <%= f.submit "Agregar Servicio", class: "btn", style: "height: 42px; padding: 0 18px;" %>
+    </div>
+  <% end %>
 </div>

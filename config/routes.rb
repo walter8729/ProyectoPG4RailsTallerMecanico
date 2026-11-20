@@ -16,11 +16,12 @@ Rails.application.routes.draw do
   resources :services, except: :show, path: "servicios"
   resources :mechanics, except: :show, path: "mecanicos"
 
-  # Órdenes de Trabajo
+  # Órdenes de Trabajo y sus detalles de servicios anidados (100% Rails puro)
   resources :orders, path: "ordenes" do
     member do
       patch :update_status
     end
+    resources :order_details, only: %i[create destroy], path: "servicios"
   end
 
   # Health check

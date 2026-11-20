@@ -53,78 +53,8 @@
     </div>
   </div>
 
-  <!-- Servicios aplicados dinámicamente con Stimulus -->
-  <div style="margin: 20px 0; padding-top: 16px; border-top: 1px solid #e5e7eb;" data-controller="order-services">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-      <div>
-        <h3 style="font-size: 1.1rem; font-weight: 600; color: #1e3a8a; margin: 0;">Servicios a Realizar</h3>
-        <p style="font-size: 0.85rem; color: #6b7280; margin: 4px 0 0 0;">Seleccioná los servicios y la cantidad. Podés agregar o quitar tantos servicios como requiera la orden.</p>
-      </div>
-      <button type="button"
-              data-action="click->order-services#addRow"
-              class="btn"
-              style="font-size: 0.85rem; height: 36px; padding: 0 14px; gap: 6px;">
-        <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-        <span>Agregar Servicio</span>
-      </button>
-    </div>
-
-    <!-- Contenedor dinámico de filas de servicios -->
-    <div id="servicios-contenedor" data-order-services-target="container">
-      <% existing_details = order.order_details.presence || [OrderDetail.new(quantity: 1)] %>
-      <% existing_details.each_with_index do |detail, idx| %>
-        <div class="servicio-fila" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-          <div style="flex: 3;">
-            <%= select_tag "order_services[#{idx}][service_id]",
-                  options_from_collection_for_select(@services, :id, ->(s) { "#{s.name} - ₲ #{number_with_delimiter(s.price)}" }, detail.service_id),
-                  prompt: "Seleccionar servicio...",
-                  style: "width: 100%; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px; background-color: #fff;" %>
-          </div>
-          <div style="flex: 1; max-width: 120px;">
-            <%= number_field_tag "order_services[#{idx}][quantity]", detail.quantity || 1, min: 1, placeholder: "Cant.", style: "width: 100%; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px; background-color: #fff;" %>
-          </div>
-          <div>
-            <button type="button"
-                    data-action="click->order-services#removeRow"
-                    class="btn-accion btn-accion-borrar"
-                    title="Quitar servicio"
-                    style="width: 38px; height: 38px;">
-              <%= icon_trash %>
-            </button>
-          </div>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Plantilla oculta para agregar nuevas filas con JavaScript -->
-    <template data-order-services-target="template">
-      <div class="servicio-fila" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-        <div style="flex: 3;">
-          <%= select_tag "order_services[NEW_RECORD][service_id]",
-                options_from_collection_for_select(@services, :id, ->(s) { "#{s.name} - ₲ #{number_with_delimiter(s.price)}" }),
-                prompt: "Seleccionar servicio...",
-                style: "width: 100%; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px; background-color: #fff;" %>
-        </div>
-        <div style="flex: 1; max-width: 120px;">
-          <%= number_field_tag "order_services[NEW_RECORD][quantity]", 1, min: 1, placeholder: "Cant.", style: "width: 100%; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px; background-color: #fff;" %>
-        </div>
-        <div>
-          <button type="button"
-                  data-action="click->order-services#removeRow"
-                  class="btn-accion btn-accion-borrar"
-                  title="Quitar servicio"
-                  style="width: 38px; height: 38px;">
-            <%= icon_trash %>
-          </button>
-        </div>
-      </div>
-    </template>
-  </div>
-
   <div class="form-acciones">
     <%= link_to "Cancelar", orders_path, class: "btn btn-secundario" %>
-    <%= form.submit order.persisted? ? "Guardar Cambios" : "Crear Orden de Trabajo", class: "btn" %>
+    <%= form.submit order.persisted? ? "Guardar Cambios" : "Continuar a Servicios", class: "btn" %>
   </div>
 <% end %>
