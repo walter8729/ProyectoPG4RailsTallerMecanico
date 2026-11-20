@@ -113,3 +113,76 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * 20 Órdenes de trabajo de demostración (Pendientes, En Proceso, Completadas) con mecánicos asignados, desglose de servicios y subtotales/totales calculados.
 - Ejecutado con éxito: bin/rails db:seed.
 - 28 tests en verde (0 fallos).
+
+[2026-11-20 00:05:00] UNIFICACIÓN DE BARRA DE BÚSQUEDA Y BOTONES
+- app/assets/stylesheets/application.css:
+  * Clase .barra-busqueda con alineación uniforme de inputs y botones.
+  * Botones de búsqueda estandarizados en todos los módulos.
+- Commits: b824210, 17b3f8d.
+
+[2026-11-20 00:20:00] MODERNIZACIÓN DE BOTONES DE ACCIÓN CON ÍCONOS SVG
+- app/helpers/application_helper.rb:
+  * Helpers icon_eye (ojo), icon_pencil (lápiz), icon_trash (papelera).
+- Vistas de Clientes, Autos, Órdenes, Servicios y Mecánicos:
+  * Reemplazo de links de texto por botones de acción con SVG (.btn-accion).
+  * Corrección de estructura HTML: contenedor <div class="tabla-acciones"> dentro de <td> para centrado vertical y horizontal sin romper el comportamiento nativo de celdas de tabla.
+- Commits: 413f127, 229009d, bf1d1ab, 9d1e3c4.
+
+[2026-11-20 00:35:00] DIRECCIONES LOCALES Y VALIDACIÓN ROBUSTA DE DOCUMENTOS
+- db/seeds.rb:
+  * Actualizadas direcciones con calles y barrios reales de Encarnación, Paraguay (Centro, San Roque, Buena Vista, Pacu Cua, etc.).
+- app/models/customer.rb y app/views/customers/_form.html.erb:
+  * Validación Regex documentada en backend y frontend para Cédula de Identidad (5 a 8 dígitos numéricos), RUC (números + dígito verificador) y Extranjeros/Pasaporte.
+  * Comentarios explicativos detallados en back y front.
+- Commits: 4d84cf2, 233254a.
+
+[2026-11-20 00:50:00] GESTIÓN DE SERVICIOS EN ÓRDENES 100% RAILS PURO (OPCIÓN C)
+- Requerimiento: Eliminar dependencias de JavaScript y usar herramientas netamente de Rails según consigna académica.
+- Implementación:
+  * Removido controlador Stimulus order_details_controller.js.
+  * Rutas anidadas en config/routes.rb: resources :orders do resources :order_details, only: [:create, :destroy] end.
+  * Creado app/controllers/order_details_controller.rb para altas y bajas individuales de servicios desde la orden.
+  * Vista app/views/orders/show.html.erb con formulario para agregar servicios y recálculo automático de subtotales y totales.
+- Commit: df6befb.
+
+[2026-11-20 01:00:00] HISTORIAL DE ÓRDENES ASIGNADAS EN VISTA DE MECÁNICOS
+- app/views/mechanics/edit.html.erb:
+  * Agregado partial _orders.html.erb para listar las órdenes de trabajo asignadas a cada mecánico con estado, vehículo, cliente y botón de ver.
+- Commit: e8d8f7f.
+
+[2026-11-20 01:08:00] CORRECCIÓN DE OVERFLOW EN DROPDOWN DE FORM-CARD
+- app/assets/stylesheets/application.css:
+  * Agregado min-width: 0, max-width: 100%, text-overflow: ellipsis en .form-fila select/input para evitar que textos largos de opciones desborden el contenedor .form-card.
+- Commit: a17ddf6.
+
+[2026-11-20 01:10:00] UNIFICACIÓN DE ÍCONO DE VER EN TABLA DE HOME
+- app/views/home/index.html.erb:
+  * Reemplazado texto "Ver" por helper icon_eye en contenedor .tabla-acciones centrado dentro de <td>.
+- Commit: 887ba43.
+
+[2026-11-20 01:20:00] COMBOBOX / PICKER BUSCADOR PARA SELECCIÓN DE VEHÍCULO
+- app/helpers/application_helper.rb:
+  * Agregado helper icon_order_add (clipboard con +) para acción directa desde la tabla de Autos.
+- app/views/cars/index.html.erb:
+  * Botón de acción directa "Crear Orden" que precarga el auto en la orden.
+- app/controllers/orders_controller.rb:
+  * Soporte de precarga de vehículo con params[:car_id].
+- app/views/orders/_form.html.erb:
+  * Componente Combobox / Entity Picker personalizado con dropdown hacia abajo, estilo del sistema y filtro en vivo por placa, marca, modelo, año, CI o cliente.
+- Commits: 7b6ccaa, 17eb66b, 1e6dc64.
+
+[2026-11-20 01:34:00] COMBOBOX / PICKER BUSCADOR PARA SELECCIÓN DE CLIENTE EN AUTOS
+- app/views/cars/_form.html.erb:
+  * Componente Combobox / Entity Picker idéntico en Crear/Editar Auto.
+  * Filtro en tiempo real por nombre, apellido, CI, RUC, pasaporte, teléfono o email.
+  * Muestra tarjetas ricas con badge de documento y datos de contacto.
+- Commit: 334d610.
+
+[2026-11-20 01:39:00] LOCALIZACIÓN I18N EN ESPAÑOL PARAGUAY (SEPARADOR DE MILES CON PUNTO)
+- config/locales/es.yml:
+  * Creado diccionario de localización definiendo delimiter: "." y separator: "," para números y moneda Guaraní (₲).
+- config/application.rb:
+  * Configurado config.i18n.default_locale = :es y config.time_zone = "Asuncion".
+  * Todas las llamadas a number_with_delimiter ahora formatean montos con punto (ej: ₲ 1.500.000, 45.000 km).
+- Suite de tests ejecutada: 28 tests con 45 assertions y 0 fallos.
+- Commit: 8cba28b.
