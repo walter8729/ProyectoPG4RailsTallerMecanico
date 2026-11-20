@@ -103,3 +103,13 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * alert: Banner rojo suave con borde e ícono de advertencia para mensajes de error o restricciones de integridad referencial.
 - Mantenida la confirmación nativa de eliminación en formularios.
 - 28 tests en verde (0 fallos).
+
+[2026-11-19 23:28:30] GENERACIÓN Y EJECUCIÓN DE SEED DEMO REAL
+- Archivo db/seeds.rb creado con:
+  * 38 Clientes con Cédulas y nombres reales según listado del usuario.
+  * 48 Vehículos asignados a clientes basados en el catálogo de marcas más comunes en Paraguay (Toyota Hilux, Vitz, Allion, Corolla, Kia Picanto, Soluto, Sportage, Hyundai HB20, Creta, etc.).
+  * 20 Servicios mecánicos oficiales con precios en Guaraníes (PYG) y descripciones detalladas.
+  * 5 Mecánicos con sus respectivas especialidades y teléfonos.
+  * 20 Órdenes de trabajo de demostración (Pendientes, En Proceso, Completadas) con mecánicos asignados, desglose de servicios y subtotales/totales calculados.
+- Ejecutado con éxito: bin/rails db:seed.
+- 28 tests en verde (0 fallos).
