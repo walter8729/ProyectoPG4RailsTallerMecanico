@@ -10,7 +10,7 @@ class Customer < ApplicationRecord
   # - Extranjero: alfanumérico con guión opcional (ej. AB123456, 12345678-K, DNI)
   EXTRANJERO_REGEX = /\A[A-Z0-9]+(-[A-Z0-9]+)?\z/i
 
-  has_many :cars, dependent: :destroy
+  has_many :cars, dependent: :restrict_with_error
 
   # Callback: normaliza el número de documento antes de validar
   # Quita puntos separadores de miles (ej. 7.030.890 -> 7030890) y espacios

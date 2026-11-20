@@ -42,8 +42,11 @@ class CarsController < ApplicationController
   end
 
   def destroy
-    @car.destroy!
-    redirect_to cars_path, notice: "Auto eliminado.", status: :see_other
+    if @car.destroy
+      redirect_to cars_path, notice: "Auto eliminado correctamente.", status: :see_other
+    else
+      redirect_to cars_path, alert: "No se puede eliminar el auto porque tiene órdenes de trabajo asociadas.", status: :see_other
+    end
   end
 
   private

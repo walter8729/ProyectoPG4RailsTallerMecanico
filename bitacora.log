@@ -226,3 +226,13 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - app/views/layouts/application.html.erb:
   * Agregado soporte para favicon.ico, icon.svg e icon.png.
 - Suite de tests: 30 tests con 51 assertions pasando al 100% (0 fallos).
+
+[2026-11-20 14:50:00] MANEJO SEGURO DE INTEGRIDAD REFERENCIAL AL ELIMINAR ENTIDADES
+- app/controllers/cars_controller.rb:
+  * En CarsController#destroy se reemplazó @car.destroy! (que lanzaba ActiveRecord::RecordNotDestroyed 500) por if @car.destroy con control de fallo.
+  * Si el auto tiene órdenes asociadas, redirige a cars_path con alert: "No se puede eliminar el auto porque tiene órdenes de trabajo asociadas."
+- app/models/customer.rb:
+  * Cambiado has_many :cars, dependent: :destroy por dependent: :restrict_with_error para proteger la integridad referencial de clientes con vehículos/órdenes.
+- test/controllers/cars_controller_test.rb:
+  * Agregado test específico test_should_not_destroy_car_with_associated_orders.
+- Suite de tests: 31 tests con 55 assertions pasando al 100% (0 fallos).

@@ -53,6 +53,15 @@ class CarsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to cars_url
   end
 
+  test "should not destroy car with associated orders" do
+    assert_no_difference("Car.count") do
+      delete car_url(@car)
+    end
+
+    assert_redirected_to cars_url
+    assert_equal "No se puede eliminar el auto porque tiene órdenes de trabajo asociadas.", flash[:alert]
+  end
+
   test "should destroy car" do
     @car.orders.destroy_all
     assert_difference("Car.count", -1) do
