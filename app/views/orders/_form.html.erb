@@ -10,65 +10,78 @@
     </div>
   <% end %>
 
-  <!-- Buscador y selector de Vehículo -->
+  <!-- Buscador y selector de Vehículo con Datalist nativo -->
   <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-      <span style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a;">Vehículo del Cliente *</span>
+      <label for="car_search_input" style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a; margin: 0;">
+        Vehículo del Cliente *
+      </label>
       <%= link_to "Ver lista completa de autos →", cars_path, style: "font-size: 0.8rem; color: #1e3a8a; text-decoration: underline;" %>
     </div>
 
-    <!-- Filtro rápido por GET (sin alterar el formulario de la orden) -->
-    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+    <% 
+      # Buscar el auto actualmente seleccionado si existe
+      current_car = @cars.find { |c| c.id == order.car_id }
+      current_val = if current_car
+        cliente_doc = current_car.customer ? " - Doc: #{current_car.customer.document_number}" : ""
+        "#{current_car.plate} - #{current_car.brand} #{current_car.model} (#{current_car.customer&.full_name}#{cliente_doc}) [ID: #{current_car.id}]"
+      else
+        ""
+      end
+    %>
+
+    <!-- Campo oculto real que viaja en el POST de Rails con el ID -->
+    <%= form.hidden_field :car_id, id: "order_car_id_real", required: true %>
+
+    <!-- Input interactivo con Datalist nativo de HTML5 -->
+    <div style="position: relative;">
       <input type="text"
-             id="filtro_rapido_auto"
-             placeholder="Filtrar por placa, marca, modelo, CI o cliente..."
-             value="<%= params[:car_q] %>"
-             oninput="filtrarVehiculosEnTiempoReal(this.value)"
-             style="flex: 1; height: 38px; padding: 6px 12px; font-size: 0.875rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff;">
-      <% if params[:car_q].present? %>
-        <%= link_to "Limpiar", order.persisted? ? edit_order_path(order) : new_order_path, class: "btn btn-secundario", style: "height: 38px; padding: 0 12px; font-size: 0.85rem; display: inline-flex; align-items: center;" %>
-      <% end %>
+             id="car_search_input"
+             list="cars_datalist"
+             autocomplete="off"
+             placeholder="Escribí para buscar: placa, marca, modelo, CI, RUC o cliente..."
+             value="<%= current_val %>"
+             oninput="actualizarIdAutoSeleccionado(this.value)"
+             class="<%= 'field-invalid' if order.errors[:car_id].any? %>"
+             style="width: 100%; height: 44px; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
+
+      <datalist id="cars_datalist">
+        <% @cars.each do |car| %>
+          <% cliente_doc = car.customer ? " - Doc: #{car.customer.document_number}" : "" %>
+          <% option_value = "#{car.plate} - #{car.brand} #{car.model} (#{car.customer&.full_name}#{cliente_doc}) [ID: #{car.id}]" %>
+          <option value="<%= option_value %>"></option>
+        <% end %>
+      </datalist>
     </div>
 
-    <div>
-      <select name="order[car_id]"
-              id="order_car_id"
-              required="required"
-              class="<%= 'field-invalid' if order.errors[:car_id].any? %>"
-              style="width: 100%; height: 44px; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
-        <option value="">-- Seleccioná el vehículo del cliente (<%= @cars.size %> disponibles) --</option>
-        <% @cars.each do |car| %>
-          <% cliente_doc = car.customer ? " [Doc: #{car.customer.document_number}]" : "" %>
-          <% label_text = "#{car.plate} - #{car.brand} #{car.model} #{car.year} (#{car.customer&.full_name}#{cliente_doc})" %>
-          <option value="<%= car.id %>"
-                  data-search="<%= "#{car.plate} #{car.brand} #{car.model} #{car.year} #{car.chassis} #{car.customer&.full_name} #{car.customer&.document_number}".downcase %>"
-                  <%= "selected" if order.car_id == car.id %>>
-            <%= label_text %>
-          </option>
-        <% end %>
-      </select>
+    <div id="car_selected_feedback" style="margin-top: 6px; font-size: 0.8rem; color: #059669; font-weight: 500; min-height: 18px;">
+      <% if current_car %>
+        ✓ Vehículo seleccionado: <%= current_car.plate %> (<%= current_car.brand %> <%= current_car.model %>)
+      <% else %>
+        <span style="color: #6b7280;">Escribí cualquier letra o hacé doble clic para desplegar todos los autos.</span>
+      <% end %>
     </div>
   </div>
 
   <script>
-    function filtrarVehiculosEnTiempoReal(texto) {
-      var query = texto.toLowerCase().trim();
-      var select = document.getElementById("order_car_id");
-      if (!select) return;
+    function actualizarIdAutoSeleccionado(texto) {
+      var match = texto.match(/\[ID:\s*(\d+)\]/i);
+      var hiddenInput = document.getElementById("order_car_id_real");
+      var feedback = document.getElementById("car_selected_feedback");
 
-      var options = select.querySelectorAll("option");
-      var firstVisible = null;
-
-      for (var i = 1; i < options.length; i++) {
-        var opt = options[i];
-        var haystack = (opt.getAttribute("data-search") || opt.text).toLowerCase();
-        if (query === "" || haystack.indexOf(query) !== -1) {
-          opt.hidden = false;
-          opt.disabled = false;
-          if (!firstVisible) firstVisible = opt;
-        } else {
-          opt.hidden = true;
-          opt.disabled = true;
+      if (match && match[1]) {
+        hiddenInput.value = match[1];
+        if (feedback) {
+          feedback.innerHTML = "<span style='color: #059669;'>✓ Vehículo seleccionado (ID: " + match[1] + ")</span>";
+        }
+      } else {
+        hiddenInput.value = "";
+        if (feedback) {
+          if (texto.trim() === "") {
+            feedback.innerHTML = "<span style='color: #6b7280;'>Escribí cualquier letra o hacé doble clic para desplegar todos los autos.</span>";
+          } else {
+            feedback.innerHTML = "<span style='color: #d97706;'>⚠ Seleccioná una de las opciones sugeridas de la lista para confirmar el vehículo.</span>";
+          }
         }
       }
     }
