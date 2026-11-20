@@ -3,31 +3,22 @@
       button_text: "Nueva orden de trabajo",
       button_url: new_order_path %>
 
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-  <%= form_with url: orders_path, method: :get, local: true, class: "flex items-center gap-2 m-0 flex-1 max-w-xl" do |form| %>
-    <%= form.text_field :q,
-          value: params[:q],
-          placeholder: "Buscar por placa, chasis, cliente u observaciones",
-          class: "h-10 px-3.5 flex-1 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
-    <% if params[:status].present? %>
-      <%= form.hidden_field :status, value: params[:status] %>
-    <% end %>
-    <%= form.submit "Buscar", class: "h-10 px-4 bg-blue-900 hover:bg-blue-800 text-white font-medium text-sm rounded-lg cursor-pointer transition-colors shrink-0" %>
-    <% if params[:q].present? || params[:status].present? %>
-      <%= link_to "Limpiar filtros", orders_path, class: "text-xs text-blue-900 hover:underline whitespace-nowrap ml-1" %>
-    <% end %>
+<%= form_with url: orders_path, method: :get, local: true, class: "barra-busqueda" do |form| %>
+  <%= form.text_field :q, value: params[:q], placeholder: "Buscar por placa, chasis, cliente u observaciones" %>
+  <% if params[:status].present? %>
+    <%= form.hidden_field :status, value: params[:status] %>
   <% end %>
+  <%= form.submit "Buscar", class: "btn" %>
+  <% if params[:q].present? || params[:status].present? %>
+    <%= link_to "Limpiar filtros", orders_path, class: "link-limpiar" %>
+  <% end %>
+<% end %>
 
-  <div class="flex items-center gap-2 flex-wrap">
-    <%= link_to "Todas", orders_path(q: params[:q]),
-          class: "h-10 px-3.5 inline-flex items-center justify-center text-sm font-medium rounded-lg transition-colors #{params[:status].blank? ? 'bg-blue-900 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}" %>
-    <%= link_to "Pendientes", orders_path(status: "Pendiente", q: params[:q]),
-          class: "h-10 px-3.5 inline-flex items-center justify-center text-sm font-medium rounded-lg transition-colors #{params[:status] == 'Pendiente' ? 'bg-blue-900 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}" %>
-    <%= link_to "En Proceso", orders_path(status: "En Proceso", q: params[:q]),
-          class: "h-10 px-3.5 inline-flex items-center justify-center text-sm font-medium rounded-lg transition-colors #{params[:status] == 'En Proceso' ? 'bg-blue-900 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}" %>
-    <%= link_to "Completadas", orders_path(status: "Completada", q: params[:q]),
-          class: "h-10 px-3.5 inline-flex items-center justify-center text-sm font-medium rounded-lg transition-colors #{params[:status] == 'Completada' ? 'bg-blue-900 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}" %>
-  </div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;">
+  <%= link_to "Todas", orders_path(q: params[:q]), class: "btn #{'btn-secundario' if params[:status].present?}" %>
+  <%= link_to "Pendientes", orders_path(status: "Pendiente", q: params[:q]), class: "btn #{'btn-secundario' unless params[:status] == 'Pendiente'}" %>
+  <%= link_to "En Proceso", orders_path(status: "En Proceso", q: params[:q]), class: "btn #{'btn-secundario' unless params[:status] == 'En Proceso'}" %>
+  <%= link_to "Completadas", orders_path(status: "Completada", q: params[:q]), class: "btn #{'btn-secundario' unless params[:status] == 'Completada'}" %>
 </div>
 
 <div class="tabla-wrap">
