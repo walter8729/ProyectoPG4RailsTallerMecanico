@@ -1,0 +1,54 @@
+<%= render "shared/page_header",
+      title: "Mecánicos",
+      button_text: "Agregar mecánico",
+      button_url: new_mechanic_path %>
+
+<%= form_with url: mechanics_path, method: :get, local: true, class: "form-fila" do |form| %>
+  <div>
+    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por nombre, especialidad o teléfono" %>
+    <%= form.submit "Buscar" %>
+    <% if params[:q].present? %>
+      <%= link_to "Ver todos", mechanics_path %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="tabla-wrap">
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Especialidad</th>
+        <th>Teléfono</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @mechanics.each do |mechanic| %>
+        <tr>
+          <td><strong><%= mechanic.first_name %></strong></td>
+          <td><%= mechanic.last_name %></td>
+          <td><span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;"><%= mechanic.specialty %></span></td>
+          <td><%= mechanic.phone %></td>
+          <td class="tabla-acciones">
+            <%= link_to "Editar", edit_mechanic_path(mechanic), class: "tabla-link" %>
+            <%= button_to "Borrar", mechanic_path(mechanic),
+                  method: :delete,
+                  class: "tabla-link tabla-link-borrar",
+                  form: { onsubmit: "return confirm('¿Desea borrar este mecánico?')" } %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @mechanics.empty? %>
+        <tr>
+          <td colspan="5" style="text-align: center; color: #6b7280; padding: 24px;">
+            No se encontraron mecánicos registrados.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%== @pagy.series_nav if @pagy.pages > 1 %>

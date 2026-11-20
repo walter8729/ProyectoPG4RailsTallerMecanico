@@ -1,0 +1,52 @@
+<%= render "shared/page_header",
+      title: "Servicios",
+      button_text: "Agregar servicio",
+      button_url: new_service_path %>
+
+<%= form_with url: services_path, method: :get, local: true, class: "form-fila" do |form| %>
+  <div>
+    <%= form.text_field :q, value: params[:q], placeholder: "Buscar servicio por nombre o descripción" %>
+    <%= form.submit "Buscar" %>
+    <% if params[:q].present? %>
+      <%= link_to "Ver todos", services_path %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="tabla-wrap">
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nombre del Servicio</th>
+        <th>Descripción</th>
+        <th>Precio (PYG)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @services.each do |service| %>
+        <tr>
+          <td><strong><%= service.name %></strong></td>
+          <td><%= service.description.presence || "-" %></td>
+          <td>₲ <%= number_with_delimiter(service.price) %></td>
+          <td class="tabla-acciones">
+            <%= link_to "Editar", edit_service_path(service), class: "tabla-link" %>
+            <%= button_to "Borrar", service_path(service),
+                  method: :delete,
+                  class: "tabla-link tabla-link-borrar",
+                  form: { onsubmit: "return confirm('¿Desea borrar este servicio?')" } %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @services.empty? %>
+        <tr>
+          <td colspan="4" style="text-align: center; color: #6b7280; padding: 24px;">
+            No se encontraron servicios registrados.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%== @pagy.series_nav if @pagy.pages > 1 %>

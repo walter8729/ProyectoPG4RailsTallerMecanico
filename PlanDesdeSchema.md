@@ -42,13 +42,13 @@ Cliente (1) ----< (N) Auto (1) ----< (N) Orden (1) ----< (N) DetalleOrden (N) >-
 ---
 
 ### Fase 2: Catálogo de Servicios y Mecánicos (CRUD + Búsqueda + Pagy + Validaciones)
-- [ ] **Paso 2.1: Módulo de Servicios (`services`)**
+- [x] **Paso 2.1: Módulo de Servicios (`services`)**
   - Controlador `ServicesController` con acciones completas.
   - Buscador por `name` o `description`.
   - Paginación Pagy con límite y navegación fluida.
   - Vistas con validaciones HTML5 (campos requeridos, precio numérico entero min=0).
   - Agregar enlace al sidebar.
-- [ ] **Paso 2.2: Módulo de Mecánicos (`mechanics`)**
+- [x] **Paso 2.2: Módulo de Mecánicos (`mechanics`)**
   - Controlador `MechanicsController` con acciones completas.
   - Buscador por `first_name`, `last_name`, `specialty` o `phone`.
   - Paginación Pagy.
