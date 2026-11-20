@@ -3,30 +3,61 @@
            button_text: "Agregar auto",
            button_url: new_car_path %>
 
+<%= form_with url: cars_path, method: :get, local: true, class: "form-fila" do |form| %>
+  <div>
+    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por placa, chasis, marca, modelo o cliente" %>
+    <%= form.submit "Buscar" %>
+    <% if params[:q].present? %>
+      <%= link_to "Ver todos", cars_path %>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="tabla-wrap">
   <table class="tabla">
-    <tr>
-      <th>Cliente</th>
-      <th>Marca</th>
-      <th>Modelo</th>
-      <th>Color</th>
-      <th></th>
-    </tr>
-    <% @cars.each do |car| %>
+    <thead>
       <tr>
-        <td><%= car.customer&.full_name %></td>
-        <td><%= car.brand %></td>
-        <td><%= car.model %></td>
-        <td><%= car.color %></td>
-        <td class="tabla-acciones">
-          <%= link_to "Editar", edit_car_path(car), class: "tabla-link" %>
-          <%= button_to "Borrar", car_path(car),
-                        method: :delete,
-                        class: "tabla-link tabla-link-borrar",
-                        form: { onsubmit: "return confirm('¿Borrar este car?')" } %>
-        </td>
+        <th>Placa</th>
+        <th>Vehículo</th>
+        <th>Chasis (VIN)</th>
+        <th>Kilometraje</th>
+        <th>Cliente Propietario</th>
+        <th></th>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <% @cars.each do |car| %>
+        <tr>
+          <td><span style="background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 0.85rem;"><%= car.plate %></span></td>
+          <td>
+            <strong><%= car.brand %> <%= car.model %> (<%= car.year %>)</strong>
+            <% if car.color.present? %>
+              <div style="font-size: 0.8rem; color: #6b7280;">Color: <%= car.color %></div>
+            <% end %>
+          </td>
+          <td><code style="font-size: 0.8rem; background: #f3f4f6; padding: 2px 4px; border-radius: 4px;"><%= car.chassis %></code></td>
+          <td><%= number_with_delimiter(car.mileage) %> km</td>
+          <td><%= car.customer&.full_name %></td>
+          <td class="tabla-acciones">
+            <%= link_to "Editar", edit_car_path(car), class: "tabla-link" %>
+            <%= button_to "Borrar", car_path(car),
+                          method: :delete,
+                          class: "tabla-link tabla-link-borrar",
+                          form: { onsubmit: "return confirm('¿Borrar este auto?')" } %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @cars.empty? %>
+        <tr>
+          <td colspan="6" style="text-align: center; color: #6b7280; padding: 24px;">
+            No se encontraron autos registrados.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </div>
+
+<%== @pagy.series_nav if @pagy.pages > 1 %>
+
 

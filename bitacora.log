@@ -43,3 +43,17 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Paginación Pagy con diseño estilizado y etiquetas de especialidad.
 - Menú lateral (Sidebar) actualizado en app/views/layouts/application.html.erb con enlaces a Servicios y Mecánicos.
 - Test suites de integración creadas y pasando al 100% (20/20 tests en total).
+
+[2026-11-19 22:54:30] FASE 3: REFACTORIZACIÓN Y COMPLETITUD DE CLIENTES Y AUTOS COMPLETADA
+- Clientes (Customers):
+  * Formulario actualizado con: Tipo de Documento (CI/RUC/Extranjero), Nro de Documento, Email y Dirección.
+  * Validaciones front (required, email, select) y back integradas.
+  * Listado actualizado mostrando tipo y número de documento con badge, email y teléfono.
+  * Buscador ampliado por nombre, apellido, teléfono y número de documento con paginación Pagy.
+- Autos (Cars):
+  * Formulario actualizado con: Chasis (VIN) y Kilometraje (entero min 0).
+  * Validaciones front y back (placa y chasis únicos, año válido, kilometraje no negativo).
+  * Listado de autos modernizado con badge de placa, chasis en código y kilometraje formateado.
+  * Paginación Pagy añadida a CarsController#index y vista.
+  * Buscador potente implementado por placa, chasis, marca, modelo o nombre/apellido del cliente.
+- Test suites pasando al 100% (20/20 tests en verde).

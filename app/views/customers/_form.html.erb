@@ -1,21 +1,52 @@
 <%= form_with model: customer, url: url, class: "form-card" do |f| %>
+  <% if customer.errors.any? %>
+    <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+      <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
+      <ul style="margin: 0; padding-left: 20px;">
+        <% customer.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="form-fila">
-    <%= f.label :first_name, "Nombre" %>
-    <%= f.text_field :first_name, placeholder: "Juan" %>
+    <%= f.label :document_type, "Tipo Doc. *" %>
+    <%= f.select :document_type, [["Cédula de Identidad (CI)", "CI"], ["RUC", "RUC"], ["Extranjero", "Extranjero"]], {}, required: true %>
   </div>
 
   <div class="form-fila">
-    <%= f.label :last_name, "Apellido" %>
-    <%= f.text_field :last_name, placeholder: "Pérez" %>
+    <%= f.label :document_number, "Nro. Doc. *" %>
+    <%= f.text_field :document_number, required: true, placeholder: "ej. 4589234 o 80012345-6", class: ("field-invalid" if customer.errors[:document_number].any?) %>
   </div>
 
   <div class="form-fila">
-    <%= f.label :phone, "Teléfono" %>
-    <%= f.telephone_field :phone, placeholder: "11 1234-5678" %>
+    <%= f.label :first_name, "Nombre *" %>
+    <%= f.text_field :first_name, required: true, placeholder: "ej. Juan", class: ("field-invalid" if customer.errors[:first_name].any?) %>
+  </div>
+
+  <div class="form-fila">
+    <%= f.label :last_name, "Apellido *" %>
+    <%= f.text_field :last_name, required: true, placeholder: "ej. Pérez", class: ("field-invalid" if customer.errors[:last_name].any?) %>
+  </div>
+
+  <div class="form-fila">
+    <%= f.label :phone, "Teléfono *" %>
+    <%= f.telephone_field :phone, required: true, placeholder: "ej. 0981 123 456", class: ("field-invalid" if customer.errors[:phone].any?) %>
+  </div>
+
+  <div class="form-fila">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email, placeholder: "cliente@correo.com", class: ("field-invalid" if customer.errors[:email].any?) %>
+  </div>
+
+  <div class="form-fila">
+    <%= f.label :address, "Dirección" %>
+    <%= f.text_field :address, placeholder: "ej. Avda. Eusebio Ayala 1234" %>
   </div>
 
   <div class="form-acciones">
     <%= link_to "Cancelar", clientes_path, class: "btn btn-secundario" %>
-    <%= f.submit "Guardar", class: "btn" %>
+    <%= f.submit customer.persisted? ? "Guardar Cambios" : "Crear Cliente", class: "btn" %>
   </div>
 <% end %>

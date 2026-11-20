@@ -1,53 +1,62 @@
 <%= form_with(model: car, class: "form-card") do |form| %>
   <% if car.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(car.errors.count, "error") %> prohibited this car from being saved:</h2>
-
-      <ul class="list-disc ml-6">
-        <% car.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+    <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+      <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
+      <ul style="margin: 0; padding-left: 20px;">
+        <% car.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="form-fila">
-    <%= form.label :customer_id, "Cliente" %>
+    <%= form.label :customer_id, "Cliente *" %>
     <%= form.collection_select :customer_id,
           @customers,
           :id,
           :full_name,
           { prompt: "Seleccioná un cliente" },
-          { class: car.errors[:customer].any? ? "field-invalid" : nil } %>
+          { required: true, class: car.errors[:customer].any? ? "field-invalid" : nil } %>
   </div>
 
   <div class="form-fila">
-    <%= form.label :brand, "Marca" %>
-    <%= form.text_field :brand, class: car.errors[:brand].any? ? "field-invalid" : nil %>
+    <%= form.label :brand, "Marca *" %>
+    <%= form.text_field :brand, required: true, placeholder: "ej. Toyota", class: car.errors[:brand].any? ? "field-invalid" : nil %>
   </div>
 
   <div class="form-fila">
-    <%= form.label :model,"Modelo" %>
-    <%= form.text_field :model, class: car.errors[:model].any? ? "field-invalid" : nil %>
+    <%= form.label :model, "Modelo *" %>
+    <%= form.text_field :model, required: true, placeholder: "ej. Hilux", class: car.errors[:model].any? ? "field-invalid" : nil %>
   </div>
 
   <div class="form-fila">
-    <%= form.label :year, "Anho" %>
-    <%= form.number_field :year, class: car.errors[:year].any? ? "field-invalid" : nil %>
+    <%= form.label :year, "Año *" %>
+    <%= form.number_field :year, required: true, min: 1950, max: Time.current.year + 1, placeholder: "ej. 2021", class: car.errors[:year].any? ? "field-invalid" : nil %>
   </div>
 
   <div class="form-fila">
-    <%= form.label :plate, "Matrica" %>
-    <%= form.text_field :plate, class: car.errors[:plate].any? ? "field-invalid" : nil %>
+    <%= form.label :plate, "Placa / Chapa *" %>
+    <%= form.text_field :plate, required: true, placeholder: "ej. AAAA123", class: car.errors[:plate].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :chassis, "Chasis (VIN) *" %>
+    <%= form.text_field :chassis, required: true, placeholder: "ej. 8AF3H340...", class: car.errors[:chassis].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :mileage, "Kilometraje *" %>
+    <%= form.number_field :mileage, required: true, min: 0, step: 1, placeholder: "ej. 45000", class: car.errors[:mileage].any? ? "field-invalid" : nil %>
   </div>
 
   <div class="form-fila">
     <%= form.label :color, "Color" %>
-    <%= form.text_field :color, class: car.errors[:color].any? ? "field-invalid" : nil %>
+    <%= form.text_field :color, placeholder: "ej. Blanco perla", class: car.errors[:color].any? ? "field-invalid" : nil %>
   </div>
 
   <div class="form-acciones">
     <%= link_to "Cancelar", cars_path, class: "btn btn-secundario" %>
-    <%= form.submit "Guardar", class: "btn" %>
+    <%= form.submit car.persisted? ? "Guardar Cambios" : "Crear Auto", class: "btn" %>
   </div>
 <% end %>

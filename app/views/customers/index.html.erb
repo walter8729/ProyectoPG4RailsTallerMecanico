@@ -7,8 +7,7 @@
 
 <%= form_with url: clientes_path, method: :get, local: true, class: "form-fila" do |form| %>
   <div>
-    <!-- <%= form.label :q, "Buscar cliente: " %> -->
-    <%= form.text_field :q, value: params[:q], placeholder: "Escribir para buscar" %>
+    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por nombre, apellido, documento o teléfono" %>
     <%= form.submit "Buscar"%>
     <% if params[:q].present? %>
       <%= link_to "Ver todos", clientes_path %>
@@ -19,27 +18,40 @@
 
 <div class="tabla-wrap">
   <table class="tabla">
-    <tr>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Teléfono</th>
-      <th></th>
-    </tr>
-    <% @customers.each do |customer| %>
+    <thead>
       <tr>
-        <td><%= customer.first_name %></td>
-        <td><%= customer.last_name %></td>
-        <td><%= customer.phone %></td>
-        <td class="tabla-acciones">
-          <%= link_to "Editar", edit_cliente_path(customer), class: "tabla-link" %>
-          <%= button_to "Borrar", cliente_path(customer),
-                method: :delete,
-                class: "tabla-link tabla-link-borrar",
-                form: { onsubmit: "return confirm('¿Borrar este cliente?')" } %>
-        </td>
+        <th>Documento</th>
+        <th>Nombre y Apellido</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th></th>
       </tr>
-    <% end %>
-    </table>
+    </thead>
+    <tbody>
+      <% @customers.each do |customer| %>
+        <tr>
+          <td><span style="background: #f3f4f6; color: #374151; padding: 3px 7px; border-radius: 4px; font-size: 0.825rem; font-weight: 600;"><%= customer.document_type %>: <%= customer.document_number %></span></td>
+          <td><strong><%= customer.full_name %></strong></td>
+          <td><%= customer.phone %></td>
+          <td><%= customer.email.presence || "-" %></td>
+          <td class="tabla-acciones">
+            <%= link_to "Editar", edit_cliente_path(customer), class: "tabla-link" %>
+            <%= button_to "Borrar", cliente_path(customer),
+                  method: :delete,
+                  class: "tabla-link tabla-link-borrar",
+                  form: { onsubmit: "return confirm('¿Borrar este cliente?')" } %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @customers.empty? %>
+        <tr>
+          <td colspan="5" style="text-align: center; color: #6b7280; padding: 24px;">
+            No se encontraron clientes registrados.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
 <%== @pagy.series_nav if @pagy.pages > 1 %>

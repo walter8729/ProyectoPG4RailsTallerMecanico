@@ -58,11 +58,11 @@ Cliente (1) ----< (N) Auto (1) ----< (N) Orden (1) ----< (N) DetalleOrden (N) >-
 ---
 
 ### Fase 3: Refactorización y Completitud de Clientes y Autos
-- [ ] **Paso 3.1: Módulo de Clientes (`customers`)**
+- [x] **Paso 3.1: Módulo de Clientes (`customers`)**
   - Actualizar formulario (`_form.html.erb`) con `document_type`, `document_number`, `email`, `address`.
   - Validaciones frontend en inputs (select para tipo de documento, required, pattern/type email).
   - Ampliar buscador para filtrar por nombre, apellido, documento o teléfono.
-- [ ] **Paso 3.2: Módulo de Autos (`cars`)**
+- [x] **Paso 3.2: Módulo de Autos (`cars`)**
   - Agregar paginación Pagy en `CarsController#index`.
   - Agregar barra de búsqueda por placa, chasis, marca, modelo o nombre del cliente.
   - Actualizar formulario con `chassis` y `mileage`.

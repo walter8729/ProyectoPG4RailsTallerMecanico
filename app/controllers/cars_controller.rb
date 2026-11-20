@@ -3,7 +3,17 @@ class CarsController < ApplicationController
   before_action :load_customers_for_form, only: %i[ new create edit update ]
 
   def index
-    @cars = Car.includes(:customer).order(:brand, :model)
+    cars = Car.includes(:customer).order(:brand, :model)
+
+    if params[:q].present?
+      criterio = "%#{params[:q]}%".downcase
+      cars = cars.joins(:customer).where(
+        "lower(cars.plate) LIKE :q OR lower(cars.chassis) LIKE :q OR lower(cars.brand) LIKE :q OR lower(cars.model) LIKE :q OR lower(customers.first_name) LIKE :q OR lower(customers.last_name) LIKE :q",
+        q: criterio
+      )
+    end
+
+    @pagy, @cars = pagy(:offset, cars)
   end
 
   def new
