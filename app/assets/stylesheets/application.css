@@ -30,16 +30,22 @@
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   flex-shrink: 0;
   height: 42px;
-  padding: 10px 18px;
-  border: none;
+  line-height: 1;
+  padding: 0 18px;
+  border: 1px solid transparent;
   border-radius: 8px;
   background: #1e3a8a;
   color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
+  vertical-align: middle;
 }
 
 .tabla-wrap {
@@ -191,14 +197,24 @@ button.tabla-link {
 
 .barra-busqueda input[type="text"] {
   flex: 1;
+  box-sizing: border-box;
   height: 42px;
+  line-height: 42px;
   padding: 0 14px;
+  margin: 0;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   background-color: #fff;
   font: inherit;
   font-size: 0.95rem;
   color: #111827;
+  vertical-align: middle;
+}
+
+.barra-busqueda input[type="submit"],
+.barra-busqueda button,
+.barra-busqueda .btn {
+  margin: 0;
 }
 
 .barra-busqueda input[type="text"]:focus {
