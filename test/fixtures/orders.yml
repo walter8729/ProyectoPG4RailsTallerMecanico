@@ -3,7 +3,7 @@
 one:
   car: one
   order_date: 2026-11-19
-  delivery_date: 2026-11-19
+  delivery_date: 2026-11-20
   status: Pendiente
   notes: Mantenimiento general
   total: 0
@@ -11,7 +11,7 @@ one:
 two:
   car: two
   order_date: 2026-11-19
-  delivery_date: 2026-11-19
+  delivery_date: 2026-11-21
   status: En Proceso
   notes: Revision de frenos
   total: 0

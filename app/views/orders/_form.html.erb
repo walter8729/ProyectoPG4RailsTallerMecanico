@@ -168,13 +168,70 @@
 
   <div class="form-fila">
     <%= form.label :order_date, "Fecha Ingreso *" %>
-    <%= form.date_field :order_date, required: true, value: (order.order_date || Date.current) %>
+    <%= form.date_field :order_date,
+          id: "order_order_date",
+          required: true,
+          value: (order.order_date || Date.current),
+          onchange: "actualizarMinFechaEntrega()",
+          class: ("field-invalid" if order.errors[:order_date].any?) %>
   </div>
 
   <div class="form-fila">
     <%= form.label :delivery_date, "Fecha Entrega" %>
-    <%= form.date_field :delivery_date, placeholder: "Estimada o final" %>
+    <%= form.date_field :delivery_date,
+          id: "order_delivery_date",
+          placeholder: "Estimada o final",
+          onchange: "validarFechasOrden()",
+          class: ("field-invalid" if order.errors[:delivery_date].any?) %>
   </div>
+
+  <!-- Script nativo para validación en Frontend de Fecha de Entrega > Fecha Ingreso -->
+  <script>
+    function sumarUnDia(fechaStr) {
+      if (!fechaStr) return "";
+      var d = new Date(fechaStr + "T00:00:00");
+      d.setDate(d.getDate() + 1);
+      var year = d.getFullYear();
+      var month = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      return year + "-" + month + "-" + day;
+    }
+
+    function actualizarMinFechaEntrega() {
+      var ingresoInput = document.getElementById("order_order_date");
+      var entregaInput = document.getElementById("order_delivery_date");
+      if (!ingresoInput || !entregaInput) return;
+
+      var minEntrega = sumarUnDia(ingresoInput.value);
+      entregaInput.min = minEntrega;
+
+      // Si la fecha de entrega ya cargada es menor o igual, alertar y limpiar
+      if (entregaInput.value && entregaInput.value <= ingresoInput.value) {
+        entregaInput.setCustomValidity("La fecha de entrega debe ser posterior a la fecha de ingreso.");
+      } else {
+        entregaInput.setCustomValidity("");
+      }
+    }
+
+    function validarFechasOrden() {
+      var ingresoInput = document.getElementById("order_order_date");
+      var entregaInput = document.getElementById("order_delivery_date");
+      if (!ingresoInput || !entregaInput) return;
+
+      if (entregaInput.value && ingresoInput.value && entregaInput.value <= ingresoInput.value) {
+        entregaInput.setCustomValidity("La fecha de entrega debe ser posterior a la fecha de ingreso.");
+        entregaInput.reportValidity();
+      } else {
+        entregaInput.setCustomValidity("");
+      }
+    }
+
+    // Inicializar al cargar la página
+    document.addEventListener("DOMContentLoaded", actualizarMinFechaEntrega);
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      actualizarMinFechaEntrega();
+    }
+  </script>
 
   <div class="form-fila">
     <%= form.label :status, "Estado *" %>

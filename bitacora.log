@@ -186,3 +186,14 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Todas las llamadas a number_with_delimiter ahora formatean montos con punto (ej: ₲ 1.500.000, 45.000 km).
 - Suite de tests ejecutada: 28 tests con 45 assertions y 0 fallos.
 - Commit: 8cba28b.
+
+[2026-11-20 01:48:00] VALIDACIÓN DE FECHA DE ENTREGA > FECHA DE INGRESO (BACKEND Y FRONTEND)
+- app/models/order.rb:
+  * Validación personalizada validate :delivery_date_must_be_after_order_date.
+  * Agrega error si delivery_date <= order_date con mensaje detallado indicando fecha de ingreso.
+- app/views/orders/_form.html.erb:
+  * Validación reactiva en frontend con HTML5 (setCustomValidity) y atributo min dinámico en fecha de entrega.
+  * Si el usuario cambia la fecha de ingreso, el mínimo seleccionable de la fecha de entrega se ajusta al día siguiente.
+- test/models/order_test.rb:
+  * Tests automatizados agregados para comprobar fechas inválidas (iguales o anteriores) y fechas válidas (posteriores o en blanco).
+- Suite de tests: 30 tests con 51 assertions pasando al 100% (0 fallos).
