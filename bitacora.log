@@ -96,3 +96,10 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - CarsController:
   * Ya mantenía params.expect(car: [...]) y params.expect(:id).
 - Test suites ejecutadas: 28 tests con 0 fallos.
+
+[2026-11-19 23:15:00] AGREGADOS BANNERS DE FEEDBACK (FLASH MESSAGES)
+- app/views/layouts/application.html.erb:
+  * notice: Banner verde suave con borde esmeralda e ícono de check para confirmar creaciones, ediciones o eliminaciones exitosas.
+  * alert: Banner rojo suave con borde e ícono de advertencia para mensajes de error o restricciones de integridad referencial.
+- Mantenida la confirmación nativa de eliminación en formularios.
+- 28 tests en verde (0 fallos).
