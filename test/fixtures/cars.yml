@@ -1,0 +1,15 @@
+one:
+  brand: Toyota
+  model: Corolla
+  year: 2020
+  plate: ABC123
+  color: Rojo
+  customer: one
+
+two:
+  brand: Ford
+  model: Focus
+  year: 2018
+  plate: XYZ789
+  color: Azul
+  customer: two

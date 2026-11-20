@@ -1,0 +1,6 @@
+<div class="page-header">
+  <h1><%= title %></h1>
+  <% if local_assigns[:button_text] %>
+    <%= link_to button_text, button_url, class: "btn" %>
+  <% end %>
+</div>

@@ -1,0 +1,53 @@
+<%= form_with(model: car, class: "form-card") do |form| %>
+  <% if car.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(car.errors.count, "error") %> prohibited this car from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% car.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-fila">
+    <%= form.label :customer_id, "Cliente" %>
+    <%= form.collection_select :customer_id,
+          @customers,
+          :id,
+          :full_name,
+          { prompt: "Seleccioná un cliente" },
+          { class: car.errors[:customer].any? ? "field-invalid" : nil } %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :brand, "Marca" %>
+    <%= form.text_field :brand, class: car.errors[:brand].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :model,"Modelo" %>
+    <%= form.text_field :model, class: car.errors[:model].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :year, "Anho" %>
+    <%= form.number_field :year, class: car.errors[:year].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :plate, "Matrica" %>
+    <%= form.text_field :plate, class: car.errors[:plate].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :color, "Color" %>
+    <%= form.text_field :color, class: car.errors[:color].any? ? "field-invalid" : nil %>
+  </div>
+
+  <div class="form-acciones">
+    <%= link_to "Cancelar", cars_path, class: "btn btn-secundario" %>
+    <%= form.submit "Guardar", class: "btn" %>
+  </div>
+<% end %>

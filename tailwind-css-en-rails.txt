@@ -1,0 +1,151 @@
+TAILWIND CSS EN RAILS
+Guia paso a paso - Prog4, Taller de practica
+=================================================
+
+Que vamos a lograr: integrar Tailwind CSS al pipeline de assets de Rails
+sin depender de Node.js, usando la gema oficial tailwindcss-rails.
+Al final vas a poder escribir clases de utilidad de Tailwind
+(class="text-xl font-bold") directamente en tus vistas .erb.
+
+Requisitos: Rails 7 o superior. No hace falta tener Node.js instalado.
+
+
+PASO 1 - Agregar la gema al Gemfile
+-------------------------------------------------
+Abri el Gemfile y agrega esta linea, cerca de las otras gemas de
+Hotwire/JS (stimulus-rails, turbo-rails):
+
+    gem "tailwindcss-rails"
+
+
+PASO 2 - Instalar la dependencia
+-------------------------------------------------
+Corre en la terminal:
+
+    $ bundle install
+
+Esto instala tailwindcss-ruby (el binario nativo de Tailwind) y
+tailwindcss-rails (la integracion con Rails). No requiere npm ni yarn.
+
+
+PASO 3 - Ejecutar el installer
+-------------------------------------------------
+    $ bin/rails tailwindcss:install
+
+Este comando:
+  - Agrega el contenedor de Tailwind al layout (application.html.erb)
+  - Crea app/assets/tailwind/application.css
+  - Crea Procfile.dev y el binario bin/dev
+  - Compila un primer build de prueba
+
+
+PASO 4 - Revisar los archivos generados
+-------------------------------------------------
+  app/assets/tailwind/application.css
+      Punto de entrada de Tailwind, se recompila en cada cambio.
+
+  app/assets/builds/
+      Carpeta con el CSS ya compilado (no se edita a mano).
+
+  Procfile.dev
+      Define los procesos que corren juntos en desarrollo.
+
+  bin/dev
+      Arranca Rails junto con el watcher de Tailwind.
+
+
+PASO 5 - Levantar el servidor con el watcher
+-------------------------------------------------
+A partir de ahora, para desarrollar usa bin/dev en lugar de
+rails server. Asi el CSS se recompila automaticamente cuando
+cambias clases en tus vistas.
+
+    $ bin/dev
+
+
+PASO 6 - Probar una clase de Tailwind
+-------------------------------------------------
+Anda a cualquier vista (por ejemplo
+app/views/customers/index.html.erb) y agrega una clase de utilidad
+para confirmar que todo esta conectado:
+
+    <h1 class="text-2xl font-bold text-teal-700">
+      Customers#index
+    </h1>
+
+Con bin/dev corriendo, recarga la pagina en el navegador: el titulo
+deberia verse mas grande, en negrita y en un tono verde azulado.
+
+
+SOLUCION DE PROBLEMAS - "No toma el cambio"
+=================================================
+
+Sintoma
+-------
+Agregaste una clase en una vista o en el layout, recargaste el
+navegador y el estilo no aparece.
+
+Diagnostico
+-----------
+1) Confirma si hay un watcher corriendo. Sin bin/dev activo, el CSS
+   compilado nunca se regenera:
+
+    $ ps aux | grep tailwindcss
+    # si no aparece nada, no hay watcher corriendo
+
+2) Buscá la clase directamente en el CSS ya compilado. Si no
+   aparece, ese es el problema:
+
+    $ grep "mi-clase" app/assets/builds/tailwind.css
+
+Causa
+-----
+Hay dos motivos posibles, y pueden combinarse:
+
+  a) Sin watcher: nadie reconstruye app/assets/builds/tailwind.css
+     cuando editas una vista.
+
+  b) Clase inexistente: si copiaste markup de un template o kit de
+     componentes, puede traer clases "semanticas" como
+     bg-neutral-secondary-soft, text-fg-brand o rounded-base.
+     Esas NO son clases nativas de Tailwind: son tokens que solo
+     existen si el proyecto define un bloque @theme propio en
+     app/assets/tailwind/application.css. Sin esa definicion,
+     Tailwind no genera ningun CSS para ellas y quedan sin estilo,
+     sin importar cuantas veces reconstruyas.
+
+Solucion
+--------
+Para este taller, la opcion mas simple es usar siempre clases
+estandar de Tailwind (documentadas en https://tailwindcss.com/docs)
+en lugar de nombres semanticos custom. Equivalencias usadas:
+
+    bg-neutral-secondary-soft   ->  bg-gray-100
+    text-fg-brand                ->  text-teal-700
+    rounded-base                 ->  rounded-lg
+    border-default                ->  border-gray-200
+    w-4.5 h-4.5                   ->  w-5 h-5
+
+Despues de corregir las clases, reconstrui una vez a mano para
+confirmar el fix antes de seguir editando con bin/dev corriendo:
+
+    $ bin/rails tailwindcss:build
+    $ grep -oE "bg-gray-100|rounded-lg" app/assets/builds/tailwind.css | sort -u
+
+Tip: si mas adelante queres usar un kit de componentes con nombres
+semanticos propios, hay que definirlos primero con @theme en
+app/assets/tailwind/application.css. Es un paso extra que no cubre
+esta guia.
+
+
+VERIFICACION FINAL
+=================================================
+[ ] gem "tailwindcss-rails" aparece en el Gemfile y en Gemfile.lock
+[ ] Existe app/assets/tailwind/application.css
+[ ] Existe bin/dev y Procfile.dev
+[ ] bin/dev levanta el server sin errores
+[ ] Una clase de Tailwind (ej. text-2xl) se ve aplicada en el navegador
+
+-------------------------------------------------
+Prog4 - Taller mecanico - guia de referencia
+Basado en tailwindcss-rails

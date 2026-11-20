@@ -1,0 +1,31 @@
+<section class="mt-8">
+  <div class="flex items-center justify-between gap-4 mb-4">
+    <h2 class="text-lg font-semibold">Autos del cliente</h2>
+    <%= link_to "Agregar auto", new_car_path(customer_id: customer.id), class: "btn" %>
+  </div>
+
+  <% if customer.cars.any? %>
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <tr>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Patente</th>
+          <th></th>
+        </tr>
+        <% customer.cars.order(:brand, :model).each do |car| %>
+          <tr>
+            <td><%= car.brand %></td>
+            <td><%= car.model %></td>
+            <td><%= car.plate %></td>
+            <td class="tabla-acciones">
+              <%= link_to "Editar", edit_car_path(car), class: "tabla-link" %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-gray-600">Este cliente aún no tiene autos registrados.</p>
+  <% end %>
+</section>

@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Académico — Sistema de Taller Mecánico en Ruby on Rails</title>
+<meta name="description" content="Manual académico de desarrollo Ruby on Rails 8 desde cero: PostgreSQL, Tailwind CSS, Hotwire y Pagy.">
+<style>
+/* ============================================================
+   ESTILOS DEL MANUAL — CSS tipo libro técnico universitario
+   ============================================================ */
+:root {
+  --bg: #f8fafc;
+  --bg-content: #ffffff;
+  --sidebar: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-active: #38bdf8;
+  --accent: #0284c7;
+  --accent-dark: #0369a1;
+  --text: #0f172a;
+  --text-soft: #475569;
+  --border: #e2e8f0;
+  --code-bg: #090d16;
+  --code-text: #f1f5f9;
+  --box-border: #cbd5e1;
+  --ok: #16a34a;
+  --warn: #d97706;
+  --danger: #dc2626;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 320px;
+  background: var(--sidebar);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  padding: 24px 16px 40px;
+  z-index: 20;
+}
+.sidebar h1 { font-size: 15px; color: #fff; line-height: 1.35; margin-bottom: 4px; font-weight: 700; }
+.sidebar .subtitle { font-size: 12px; color: #64748b; margin-bottom: 20px; }
+.sidebar .nav-group {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  color: #38bdf8; margin: 18px 0 6px; font-weight: 600;
+}
+.sidebar nav a {
+  display: block; color: var(--sidebar-text); text-decoration: none;
+  font-size: 13px; padding: 6px 8px; border-left: 3px solid transparent; border-radius: 4px;
+}
+.sidebar nav a:hover { background: #1e293b; color: #fff; }
+.sidebar nav a.active { border-left-color: var(--sidebar-active); color: #fff; font-weight: 600; }
+.sidebar nav a .tag {
+  float: right; font-size: 10px; background: #1e293b; color: #94a3b8;
+  padding: 1px 6px; border-radius: 8px;
+}
+.sidebar nav a .tag.done { background: #064e3b; color: #34d399; }
+.sidebar .progress-summary { margin-top: 24px; font-size: 12px; color: #94a3b8; }
+.sidebar .progress-bar { height: 8px; background: #1e293b; border-radius: 4px; margin-top: 8px; overflow: hidden; }
+.sidebar .progress-bar .fill { height: 100%; width: 0%; background: var(--accent); transition: width .3s ease; }
+
+/* Contenido Principal */
+.content { margin-left: 320px; flex: 1; padding: 0 48px 80px; max-width: 1020px; }
+main > section { padding-top: 48px; }
+h2.parte {
+  font-size: 12.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); margin: 0 0 8px; font-weight: 700;
+}
+h2.chapter {
+  font-size: 26px; color: var(--text); border-bottom: 3px solid var(--accent);
+  padding-bottom: 10px; margin-bottom: 22px; font-weight: 800;
+}
+h3 { font-size: 19px; margin: 28px 0 12px; color: var(--text); font-weight: 700; }
+h4 { font-size: 15.5px; margin: 22px 0 8px; color: var(--text); font-weight: 600; }
+p { margin: 0 0 14px; }
+ul, ol { margin: 0 0 16px 24px; }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0 22px; font-size: 13.5px; }
+th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { background: #f1f5f9; font-weight: 600; color: #0f172a; }
+
+/* Bloques de código */
+pre.code {
+  background: var(--code-bg); color: var(--code-text); padding: 16px 18px; border-radius: 8px;
+  overflow-x: auto; margin: 14px 0 20px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px; line-height: 1.55; border: 1px solid #1e293b;
+}
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  background: #e2e8f0; color: #0f172a; padding: 2px 5px; border-radius: 4px; font-size: .9em;
+}
+pre.code code { background: none; color: inherit; padding: 0; font-size: 1em; }
+
+/* Cajas pedagógicas */
+.box {
+  border: 1px solid var(--box-border); border-left-width: 5px; border-radius: 6px;
+  padding: 14px 18px; margin: 18px 0 22px; background: var(--bg-content);
+}
+.box > .box-title { font-weight: 700; font-size: 13.5px; margin-bottom: 8px; }
+.box p:last-child { margin-bottom: 0; }
+.box ul { margin-bottom: 4px; }
+.box-concepto { border-left-color: var(--accent); }
+.box-concepto .box-title { color: var(--accent-dark); }
+.box-profunda { border-left-color: #7c3aed; }
+.box-profunda .box-title { color: #6d28d9; }
+.box-error { border-left-color: var(--danger); }
+.box-error .box-title { color: var(--danger); }
+.box-porque { border-left-color: #0d9488; }
+.box-porque .box-title { color: #0f766e; }
+.box-experimento { border-left-color: var(--warn); }
+.box-experimento .box-title { color: var(--warn); }
+.box-leer { border-left-color: #0284c7; }
+.box-leer .box-title { color: #0369a1; }
+.box-ejercicio { border-left-color: var(--ok); }
+.box-ejercicio .box-title { color: #15803d; }
+.box-comprobacion { border-left-color: #64748b; }
+.box-comprobacion .box-title { color: #475569; }
+
+/* Portada */
+#portada { padding-top: 0; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+.cover-badge {
+  display: inline-block; background: #0284c7; color: #fff; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .14em; padding: 6px 14px; border-radius: 20px; margin-bottom: 22px; width: fit-content;
+}
+.cover-title { font-size: 38px; line-height: 1.15; margin-bottom: 14px; color: var(--text); font-weight: 800; }
+.cover-subtitle { font-size: 18px; color: var(--text-soft); margin-bottom: 28px; max-width: 680px; }
+.cover-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.cover-meta .chip {
+  border: 1px solid var(--border); background: var(--bg-content); padding: 8px 16px;
+  border-radius: 20px; font-size: 13px; color: var(--text); font-weight: 500;
+}
+.cover-note { margin-top: 32px; font-size: 13px; color: var(--text-soft); }
+
+/* Checklists & diagramas */
+.check-list { list-style: none; margin-left: 0; }
+.check-list li { padding-left: 30px; position: relative; }
+.check-list input[type="checkbox"] {
+  position: absolute; left: 0; top: 4px; width: 17px; height: 17px;
+  accent-color: var(--accent); cursor: pointer;
+}
+footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-soft); }
+
+@media (max-width: 900px) {
+  body { display: block; }
+  .sidebar { position: static; width: 100%; height: auto; padding: 16px; }
+  .content { margin-left: 0; padding: 0 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- BARRA LATERAL -->
+<aside class="sidebar">
+  <h1>Manual Académico Rails 8</h1>
+  <div class="subtitle">Sistema de Taller Mecánico · Guía Completa</div>
+
+  <div class="nav-group">Inicio</div>
+  <nav>
+    <a href="#portada">Portada</a>
+    <a href="#informacion">Información del proyecto</a>
+    <a href="#objetivo">Objetivo del manual</a>
+    <a href="#como-usar">Cómo utilizar este manual</a>
+    <a href="#requisitos">Requisitos previos</a>
+    <a href="#mapa">Mapa general del sistema</a>
+    <a href="#arquitectura">Arquitectura general</a>
+    <a href="#indice">Índice navegable</a>
+    <a href="#progreso">Sistema de progreso</a>
+  </nav>
+
+  <div class="nav-group">Parte I · Fundamentos</div>
+  <nav>
+    <a href="#cap1">Cap. 1 · Presentación del proyecto <span class="tag done">hecho</span></a>
+    <a href="#cap2">Cap. 2 · Análisis funcional <span class="tag done">hecho</span></a>
+    <a href="#cap3">Cap. 3 · Arquitectura y Tecnologías <span class="tag done">hecho</span></a>
+  </nav>
+
+  <div class="nav-group">Parte II · Entorno y Creación</div>
+  <nav>
+    <a href="#cap4">Cap. 4 · Ruby esencial para Rails <span class="tag done">hecho</span></a>
+    <a href="#cap5">Cap. 5 · Instalación: PostgreSQL y Ruby <span class="tag done">hecho</span></a>
+    <a href="#cap6">Cap. 6 · Creación de la app con PostgreSQL <span class="tag done">hecho</span></a>
+  </nav>
+
+  <div class="nav-group">Parte III · Base de Datos y Modelos</div>
+  <nav>
+    <a href="#cap7">Cap. 7 · Análisis de la Base de Datos <span class="tag done">hecho</span></a>
+    <a href="#cap8">Cap. 8 · Migraciones e Historial <span class="tag done">hecho</span></a>
+    <a href="#cap9">Cap. 9 · Active Record en profundidad <span class="tag done">hecho</span></a>
+    <a href="#cap10">Cap. 10 · Modelos Customer y Car (1:N) <span class="tag done">hecho</span></a>
+  </nav>
+
+  <div class="nav-group">Parte IV · Rutas y Controladores</div>
+  <nav>
+    <a href="#cap11">Cap. 11 · Rutas REST y DSL <span class="tag done">hecho</span></a>
+    <a href="#cap12">Cap. 12 · Controladores y Params Expect <span class="tag done">hecho</span></a>
+  </nav>
+
+  <div class="nav-group">Parte V · Vistas, Tailwind y UI</div>
+  <nav>
+    <a href="#cap13">Cap. 13 · Vistas ERB y Parciales <span class="tag done">hecho</span></a>
+    <a href="#cap14">Cap. 14 · Tailwind CSS v4 en Rails <span class="tag done">hecho</span></a>
+    <a href="#cap15">Cap. 15 · Hotwire: Turbo & Stimulus <span class="tag done">hecho</span></a>
+    <a href="#cap16">Cap. 16 · Paginación con Pagy <span class="tag done">hecho</span></a>
+  </nav>
+
+  <div class="nav-group">Parte VI · Avanzado y Práctica</div>
+  <nav>
+    <a href="#cap17">Cap. 17 · Buenas prácticas y seguridad <span class="tag done">hecho</span></a>
+    <a href="#cap18">Cap. 18 · Testing con Minitest <span class="tag done">hecho</span></a>
+    <a href="#cap19">Cap. 19 · Despliegue con Kamal y Docker <span class="tag done">hecho</span></a>
+    <a href="#cap20">Cap. 20 · Reconstrucción paso a paso <span class="tag done">hecho</span></a>
+    <a href="#glosario">Glosario de términos</a>
+    <a href="#ejercicios">Ejercicios propuestos</a>
+  </nav>
+
+  <div class="progress-summary">
+    <div>Progreso global del curso:</div>
+    <div class="progress-bar"><div class="fill" id="progfill"></div></div>
+    <div id="progtext" style="margin-top: 6px; font-weight: 600;">0 de 20 capítulos completados</div>
+  </div>
+</aside>
+
+<main class="content">
+
+<!-- ==================== PORTADA ==================== -->
+<section id="portada">
+  <div class="cover-badge">Manual Universitario · Programación IV</div>
+  <h1 class="cover-title">Manual Académico de Desarrollo<br>Ruby on Rails 8 desde Cero</h1>
+  <p class="cover-subtitle">
+    Construcción paso a paso de un Sistema de Gestión de Taller Mecánico con PostgreSQL, Tailwind CSS, Hotwire (Turbo + Stimulus) y Pagy.
+  </p>
+  <div class="cover-meta">
+    <div class="chip"><strong>Ruby</strong> 4.0.6</div>
+    <div class="chip"><strong>Rails</strong> 8.1.3.1</div>
+    <div class="chip"><strong>Base de Datos</strong> PostgreSQL 16+</div>
+    <div class="chip"><strong>CSS</strong> Tailwind CSS 4.x</div>
+    <div class="chip"><strong>Frontend</strong> Hotwire (Turbo + Stimulus)</div>
+    <div class="chip"><strong>Paginación</strong> Pagy 43.x</div>
+  </div>
+  <p class="cover-note">
+    Documento técnico y pedagógico elaborado directamente a partir del código fuente auditado del proyecto <code>taller-mecanico</code>. Incluye fundamentos teóricos, análisis de código línea por línea, buenas prácticas y ejercicios de fijación.
+  </p>
+</section>
+
+<!-- ==================== INFORMACION ==================== -->
+<section id="informacion">
+  <h2 class="chapter">Información del proyecto</h2>
+  <p>
+    El presente manual documenta de forma exhaustiva la arquitectura, diseño de datos, controladores, vistas y lógica de interfaz del <strong>Sistema de Gestión de Taller Mecánico</strong>. Este software está orientado a registrar los clientes del taller, llevar el inventario de sus vehículos, gestionar el flujo de recepción y preparar la plataforma para futuras ampliaciones como órdenes de reparación, mecánicos asignados y facturación.
+  </p>
+
+  <div class="box box-concepto">
+    <div class="box-title">FICHA TÉCNICA DEL SISTEMA</div>
+    <table>
+      <tr><th>Atributo</th><th>Detalle en este proyecto</th></tr>
+      <tr><td>Nombre de la Aplicación</td><td><code>TallerMecanico</code></td></tr>
+      <tr><td>Framework Base</td><td>Ruby on Rails 8.1.3.1</td></tr>
+      <tr><td>Gestor de Base de Datos</td><td>PostgreSQL (gema <code>pg ~> 1.5</code>)</td></tr>
+      <tr><td>Diseño Visual</td><td>Tailwind CSS (gema <code>tailwindcss-rails</code>)</td></tr>
+      <tr><td>Manejo de Assets</td><td>Propshaft + Import Maps (sin dependencias de Node.js)</td></tr>
+      <tr><td>Entidades Nucleares</td><td><code>Customer</code> (Clientes), <code>Car</code> (Vehículos)</td></tr>
+      <tr><td>Patrón de Diseño</td><td>MVC (Modelo-Vista-Controlador) Server-Side Rendered</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== OBJETIVO ==================== -->
+<section id="objetivo">
+  <h2 class="chapter">Objetivo del manual</h2>
+  <p>
+    El objetivo de este manual es doble:
+  </p>
+  <ol>
+    <li>
+      <strong>Formativo y Didáctico</strong>: Permitir que un estudiante de programación o desarrollador comprenda desde los fundamentos de la sintaxis de Ruby hasta la creación de un sistema web completo en Rails 8, entendiendo <em>el porqué</em> de cada decisión técnica.
+    </li>
+    <li>
+      <strong>Referencia Técnica y Reconstrucción</strong>: Proveer un manual de referencia detallado para auditar, mantener o reconstruir completamente el proyecto desde cero, incluyendo migraciones, modelos, controladores REST, vistas con Tailwind CSS y componentes de paginación con Pagy.
+    </li>
+  </ol>
+</section>
+
+<!-- ==================== COMO USAR ==================== -->
+<section id="como-usar">
+  <h2 class="chapter">Cómo utilizar este manual</h2>
+  <p>
+    El manual está organizado en <strong>20 capítulos</strong> agrupados en 6 partes lógicas. A lo largo del texto encontrarás diferentes cajas pedagógicas con códigos de color para facilitar el aprendizaje:
+  </p>
+
+  <div class="box box-concepto">
+    <div class="box-title">CONCEPTO CLAVE</div>
+    <p>Explica la teoría formal de Rails, convenciones de nomenclatura, patrones de diseño o conceptos fundamentales de bases de datos relacionales.</p>
+  </div>
+
+  <div class="box box-porque">
+    <div class="box-title">¿POR QUÉ SE HACE ASÍ?</div>
+    <p>Justifica la elección de una herramienta o patrón frente a otras alternativas (por ejemplo: ¿Por qué PostgreSQL en vez de SQLite? ¿Por qué Pagy en lugar de Kaminari?).</p>
+  </div>
+
+  <div class="box box-leer">
+    <div class="box-title">CÓMO LEER EL CÓDIGO</div>
+    <p>Desglosa líneas de código complejas y traduce cada sentencia a lenguaje natural para entender el flujo exacto de ejecución.</p>
+  </div>
+
+  <div class="box box-error">
+    <div class="box-title">ERRORES COMUNES Y CÓMO EVITARLOS</div>
+    <p>Previene tropiezos típicos de principiantes en Rails: problemas de pluralización irregular, errores de migración, violaciones de clave foránea o confusión de scopes.</p>
+  </div>
+
+  <div class="box box-experimento">
+    <div class="box-title">EXPERIMENTO EN CONSOLA</div>
+    <p>Instrucciones prácticas para abrir <code>bin/rails console</code> y comprobar el comportamiento interactivo de consultas, relaciones y métodos.</p>
+  </div>
+</section>
+
+<!-- ==================== REQUISITOS ==================== -->
+<section id="requisitos">
+  <h2 class="chapter">Requisitos previos</h2>
+  <p>Para aprovechar al máximo este manual y replicar el proyecto, se requiere:</p>
+  <ul>
+    <li>Conocimientos básicos de programación estructurada y orientada a objetos (clases, instancias, métodos, atributos).</li>
+    <li>Familiaridad con la terminal de comandos (PowerShell, Bash o Zsh).</li>
+    <li>Conceptos elementales de bases de datos relacionales (tablas, claves primarias <code>PK</code>, claves foráneas <code>FK</code>, relaciones uno a muchos).</li>
+    <li>Fundamentos de HTTP (verbos <code>GET</code>, <code>POST</code>, <code>PATCH</code>, <code>DELETE</code> y códigos de estado como 200, 302, 404, 422).</li>
+  </ul>
+</section>
+
+<!-- ==================== MAPA GENERAL ==================== -->
+<section id="mapa">
+  <h2 class="chapter">Mapa general del sistema</h2>
+  <p>El siguiente diagrama esquematiza los componentes principales del sistema y su interacción:</p>
+
+  <div class="diagram">
+    <pre class="code"><code>+-----------------------------------------------------------------------------------+
+|                                 USUARIO / NAVEGADOR                              |
+|                   (Vistas ERB + Estilos Tailwind CSS + Hotwire Turbo)              |
++-----------------------------------------------------------------------------------+
+                                   │ HTTP (GET/POST/PATCH/DELETE)
+                                   ▼
++-----------------------------------------------------------------------------------+
+|                           ENRUTADOR (config/routes.rb)                            |
+|             Mapea URLs a controladores (ej: /clientes -> customers#index)          |
++-----------------------------------------------------------------------------------+
+                                   │
+                                   ▼
++-----------------------------------------------------------------------------------+
+|                               CONTROLADORES (app/controllers/)                    |
+|        HomeController        |      CustomersController      |    CarsController    |
+|   (Dashboard / Métricas)     |   (Búsqueda, CRUD, Pagy)      |   (CRUD con params)  |
++-----------------------------------------------------------------------------------+
+                                   │
+                                   ▼
++-----------------------------------------------------------------------------------+
+|                                 MODELOS (app/models/)                             |
+|          Customer (1)  <──────── has_many / belongs_to ─────────>  (N) Car        |
+|      (full_name, scope :ordered)                             (belongs_to :customer)|
++-----------------------------------------------------------------------------------+
+                                   │ Active Record ORM
+                                   ▼
++-----------------------------------------------------------------------------------+
+|                        MOTOR DE BASE DE DATOS (PostgreSQL)                        |
+|   Tabla "customers" (id, first_name, last_name, phone, active)                    |
+|   Tabla "cars" (id, customer_id [FK], brand, model, year, plate, color)           |
++-----------------------------------------------------------------------------------+</code></pre>
+  </div>
+</section>
+
+<!-- ==================== ARQUITECTURA GENERAL ==================== -->
+<section id="arquitectura">
+  <h2 class="chapter">Arquitectura general</h2>
+  <p>
+    Rails 8 promueve el paradigma de la <strong>aplicación web autosuficiente</strong> (<em>One-person framework</em>). Esto significa que no necesitamos montar servidores de Node.js, configuraciones complejas de Webpack ni bases de datos de Redis para colas y caché.
+  </p>
+  <ul>
+    <li><strong>Propshaft</strong> se encarga de servir los archivos estáticos de forma liviana.</li>
+    <li><strong>Tailwind CSS</strong> compila directamente mediante un binario independiente gracias a la gema <code>tailwindcss-rails</code>.</li>
+    <li><strong>Pagy</strong> procesa la paginación con un consumo insignificante de memoria RAM y microsegundos de CPU.</li>
+    <li><strong>Solid Suite (Cache, Queue, Cable)</strong> utiliza la propia base de datos relacional para gestionar tareas en segundo plano y WebSockets sin requerir software adicional.</li>
+  </ul>
+</section>
+
+<!-- ==================== INDICE NAVEGABLE ==================== -->
+<section id="indice">
+  <h2 class="chapter">Índice navegable</h2>
+  <p>Utiliza las casillas de verificación para marcar tu progreso conforme estudies cada módulo:</p>
+
+  <ul class="check-list">
+    <li><input type="checkbox" data-chapter="cap1"> <a href="#cap1"><strong>Capítulo 1</strong> — Presentación del proyecto y requerimientos</a></li>
+    <li><input type="checkbox" data-chapter="cap2"> <a href="#cap2"><strong>Capítulo 2</strong> — Análisis funcional y casos de uso</a></li>
+    <li><input type="checkbox" data-chapter="cap3"> <a href="#cap3"><strong>Capítulo 3</strong> — Arquitectura del sistema y pila tecnológica</a></li>
+    <li><input type="checkbox" data-chapter="cap4"> <a href="#cap4"><strong>Capítulo 4</strong> — Ruby esencial para desarrolladores Rails</a></li>
+    <li><input type="checkbox" data-chapter="cap5"> <a href="#cap5"><strong>Capítulo 5</strong> — Instalación del entorno: Ruby y PostgreSQL</a></li>
+    <li><input type="checkbox" data-chapter="cap6"> <a href="#cap6"><strong>Capítulo 6</strong> — Creación de la aplicación Rails con PostgreSQL</a></li>
+    <li><input type="checkbox" data-chapter="cap7"> <a href="#cap7"><strong>Capítulo 7</strong> — Análisis de la base de datos y diseño relacional</a></li>
+    <li><input type="checkbox" data-chapter="cap8"> <a href="#cap8"><strong>Capítulo 8</strong> — Migraciones en Rails: evolución del esquema</a></li>
+    <li><input type="checkbox" data-chapter="cap9"> <a href="#cap9"><strong>Capítulo 9</strong> — Active Record en profundidad: consultas y scopes</a></li>
+    <li><input type="checkbox" data-chapter="cap10"> <a href="#cap10"><strong>Capítulo 10</strong> — Modelos del sistema: Customer y Car (relación 1:N)</a></li>
+    <li><input type="checkbox" data-chapter="cap11"> <a href="#cap11"><strong>Capítulo 11</strong> — Sistema de enrutamiento: DSL y convenciones REST</a></li>
+    <li><input type="checkbox" data-chapter="cap12"> <a href="#cap12"><strong>Capítulo 12</strong> — Controladores: flujo de acciones y parámetros seguros</a></li>
+    <li><input type="checkbox" data-chapter="cap13"> <a href="#cap13"><strong>Capítulo 13</strong> — Vistas ERB, formularios y diseño con parciales</a></li>
+    <li><input type="checkbox" data-chapter="cap14"> <a href="#cap14"><strong>Capítulo 14</strong> — Integración de Tailwind CSS v4 en Rails</a></li>
+    <li><input type="checkbox" data-chapter="cap15"> <a href="#cap15"><strong>Capítulo 15</strong> — Hotwire: Aceleración con Turbo y Stimulus JS</a></li>
+    <li><input type="checkbox" data-chapter="cap16"> <a href="#cap16"><strong>Capítulo 16</strong> — Paginación de alto rendimiento con Pagy</a></li>
+    <li><input type="checkbox" data-chapter="cap17"> <a href="#cap17"><strong>Capítulo 17</strong> — Buenas prácticas, seguridad y validaciones</a></li>
+    <li><input type="checkbox" data-chapter="cap18"> <a href="#cap18"><strong>Capítulo 18</strong> — Testing con Minitest</a></li>
+    <li><input type="checkbox" data-chapter="cap19"> <a href="#cap19"><strong>Capítulo 19</strong> — Despliegue en producción con Kamal y Docker</a></li>
+    <li><input type="checkbox" data-chapter="cap20"> <a href="#cap20"><strong>Capítulo 20</strong> — Guía de reconstrucción del sistema desde cero</a></li>
+  </ul>
+</section>
+
+<!-- ==================== PARTE I ==================== -->
+<h2 class="parte">Parte I · Fundamentos y Análisis del Sistema</h2>
+
+<!-- CAPITULO 1 -->
+<section id="cap1">
+  <h2 class="chapter">Capítulo 1 — Presentación del proyecto y requerimientos</h2>
+  <p>
+    En la gestión cotidiana de un taller automotriz, el desorden operativo suele originarse en la falta de un registro centralizado de los clientes y sus respectivos vehículos. Frecuentemente, los datos de contacto y el historial de automóviles atendidos se encuentran dispersos en cuadernos o planillas no normalizadas.
+  </p>
+  <p>
+    El proyecto <strong>taller-mecanico</strong> se diseñó como una solución web integral y moderna construida con <strong>Ruby on Rails 8</strong>. El sistema resuelve el núcleo del problema registrando de forma relacional y estructurada los propietarios y sus autos, sirviendo de base sólida para el posterior seguimiento de órdenes de trabajo, repuestos y cobros.
+  </p>
+
+  <h3>1.1 Objetivos específicos del software</h3>
+  <ul>
+    <li><strong>Registro unificado de clientes</strong>: Almacenamiento seguro de nombre, apellido, teléfono y estado activo del cliente.</li>
+    <li><strong>Gestión del parque automotor</strong>: Asociación directa de cada vehículo con su titular, guardando marca, modelo, año de fabricación, matrícula (patente) y color.</li>
+    <li><strong>Búsqueda en tiempo real</strong>: Localización veloz de clientes por coincidencias parciales de nombre, apellido o número de teléfono.</li>
+    <li><strong>Panel de control intuitivo</strong>: Dashboard principal con métricas resumidas en tarjetas (KPIs) y accesos rápidos a las operaciones comunes.</li>
+    <li><strong>Navegación moderna y responsiva</strong>: Barra lateral (sidebar) colapsable con soporte completo para dispositivos móviles y escritorio.</li>
+  </ul>
+
+  <div class="box box-concepto">
+    <div class="box-title">CONCEPTO: CONVENTION OVER CONFIGURATION (CoC)</div>
+    <p>
+      Ruby on Rails se rige por el principio de <em>"Convención sobre Configuración"</em>. Esto significa que si seguimos los estándares de nombres predeterminados de Rails (por ejemplo, clase en singular como <code>Customer</code> y tabla en plural en la base de datos como <code>customers</code>), el framework resuelve automáticamente las relaciones, consultas SQL y enlaces sin necesidad de escribir extensos archivos de configuración XML o JSON.
+    </p>
+  </div>
+</section>
+
+<!-- CAPITULO 2 -->
+<section id="cap2">
+  <h2 class="chapter">Capítulo 2 — Análisis funcional y casos de uso</h2>
+  <p>
+    El sistema cuenta con flujos de trabajo claros orientados a recepcionistas y administradores del taller. Analicemos los casos de uso principales:
+  </p>
+
+  <h3>2.1 Caso de Uso 1: Registro y Gestión de Clientes</h3>
+  <ol>
+    <li>El recepcionista accede a la sección <code>/clientes</code>.</li>
+    <li>Visualiza el listado de clientes paginado de 5 en 5 (gracias al motor <strong>Pagy</strong>).</li>
+    <li>Puede filtrar la lista escribiendo cualquier término en la barra de búsqueda; la consulta se ejecuta con coincidencias insensibles a mayúsculas/minúsculas.</li>
+    <li>Al pulsar <em>"Nuevo Cliente"</em>, completa el formulario con nombre, apellido y teléfono.</li>
+    <li>Al pulsar <em>"Guardar"</em>, el sistema valida la entrada y redirige al listado general.</li>
+    <li>Al entrar a editar un cliente, el sistema despliega el formulario y además una tabla integrada con <strong>todos los vehículos que posee dicho cliente</strong>, con enlaces directos para registrar nuevos autos asociados a él.</li>
+  </ol>
+
+  <h3>2.2 Caso de Uso 2: Gestión de Vehículos (Autos)</h3>
+  <ol>
+    <li>Desde el panel lateral o desde la ficha de un cliente, se accede a <code>/cars</code>.</li>
+    <li>El listado presenta marca, modelo, año, patente, color (mostrado con un badge visual estilizado) y el nombre completo del cliente propietario.</li>
+    <li>Al crear un nuevo auto, se selecciona el cliente correspondiente de una lista desplegable ordenada alfabéticamente. Si se accedió desde la ficha de un cliente específico, el selector viene precargado automáticamente.</li>
+  </ol>
+
+  <div class="box box-porque">
+    <div class="box-title">¿POR QUÉ BORRADO EN CASCADA (DEPENDENT: :DESTROY)?</div>
+    <p>
+      En el modelo de datos, un automóvil no puede existir en el taller sin un cliente titular responsable. Si un cliente fuese eliminado del sistema y sus autos quedasen huérfanos, la base de datos sufriría una inconsistencia referencial. Por este motivo, la asociación en Rails se define como <code>has_many :cars, dependent: :destroy</code> y en PostgreSQL se refuerza con una clave foránea (<code>foreign_key</code>).
+    </p>
+  </div>
+</section>
+
+<!-- CAPITULO 3 -->
+<section id="cap3">
+  <h2 class="chapter">Capítulo 3 — Arquitectura del sistema y pila tecnológica</h2>
+  <p>
+    La arquitectura de <strong>taller-mecanico</strong> se fundamenta en el patrón <strong>MVC (Modelo-Vista-Controlador)</strong> con renderizado del lado del servidor (SSR), enriquecido por el ecosistema moderno de <strong>Hotwire</strong>.
+  </p>
+
+  <table>
+    <tr><th>Componente</th><th>Tecnología utilizada</th><th>Responsabilidad en la Arquitectura</th></tr>
+    <tr><td><strong>Modelo (M)</strong></td><td>Active Record + PostgreSQL</td><td>Gestión de datos, lógica relacional 1:N, scopes y consultas Arel SQL.</td></tr>
+    <tr><td><strong>Vista (V)</strong></td><td>Action View (ERB) + Tailwind CSS</td><td>Estructura HTML semántica, estilos utilitarios modernos y componentes UI responsivos.</td></tr>
+    <tr><td><strong>Controlador (C)</strong></td><td>Action Controller</td><td>Recepción de peticiones HTTP, sanitización de parámetros con <code>params.expect</code> y coordinación.</td></tr>
+    <tr><td><strong>Interactividad</strong></td><td>Hotwire (Turbo + Stimulus)</td><td>Navegación fluida sin recarga de pantalla completa y menú lateral dinámico.</td></tr>
+    <tr><td><strong>Paginación</strong></td><td>Pagy</td><td>Fragmentación de consultas en bloques ligeros sin penalizar la memoria del servidor.</td></tr>
+  </table>
+
+  <div class="box box-profunda">
+    <div class="box-title">INSPECCIÓN PROFUNDA: POSTGRESQL VS SQLITE</div>
+    <p>
+      Mientras que SQLite es ideal para prototipado rápido, entornos de desarrollo locales simples o aplicaciones de un solo archivo, <strong>PostgreSQL</strong> es el motor relacional estándar de facto en producción para sistemas empresariales:
+    </p>
+    <ul>
+      <li><strong>Concurrencia real</strong>: Permite lecturas y escrituras simultáneas multi-hilo y multi-proceso sin bloqueos a nivel de archivo (evitando el error <em>database is locked</em>).</li>
+      <li><strong>Índices avanzados y tipos de datos</strong>: Soporta tipos nativos como JSONB, UUID, arreglos y búsquedas por expresiones con índices funcionales.</li>
+      <li><strong>Integridad estricta</strong>: Chequeo exhaustivo y transaccional de restricciones de claves foráneas y tipos de datos.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== PARTE II ==================== -->
+<h2 class="parte">Parte II · Entorno de Desarrollo y Creación</h2>
+
+<!-- CAPITULO 4 -->
+<section id="cap4">
+  <h2 class="chapter">Capítulo 4 — Ruby esencial para desarrolladores Rails</h2>
+  <p>
+    Ruby on Rails no es un lenguaje nuevo; es una librería (gem) escrita en <strong>Ruby</strong>. Para entender el código de este taller mecánico, es vital dominar las estructuras idiomáticas que Rails utiliza permanentemente.
+  </p>
+
+  <h3>4.1 Símbolos vs Strings</h3>
+  <p>
+    En Ruby, un <code>String</code> es mutable y genera una nueva asignación de memoria cada vez que se declara. Un <code>Symbol</code> (inicia con dos puntos, ej. <code>:first_name</code>, <code>:destroy</code>) es inmutable y único en el entorno de ejecución, lo que lo hace perfecto como identificador de claves en hashes y parámetros:
+  </p>
+  <pre class="code"><code># Strings (objetos distintos en memoria)
+"nombre".object_id != "nombre".object_id # true
+
+# Símbolos (mismo objeto en memoria para toda la vida del proceso)
+:nombre.object_id == :nombre.object_id   # true</code></pre>
+
+  <h3>4.2 Hashes con sintaxis moderna</h3>
+  <p>
+    Cuando la clave de un hash es un símbolo, Ruby permite omitir la flecha hashrocket (<code>=></code>) usando los dos puntos a la derecha:
+  </p>
+  <pre class="code"><code># Sintaxis antigua:
+cliente = { :first_name => "Carlos", :phone => "11223344" }
+
+# Sintaxis idiomática moderna (usada en Rails):
+cliente = { first_name: "Carlos", phone: "11223344" }</code></pre>
+
+  <h3>4.3 Bloques, Lambdas y Scopes</h3>
+  <p>
+    Un bloque es una porción de código delimitada por <code>do ... end</code> o llaves <code>{ ... }</code>. En el modelo <code>Customer</code> de este proyecto encontramos una expresión lambda (<code>-> { ... }</code>) para ordenar:
+  </p>
+  <pre class="code"><code>scope :ordered, -> { order(Arel.sql("LOWER(last_name)"), Arel.sql("LOWER(first_name)")) }</code></pre>
+  <p>
+    La flecha <code>-></code> crea un bloque ejecutable que Active Record evalúa cada vez que se llama al método <code>Customer.ordered</code>, garantizando que el ordenamiento se resuelva de forma dinámica.
+  </p>
+
+  <h3>4.4 Métodos con signos de exclamación e interrogación</h3>
+  <ul>
+    <li><strong>Predicados (<code>?</code>)</strong>: Métodos que retornan un booleano (<code>true</code> o <code>false</code>), por ejemplo <code>params[:q].present?</code> o <code>current_page?(path)</code>.</li>
+    <li><strong>Mutantes o peligrosos (<code>!</code>)</strong>: Métodos que lanzan una excepción si fallan, por ejemplo <code>@car.destroy!</code> en <code>CarsController</code>. Si la eliminación fallara por una restricción de base de datos, Rails detendrá la ejecución lanzando un error en lugar de retornar silenciosamente <code>false</code>.</li>
+  </ul>
+</section>
+
+<!-- CAPITULO 5 -->
+<section id="cap5">
+  <h2 class="chapter">Capítulo 5 — Instalación del entorno: Ruby y PostgreSQL</h2>
+  <p>
+    Para ejecutar y desarrollar este proyecto en Windows, Linux o macOS, requerimos una configuración de entorno consistente.
+  </p>
+
+  <h3>5.1 Instalación de Ruby y PostgreSQL</h3>
+  <ol>
+    <li>
+      <strong>Ruby (Versión 4.0.6 o compatible 3.4+)</strong>:
+      En Windows se recomienda utilizar <strong>RubyInstaller with Devkit</strong> (MSYS2). En entornos Linux/macOS se aconseja un gestor de versiones como <code>mise</code>, <code>asdf</code> o <code>rbenv</code>.
+    </li>
+    <li>
+      <strong>PostgreSQL</strong>:
+      Descargar e instalar PostgreSQL (versión 15, 16 o superior). Durante la instalación, se define el usuario <code>postgres</code> y una contraseña maestra que debe coincidir con la configuración del entorno.
+    </li>
+    <li>
+      <strong>Herramientas de compilación C</strong>:
+      La gema <code>pg</code> requiere compilar código nativo C para interactuar con la librería cliente <code>libpq</code> de PostgreSQL.
+    </li>
+  </ol>
+
+  <div class="box box-error">
+    <div class="box-title">ERROR TÍPICO: FALLO AL INSTALAR LA GEMA PG EN WINDOWS</div>
+    <p>
+      Si al ejecutar <code>bundle install</code> la terminal arroja un error indicando que no se encuentra <code>libpq-fe.h</code>, es porque falta el paquete de desarrollo en MSYS2. Se soluciona ejecutando en la consola de Ruby:
+    </p>
+    <pre class="code"><code>ridk exec pacman -S --noconfirm mingw-w64-ucrt-x86_64-postgresql</code></pre>
+  </div>
+</section>
+
+<!-- CAPITULO 6 -->
+<section id="cap6">
+  <h2 class="chapter">Capítulo 6 — Creación de la aplicación Rails con PostgreSQL</h2>
+  <p>
+    A diferencia de una aplicación predeterminada que usa SQLite, este proyecto fue inicializado especificando el motor PostgreSQL y la integración oficial de Tailwind CSS.
+  </p>
+
+  <h3>6.1 Comando de inicialización</h3>
+  <pre class="code"><code>rails new taller-mecanico --database=postgresql --css=tailwind</code></pre>
+
+  <div class="box box-leer">
+    <div class="box-title">ANÁLISIS DE LOS PARÁMETROS DEL COMANDO</div>
+    <ul>
+      <li><code>--database=postgresql</code>: Configura el archivo <code>config/database.yml</code> con el adaptador <code>postgresql</code> e incluye la gema <code>pg</code> en el <code>Gemfile</code>.</li>
+      <li><code>--css=tailwind</code>: Agrega la gema <code>tailwindcss-rails</code>, genera el archivo de configuración <code>tailwind.config.js</code> y crea el script <code>Procfile.dev</code> para compilar utilidades CSS en tiempo real.</li>
+    </ul>
+  </div>
+
+  <h3>6.2 Configuración de conexión en <code>config/database.yml</code></h3>
+  <pre class="code"><code>default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: taller_mecanico_development
+  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "postgres") %>
+  host: localhost
+  port: 5432</code></pre>
+
+  <h3>6.3 Creación de las bases de datos</h3>
+  <p>Una vez configuradas las credenciales, se ejecutan las tareas de Rake para aprovisionar las bases de datos en el servidor local de Postgres:</p>
+  <pre class="code"><code>bin/rails db:create</code></pre>
+</section>
+
+<!-- ==================== PARTE III ==================== -->
+<h2 class="parte">Parte III · Base de Datos y Modelos</h2>
+
+<!-- CAPITULO 7 -->
+<section id="cap7">
+  <h2 class="chapter">Capítulo 7 — Análisis de la base de datos y diseño relacional</h2>
+  <p>
+    El diseño de la base de datos en <strong>taller-mecanico</strong> responde al principio de normalización relacional: separar la entidad del cliente (propietario) de la entidad del vehículo (bien material atendido).
+  </p>
+
+  <h3>7.1 Diagrama Entidad-Relación (DER)</h3>
+  <div class="diagram">
+    <pre class="code"><code>┌───────────────────────────────────────┐
+│              CUSTOMERS                │
+├───────────────────────────────────────┤
+│ id           : bigint (PK)            │
+│ first_name   : character varying      │
+│ last_name    : character varying      │
+│ phone        : character varying      │
+│ active       : boolean (default true) │
+│ created_at   : timestamp without zone │
+│ updated_at   : timestamp without zone │
+└───────────────────┬───────────────────┘
+                    │ 1
+                    │
+                    │ posee (has_many)
+                    │
+                    │ N
+┌───────────────────▼───────────────────┐
+│                 CARS                  │
+├───────────────────────────────────────┤
+│ id           : bigint (PK)            │
+│ customer_id  : bigint (FK -> customers│
+│ brand        : character varying      │
+│ model        : character varying      │
+│ year         : integer                │
+│ plate        : character varying      │
+│ color        : character varying      │
+│ created_at   : timestamp without zone │
+│ updated_at   : timestamp without zone │
+└───────────────────────────────────────┘</code></pre>
+  </div>
+
+  <div class="box box-concepto">
+    <div class="box-title">CLAVES FORÁNEAS EN POSTGRESQL</div>
+    <p>
+      El campo <code>customer_id</code> en la tabla <code>cars</code> almacena el número de <code>id</code> del cliente titular. En PostgreSQL, esta relación está blindada con una restricción formal (<code>FOREIGN KEY (customer_id) REFERENCES customers(id)</code>). Esto impide que se pueda insertar un auto con un <code>customer_id</code> que no exista en la tabla de clientes.
+    </p>
+  </div>
+</section>
+
+<!-- CAPITULO 8 -->
+<section id="cap8">
+  <h2 class="chapter">Capítulo 8 — Migraciones en Rails: evolución del esquema</h2>
+  <p>
+    Las migraciones son archivos en Ruby que modifican la estructura de la base de datos de manera incremental e independiente del motor SQL utilizado. En este proyecto se puede apreciar una evolución histórica realista a través de 7 archivos de migración.
+  </p>
+
+  <h3>8.1 Línea de tiempo de las migraciones</h3>
+  <table>
+    <tr><th>Archivo de Migración</th><th>Operación realizada</th><th>Observaciones didácticas</th></tr>
+    <tr><td><code>20260831213914_create_customers.rb</code></td><td>Crea la tabla <code>customers</code> inicial con el campo <code>active: boolean</code>.</td><td>Primera definición de la entidad cliente.</td></tr>
+    <tr><td><code>20260831215025_create_carts.rb</code></td><td>Crea tabla <code>carts</code> (error tipográfico por "cars").</td><td>Situación clásica donde se crea una tabla equivocada durante el desarrollo.</td></tr>
+    <tr><td><code>20260831215430_add_firt_name_last_name_to_customers.rb</code></td><td>Agrega columnas <code>first_name</code> y <code>last_name</code> a <code>customers</code>.</td><td>Ampliación progresiva de campos sin destruir la tabla existente.</td></tr>
+    <tr><td><code>20260831222837_add_phone_number_to_customers.rb</code></td><td>Agrega columna <code>phone</code> a <code>customers</code>.</td><td>Incorporación del número de contacto.</td></tr>
+    <tr><td><code>20261012213129_create_cars.rb</code></td><td>Crea formalmente la tabla <code>cars</code> con <code>brand</code>, <code>model</code>, <code>year</code>, <code>plate</code>, <code>color</code>.</td><td>Creación de la entidad del vehículo.</td></tr>
+    <tr><td><code>20261019133000_add_customer_to_cars.rb</code></td><td>Agrega <code>customer_id</code> como referencia con índice y clave foránea.</td><td>Enlace relacional: <code>add_reference :cars, :customer, null: false, foreign_key: true</code>.</td></tr>
+    <tr><td><code>20261019140000_drop_carts.rb</code></td><td>Elimina la tabla redundante <code>carts</code>.</td><td>Saneamiento y limpieza de tablas obsoletas.</td></tr>
+  </table>
+
+  <h3>8.2 Anatomía de una migración de clave foránea</h3>
+  <pre class="code"><code>class AddCustomerToCars < ActiveRecord::Migration[8.1]
+  def change
+    add_reference :cars, :customer, null: false, foreign_key: true
+  end
+end</code></pre>
+  <div class="box box-leer">
+    <div class="box-title">¿QUÉ HACE ESTA MIGRACIÓN EN POSTGRESQL?</div>
+    <ol>
+      <li>Crea la columna <code>customer_id BIGINT NOT NULL</code> en la tabla <code>cars</code>.</li>
+      <li>Crea un índice de búsqueda en Postgres: <code>CREATE INDEX index_cars_on_customer_id ON cars (customer_id);</code>.</li>
+      <li>Añade la restricción de integridad referencial: <code>ALTER TABLE cars ADD CONSTRAINT fk_rails_... FOREIGN KEY (customer_id) REFERENCES customers (id);</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- CAPITULO 9 -->
+<section id="cap9">
+  <h2 class="chapter">Capítulo 9 — Active Record en profundidad: consultas y scopes</h2>
+  <p>
+    <strong>Active Record</strong> es el motor ORM (Object-Relational Mapping) de Rails. Su función es traducir tablas de bases de datos a clases de Ruby, filas a objetos e instrucciones de persistencia a sentencias SQL seguras contra inyecciones maliciosas.
+  </p>
+
+  <h3>9.1 Scopes personalizados y Arel SQL</h3>
+  <p>
+    En el modelo <code>Customer</code>, el listado debe mostrarse alfabéticamente por apellido y nombre, sin que las mayúsculas interfieran en el orden (en ASCII, una 'Z' mayúscula va antes que una 'a' minúscula).
+  </p>
+  <pre class="code"><code>scope :ordered, -> { order(Arel.sql("LOWER(last_name)"), Arel.sql("LOWER(first_name)")) }</code></pre>
+
+  <div class="box box-porque">
+    <div class="box-title">¿POR QUÉ SE USA Arel.sql?</div>
+    <p>
+      Rails 6, 7 y 8 protegen las consultas bloqueando fragmentos de texto crudo en métodos como <code>order</code> si detectan riesgo de inyección SQL. Al envolver la función SQL nativa con <code>Arel.sql("LOWER(...)")</code>, le indicamos explícitamente a Rails que se trata de una instrucción SQL segura y sanitizada por el programador.
+    </p>
+  </div>
+
+  <h3>9.2 Consultas con parámetros con nombre (Named Binds)</h3>
+  <p>
+    En el controlador <code>CustomersController</code>, la búsqueda por texto se implementa con interpolación segura:
+  </p>
+  <pre class="code"><code>criterio = "%#{params[:q]}%".downcase
+@customers = Customer.where(
+  "lower(first_name) LIKE :q OR lower(last_name) LIKE :q OR lower(phone) LIKE :q",
+  q: criterio
+)</code></pre>
+  <p>
+    El uso de <code>:q</code> evita que un atacante cierre comillas para inyectar código malicioso (SQL Injection), ya que el adaptador de PostgreSQL parametriza el valor antes de enviarlo al servidor de base de datos.
+  </p>
+</section>
+
+<!-- CAPITULO 10 -->
+<section id="cap10">
+  <h2 class="chapter">Capítulo 10 — Modelos del sistema: Customer y Car (relación 1:N)</h2>
+  <p>
+    Analicemos el código fuente exacto de los dos modelos nucleares del taller mecánico.
+  </p>
+
+  <h3>10.1 Modelo <code>Customer</code> (app/models/customer.rb)</h3>
+  <pre class="code"><code>class Customer < ApplicationRecord
+  has_many :cars, dependent: :destroy
+
+  scope :ordered, -> { order(Arel.sql("LOWER(last_name)"), Arel.sql("LOWER(first_name)")) }
+
+  def full_name
+    [ first_name, last_name ].compact_blank.join(" ")
+  end
+end</code></pre>
+
+  <div class="box box-leer">
+    <div class="box-title">ANÁLISIS DEL MÉTODO full_name</div>
+    <p>
+      El método <code>full_name</code> aprovecha el método de Ruby <code>compact_blank</code> (incorporado en Active Support). Si <code>last_name</code> o <code>first_name</code> estuviesen en blanco o fuesen <code>nil</code>, no se generan dobles espacios indeseados al invocar <code>join(" ")</code>.
+    </p>
+  </div>
+
+  <h3>10.2 Modelo <code>Car</code> (app/models/car.rb)</h3>
+  <pre class="code"><code>class Car < ApplicationRecord
+  belongs_to :customer
+end</code></pre>
+
+  <div class="box box-experimento">
+    <div class="box-title">EXPERIMENTO EN LA CONSOLA DE RAILS</div>
+    <p>Abre tu terminal y ejecuta <code>bin/rails console</code> para interactuar con los modelos:</p>
+    <pre class="code"><code># 1. Crear un cliente
+c = Customer.create(first_name: "María", last_name: "González", phone: "351-5551234")
+c.full_name # => "María González"
+
+# 2. Crear un auto asociado directamente a ese cliente
+auto = c.cars.create(brand: "Toyota", model: "Yaris", year: 2022, plate: "AE123CD", color: "Gris")
+
+# 3. Comprobar la relación bidireccional
+auto.customer.full_name # => "María González"
+c.cars.count            # => 1
+
+# 4. Probar el borrado en cascada
+c.destroy
+Car.find_by(id: auto.id) # => nil (el auto fue eliminado automáticamente)</code></pre>
+  </div>
+</section>
+
+<!-- ==================== PARTE IV ==================== -->
+<h2 class="parte">Parte IV · Rutas y Controladores</h2>
+
+<!-- CAPITULO 11 -->
+<section id="cap11">
+  <h2 class="chapter">Capítulo 11 — Sistema de enrutamiento: DSL y convenciones REST</h2>
+  <p>
+    El archivo <code>config/routes.rb</code> define el mapa de navegación de la aplicación web, asociando una solicitud HTTP entrante (Verbo + URI) con el controlador y método correspondiente.
+  </p>
+
+  <h3>11.1 Código fuente de <code>config/routes.rb</code></h3>
+  <pre class="code"><code>Rails.application.routes.draw do
+  resources :cars, except: :show
+
+  # Health check para monitoreo y despliegue
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # Ruta raíz del sistema
+  root "home#index"
+
+  # Rutas hispanizadas para Clientes
+  get "clientes", to: "customers#index", as: :clientes
+  get "clientes/new", to: "customers#new", as: :new_cliente
+  post "clientes", to: "customers#create"
+  get "clientes/:id/edit", to: "customers#edit", as: :edit_cliente
+  patch "clientes/:id", to: "customers#update", as: :cliente
+  delete "clientes/:id", to: "customers#destroy"
+end</code></pre>
+
+  <div class="box box-concepto">
+    <div class="box-title">RECURSOS REST AUTOMÁTICOS VS RUTAS INDIVIDUALES</div>
+    <p>
+      Para la entidad <code>cars</code> se utiliza la macro REST: <code>resources :cars, except: :show</code>. Esta sola línea genera automáticamente las 6 rutas estándar (index, new, create, edit, update, destroy), excluyendo <code>show</code> porque el diseño del taller no requiere una página individual para cada auto, sino que los gestiona directamente desde la tabla de autos y la ficha del cliente.
+    </p>
+    <p>
+      Para los clientes, se declararon rutas manuales en español (<code>/clientes</code>) mapeándolas al controlador en inglés <code>CustomersController</code>, creando los helpers de URL <code>clientes_path</code>, <code>new_cliente_path</code> y <code>edit_cliente_path</code>.
+    </p>
+  </div>
+</section>
+
+<!-- CAPITULO 12 -->
+<section id="cap12">
+  <h2 class="chapter">Capítulo 12 — Controladores: flujo de acciones y parámetros seguros</h2>
+  <p>
+    Los controladores heredan de <code>ApplicationController</code> y actúan como intermediarios: extraen datos de la solicitud HTTP, invocan operaciones en los modelos y seleccionan la vista a renderizar.
+  </p>
+
+  <h3>12.1 Controlador <code>CustomersController</code></h3>
+  <pre class="code"><code>class CustomersController < ApplicationController
+  def index
+    if params[:q].present?
+      criterio = "%#{params[:q]}%".downcase
+      @customers = Customer.where(
+        "lower(first_name) LIKE :q OR lower(last_name) LIKE :q OR lower(phone) LIKE :q",
+        q: criterio
+      )
+    else
+      @pagy, @customers = pagy(:offset, Customer.ordered.order(:id))
+    end
+  end
+
+  def new
+    @customer = Customer.new
+  end
+
+  def create
+    @customer = Customer.new(customer_params)
+    @customer.save
+    redirect_to clientes_path
+  end
+
+  def edit
+    @customer = Customer.includes(:cars).find(params[:id])
+  end
+
+  def update
+    @customer = Customer.find(params[:id])
+    @customer.update(customer_params)
+    redirect_to clientes_path
+  end
+
+  def destroy
+    @customer = Customer.find(params[:id])
+    @customer.destroy
+    redirect_to clientes_path
+  end
+
+  private
+
+  def customer_params
+    params.require(:customer).permit(:first_name, :last_name, :phone)
+  end
+end</code></pre>
+
+  <div class="box box-leer">
+    <div class="box-title">OPTIMIZACIÓN N+1 CON includes(:cars)</div>
+    <p>
+      En la acción <code>edit</code>, se ejecuta: <code>Customer.includes(:cars).find(params[:id])</code>.<br>
+      Al usar <code>includes(:cars)</code>, Active Record carga en una sola consulta adicional todos los automóviles de ese cliente. Cuando la vista <code>edit.html.erb</code> itera sobre <code>@customer.cars</code>, no efectúa nuevas consultas a PostgreSQL, previniendo el temido problema de rendimiento <em>N+1 queries</em>.
+    </p>
+  </div>
+
+  <h3>12.2 Controlador <code>CarsController</code> y la novedad de Rails 8: <code>params.expect</code></h3>
+  <pre class="code"><code>class CarsController < ApplicationController
+  before_action :set_car, only: %i[ edit update destroy ]
+  before_action :load_customers_for_form, only: %i[ new create edit update ]
+
+  def index
+    @cars = Car.includes(:customer).order(:brand, :model)
+  end
+
+  def new
+    @car = Car.new(customer_id: params[:customer_id])
+  end
+
+  def edit
+  end
+
+  def create
+    @car = Car.new(car_params)
+
+    if @car.save
+      redirect_to cars_path, notice: "Auto guardado correctamente."
+    else
+      render :new, status: :unprocessable_content
+    end
+  end
+
+  def update
+    if @car.update(car_params)
+      redirect_to cars_path, notice: "Auto actualizado correctamente."
+    else
+      render :edit, status: :unprocessable_content
+    end
+  end
+
+  def destroy
+    @car.destroy!
+    redirect_to cars_path, notice: "Auto eliminado.", status: :see_other
+  end
+
+  private
+
+  def set_car
+    @car = Car.find(params.expect(:id))
+  end
+
+  def car_params
+    params.expect(car: [ :brand, :model, :year, :plate, :color, :customer_id ])
+  end
+
+  def load_customers_for_form
+    @customers = Customer.ordered
+  end
+end</code></pre>
+
+  <div class="box box-concepto">
+    <div class="box-title">NOVEDAD DE RAILS 8: params.expect</div>
+    <p>
+      En versiones previas de Rails, los Strong Parameters se definían como <code>params.require(:car).permit(...)</code> y para parámetros individuales se usaba <code>params[:id]</code>. Si el parámetro requerido no estaba presente, <code>params.require</code> lanzaba un error <code>ActionController::ParameterMissing</code> que debía capturarse.<br>
+      Rails 8 introduce la directiva <strong><code>params.expect(...)</code></strong>, mucho más concisa y estricta, que valida tanto parámetros individuales obligatorios (<code>params.expect(:id)</code>) como estructuras completas de hashes y listas blancas.
+    </p>
+  </div>
+</section>
+
+<!-- ==================== PARTE V ==================== -->
+<h2 class="parte">Parte V · Vistas, Tailwind CSS y Experiencia de Usuario</h2>
+
+<!-- CAPITULO 13 -->
+<section id="cap13">
+  <h2 class="chapter">Capítulo 13 — Vistas ERB, formularios y diseño con parciales</h2>
+  <p>
+    Rails utiliza el motor de plantillas <strong>ERB (Embedded Ruby)</strong> para generar código HTML dinámico en el servidor. En este proyecto se destaca el uso de vistas parciales (archivos que inician con guión bajo <code>_</code>) para evitar la duplicación de código (Principio DRY: <em>Don't Repeat Yourself</em>).
+  </p>
+
+  <h3>13.1 Parciales de formularios</h3>
+  <p>
+    Tanto para clientes (<code>app/views/customers/_form.html.erb</code>) como para autos (<code>app/views/cars/_form.html.erb</code>), el formulario de creación (<code>new.html.erb</code>) y el de actualización (<code>edit.html.erb</code>) comparten el mismo archivo parcial:
+  </p>
+  <pre class="code"><code><!-- app/views/cars/new.html.erb -->
+&lt;div class="max-w-2xl mx-auto"&gt;
+  &lt;h1 class="text-2xl font-bold text-gray-900 mb-6"&gt;Registrar nuevo auto&lt;/h1&gt;
+  &lt;%= render "form", car: @car %&gt;
+&lt;/div&gt;</code></pre>
+
+  <h3>13.2 Parcial anidado: Ficha de autos del cliente (<code>_cars.html.erb</code>)</h3>
+  <p>
+    Cuando se edita un cliente en <code>customers/edit.html.erb</code>, el sistema no solo muestra los datos personales, sino que incrusta el sub-listado de sus vehículos:
+  </p>
+  <pre class="code"><code>&lt;!-- app/views/customers/edit.html.erb --&gt;
+&lt;div class="grid grid-cols-1 lg:grid-cols-3 gap-8"&gt;
+  &lt;div class="lg:col-span-1"&gt;
+    &lt;h2 class="text-lg font-semibold mb-4"&gt;Editar Cliente&lt;/h2&gt;
+    &lt;%= render "form", customer: @customer %&gt;
+  &lt;/div&gt;
+
+  &lt;div class="lg:col-span-2"&gt;
+    &lt;div class="flex items-center justify-between mb-4"&gt;
+      &lt;h2 class="text-lg font-semibold"&gt;Vehículos registrados&lt;/h2&gt;
+      &lt;%= link_to "Nuevo auto para este cliente", new_car_path(customer_id: @customer.id),
+                  class: "text-sm text-teal-600 hover:underline font-medium" %&gt;
+    &lt;/div&gt;
+    &lt;%= render "cars", cars: @customer.cars %&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</section>
+
+<!-- CAPITULO 14 -->
+<section id="cap14">
+  <h2 class="chapter">Capítulo 14 — Integración de Tailwind CSS v4 en Rails</h2>
+  <p>
+    En lugar de escribir hojas de estilos CSS tradicionales con cientos de selectores de clase, este proyecto utiliza <strong>Tailwind CSS</strong>, un framework basado en clases de utilidad atómicas aplicadas directamente sobre los elementos HTML.
+  </p>
+
+  <h3>14.1 Beneficios de la integración con <code>tailwindcss-rails</code></h3>
+  <ul>
+    <li><strong>Cero dependencias de Node.js</strong>: Rails descarga automáticamente un ejecutable binario nativo para el sistema operativo en uso (Windows x64 en este caso).</li>
+    <li><strong>Purga y escaneo automático</strong>: El compilador analiza todos los archivos <code>.erb</code>, <code>.rb</code> y <code>.js</code>, extrayendo únicamente las clases utilizadas, generando un archivo CSS ultraliviano para producción.</li>
+  </ul>
+
+  <h3>14.2 Ejecución con <code>Procfile.dev</code></h3>
+  <p>Durante el desarrollo local, el comando para levantar el servidor y el observador de Tailwind es:</p>
+  <pre class="code"><code># Ejecuta Foreman o bin/dev:
+bin/dev</code></pre>
+  <p>El archivo <code>Procfile.dev</code> contiene:</p>
+  <pre class="code"><code>web: bin/rails server
+css: bin/rails tailwindcss:watch</code></pre>
+
+  <h3>14.3 Clases de utilidad recurrentes en la interfaz del taller</h3>
+  <table>
+    <tr><th>Clase Tailwind</th><th>Efecto visual</th><th>Ejemplo de uso en el proyecto</th></tr>
+    <tr><td><code>bg-blue-900</code></td><td>Fondo azul marino oscuro</td><td>Barra lateral del taller (sidebar)</td></tr>
+    <tr><td><code>text-teal-700 bg-teal-50</code></td><td>Texto verde azulado con fondo suave</td><td>Tarjetas métricas (KPIs) en el Dashboard</td></tr>
+    <tr><td><code>rounded-lg border border-gray-200</code></td><td>Bordes redondeados y marco sutil</td><td>Tarjetas y contenedores de formularios</td></tr>
+    <tr><td><code>grid grid-cols-1 sm:grid-cols-2</code></td><td>Layout en cuadrícula responsivo</td><td>Disposición de tarjetas métricas adaptables</td></tr>
+  </table>
+</section>
+
+<!-- CAPITULO 15 -->
+<section id="cap15">
+  <h2 class="chapter">Capítulo 15 — Hotwire: Aceleración con Turbo y Stimulus JS</h2>
+  <p>
+    <strong>Hotwire</strong> (HTML Over The Wire) es la filosofía de Rails para crear aplicaciones reactivas y modernas enviando HTML directamente desde el servidor en lugar de complejas APIs de JSON consumidas por frameworks pesados.
+  </p>
+
+  <h3>15.1 Turbo Drive</h3>
+  <p>
+    Está activo por defecto mediante la gema <code>turbo-rails</code>. Cada vez que el usuario hace clic en un enlace o envía un formulario, Turbo intercepta la petición, la ejecuta mediante <code>fetch</code> en segundo plano y reemplaza el contenido del <code>&lt;body&gt;</code> sin recargar los recursos estáticos (CSS/JS) en el navegador. Esto otorga la velocidad y fluidez de una Single Page Application (SPA).
+  </p>
+
+  <h3>15.2 Stimulus JS: Controlador del Sidebar</h3>
+  <p>
+    Para elementos que sí requieren lógica en el cliente (como abrir y cerrar el menú lateral en dispositivos móviles), se utiliza <strong>Stimulus</strong>. El código se encuentra en <code>app/javascript/controllers/sidebar_controller.js</code>:
+  </p>
+  <pre class="code"><code>import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = [ "panel", "opener", "content" ]
+
+  toggle() {
+    this.panelTarget.classList.toggle("-translate-x-full")
+    this.openerTarget.classList.toggle("hidden")
+    this.contentTarget.classList.toggle("ml-0")
+    this.contentTarget.classList.toggle("ml-56")
+  }
+}</code></pre>
+
+  <div class="box box-leer">
+    <div class="box-title">CÓMO VINCULA STIMULUS EL HTML CON JAVASCRIPT</div>
+    <ol>
+      <li>En <code>application.html.erb</code>, el <code>&lt;body&gt;</code> declara: <code>data-controller="sidebar"</code>.</li>
+      <li>El panel lateral declara: <code>data-sidebar-target="panel"</code>.</li>
+      <li>El botón para colapsar declara: <code>data-action="click-&gt;sidebar#toggle"</code>.</li>
+      <li>Al hacer clic, Stimulus ejecuta el método <code>toggle()</code>, alternando las clases de Tailwind sin necesidad de escribir selectores manuales con <code>document.querySelector</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- CAPITULO 16 -->
+<section id="cap16">
+  <h2 class="chapter">Capítulo 16 — Paginación de alto rendimiento con Pagy</h2>
+  <p>
+    Cuando el taller almacena cientos o miles de clientes, renderizar toda la lista en una sola pantalla colapsaría el rendimiento de la red y el navegador. Para solucionar esto se integró la gema <strong>Pagy</strong>.
+  </p>
+
+  <h3>16.1 Configuración en <code>config/initializers/pagy.rb</code></h3>
+  <pre class="code"><code>Pagy.options[:limit] = 5</code></pre>
+  <p>
+    Esta directiva establece que por defecto cada página mostrará únicamente 5 registros a la vez.
+  </p>
+
+  <h3>16.2 Uso en el Controlador y Vista</h3>
+  <pre class="code"><code># En CustomersController#index:
+@pagy, @customers = pagy(:offset, Customer.ordered.order(:id))</code></pre>
+  <p>En la vista <code>app/views/customers/index.html.erb</code> se renderiza la barra de navegación:</p>
+  <pre class="code"><code>&lt;!-- Muestra: Página 1 de 4, botones anterior y siguiente --&gt;
+&lt;%= raw pagy_nav(@pagy) if @pagy.pages &gt; 1 %&gt;</code></pre>
+
+  <div class="box box-porque">
+    <div class="box-title">¿POR QUÉ PAGY EN VEZ DE KAMINARI O WILL_PAGINATE?</div>
+    <p>
+      Pagy fue escrita desde cero con obsesión por la velocidad: consume hasta <strong>30 veces menos memoria</strong> y es hasta <strong>40 veces más rápida</strong> que alternativas históricas como Kaminari, sin sobrecargar los objetos de Active Record con métodos innecesarios.
+    </p>
+  </div>
+</section>
+
+<!-- ==================== PARTE VI ==================== -->
+<h2 class="parte">Parte VI · Avanzado, Práctica y Reconstrucción</h2>
+
+<!-- CAPITULO 17 -->
+<section id="cap17">
+  <h2 class="chapter">Capítulo 17 — Buenas prácticas, seguridad y validaciones</h2>
+  <p>
+    A partir de la auditoría técnica realizada, identificamos áreas clave para fortalecer la robustez del sistema en un entorno de producción.
+  </p>
+
+  <h3>17.1 Incorporación de Validaciones de Modelo</h3>
+  <p>
+    Actualmente los modelos <code>Customer</code> y <code>Car</code> delegan parte de la integridad a la base de datos. Para ofrecer una experiencia de usuario superior con mensajes de error descriptivos en los formularios, se recomienda añadir validaciones a nivel de modelo:
+  </p>
+  <pre class="code"><code># app/models/customer.rb
+class Customer < ApplicationRecord
+  has_many :cars, dependent: :destroy
+
+  validates :first_name, :last_name, presence: true, length: { maximum: 60 }
+  validates :phone, presence: true, format: { with: /\A[0-9\-+\s()]+\z/, message: "solo permite números y guiones" }
+
+  scope :ordered, -> { order(Arel.sql("LOWER(last_name)"), Arel.sql("LOWER(first_name)")) }
+  # ...
+end
+
+# app/models/car.rb
+class Car < ApplicationRecord
+  belongs_to :customer
+
+  validates :brand, :model, presence: true
+  validates :plate, presence: true, uniqueness: { case_sensitive: false }
+  validates :year, numericality: { only_integer: true, greater_than: 1950, less_than_or_equal_to: -> { Time.current.year + 1 } }
+end</code></pre>
+
+  <h3>17.2 Manejo de Errores en Controladores</h3>
+  <p>
+    En <code>CustomersController#create</code> y <code>#update</code>, es una buena práctica evaluar el éxito de la operación para renderizar nuevamente el formulario con el código de estado HTTP <code>422 Unprocessable Entity</code> si alguna validación no se cumple:
+  </p>
+  <pre class="code"><code>def create
+  @customer = Customer.new(customer_params)
+  if @customer.save
+    redirect_to clientes_path, notice: "Cliente registrado con éxito."
+  else
+    render :new, status: :unprocessable_entity
+  end
+end</code></pre>
+</section>
+
+<!-- CAPITULO 18 -->
+<section id="cap18">
+  <h2 class="chapter">Capítulo 18 — Testing con Minitest</h2>
+  <p>
+    Rails incluye por defecto el framework <strong>Minitest</strong> para pruebas unitarias, de integración y de sistema sin necesidad de librerías externas.
+  </p>
+
+  <h3>18.1 Prueba de integración para el listado de clientes</h3>
+  <p>Archivo <code>test/controllers/customers_controller_test.rb</code>:</p>
+  <pre class="code"><code>require "test_helper"
+
+class CustomersControllerTest < ActionDispatch::IntegrationTest
+  test "debe obtener la pagina de clientes exitosamente" do
+    get clientes_url
+    assert_response :success
+  end
+
+  test "debe crear un nuevo cliente con datos validos" do
+    assert_difference("Customer.count", 1) do
+      post clientes_url, params: {
+        customer: { first_name: "Roberto", last_name: "Pérez", phone: "3514445566" }
+      }
+    end
+    assert_redirected_to clientes_path
+  end
+end</code></pre>
+
+  <p>Para ejecutar las pruebas en consola:</p>
+  <pre class="code"><code>bin/rails test</code></pre>
+</section>
+
+<!-- CAPITULO 19 -->
+<section id="cap19">
+  <h2 class="chapter">Capítulo 19 — Despliegue en producción con Kamal y Docker</h2>
+  <p>
+    Rails 8 introduce como estándar oficial la herramienta de despliegue <strong>Kamal</strong> (antiguamente llamada MRSK), diseñada para empaquetar la aplicación en una imagen de Docker y desplegarla en cualquier servidor Linux (VPS en DigitalOcean, Hetzner, AWS EC2, etc.) sin cuotas mensuales por plataforma propietaria.
+  </p>
+
+  <h3>19.1 Componentes de Kamal en el proyecto</h3>
+  <ul>
+    <li><code>Dockerfile</code>: Describe la compilación de Ruby, la instalación de gemas, la precompilación de Tailwind CSS y la creación de un usuario sin privilegios root por seguridad.</li>
+    <li><code>config/deploy.yml</code>: Archivo de configuración que especifica la IP del servidor, el registro de imágenes Docker (Docker Hub o GitHub Packages) y las variables de entorno de producción.</li>
+  </ul>
+</section>
+
+<!-- CAPITULO 20 -->
+<section id="cap20">
+  <h2 class="chapter">Capítulo 20 — Guía de reconstrucción del sistema desde cero</h2>
+  <p>
+    Si necesitas replicar exactamente este sistema en otra máquina o proyecto universitario, sigue esta secuencia cronológica de comandos y pasos:
+  </p>
+
+  <ol>
+    <li>
+      <strong>Crear el proyecto con PostgreSQL y Tailwind</strong>:
+      <pre class="code"><code>rails new taller-mecanico -d postgresql --css tailwind
+cd taller-mecanico</code></pre>
+    </li>
+    <li>
+      <strong>Agregar gemas al Gemfile</strong>:
+      <pre class="code"><code>bundle add pagy</code></pre>
+    </li>
+    <li>
+      <strong>Configurar inicializador de Pagy</strong> en <code>config/initializers/pagy.rb</code>:
+      <pre class="code"><code>Pagy.options[:limit] = 5</code></pre>
+    </li>
+    <li>
+      <strong>Generar migraciones y modelos</strong>:
+      <pre class="code"><code>bin/rails generate model Customer first_name:string last_name:string phone:string active:boolean
+bin/rails generate model Car customer:references brand:string model:string year:integer plate:string color:string
+bin/rails db:create
+bin/rails db:migrate</code></pre>
+    </li>
+    <li>
+      <strong>Definir asociaciones y scopes</strong>:
+      <p>Configurar <code>has_many :cars, dependent: :destroy</code> en <code>Customer</code> y <code>belongs_to :customer</code> en <code>Car</code>.</p>
+    </li>
+    <li>
+      <strong>Generar controladores</strong>:
+      <pre class="code"><code>bin/rails generate controller Home index
+bin/rails generate controller Customers
+bin/rails generate controller Cars</code></pre>
+    </li>
+    <li>
+      <strong>Configurar rutas en <code>config/routes.rb</code></strong> vinculando el Dashboard como <code>root</code> y los recursos de <code>cars</code> y <code>clientes</code>.
+    </li>
+    <li>
+      <strong>Levantar el entorno de desarrollo</strong>:
+      <pre class="code"><code>bin/dev</code></pre>
+      <p>Acceder a <code>http://localhost:3000</code> en el navegador.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- GLOSARIO -->
+<section id="glosario">
+  <h2 class="chapter">Glosario de términos</h2>
+  <table>
+    <tr><th>Término</th><th>Definición técnica en Rails</th></tr>
+    <tr><td><strong>Active Record</strong></td><td>Patrón de arquitectura de software y librería ORM donde los objetos contienen tanto los datos de la fila como el comportamiento de persistencia en base de datos.</td></tr>
+    <tr><td><strong>Strong Parameters</strong></td><td>Mecanismo de seguridad de Action Controller que obliga a declarar explícitamente qué atributos del formulario están autorizados a persistirse, impidiendo ataques de asignación masiva.</td></tr>
+    <tr><td><strong>params.expect</strong></td><td>Método introducido en Rails 8 para validar de forma estricta los parámetros esperados de una petición HTTP.</td></tr>
+    <tr><td><strong>Turbo Drive</strong></td><td>Tecnología de Hotwire que reemplaza las peticiones tradicionales del navegador por peticiones asíncronas automáticas, acelerando la navegación sin escribir JavaScript manual.</td></tr>
+    <tr><td><strong>Stimulus</strong></td><td>Framework JavaScript modesto que se conecta a fragmentos de HTML mediante atributos <code>data-controller</code>, <code>data-action</code> y <code>data-target</code>.</td></tr>
+    <tr><td><strong>Propshaft</strong></td><td>El nuevo pipeline de activos por defecto de Rails 8, enfocado en velocidad y simplicidad sin transformaciones innecesarias de archivos.</td></tr>
+    <tr><td><strong>Pagy</strong></td><td>Librería de paginación para Ruby de altísima velocidad y bajo consumo de memoria.</td></tr>
+  </table>
+</section>
+
+<!-- EJERCICIOS -->
+<section id="ejercicios">
+  <h2 class="chapter">Ejercicios propuestos</h2>
+  <div class="box box-ejercicio">
+    <div class="box-title">EJERCICIO 1: VALIDACIÓN DE PATENTE ÚNICA</div>
+    <p>
+      Modifica el modelo <code>Car</code> para asegurar que no se puedan dar de alta dos vehículos con la misma matrícula (patente). Comprueba en la consola de Rails qué sucede si intentas guardar un auto duplicado.
+    </p>
+  </div>
+
+  <div class="box box-ejercicio">
+    <div class="box-title">EJERCICIO 2: FILTRO DE AUTOS POR MARCA</div>
+    <p>
+      Añade una barra de búsqueda en <code>app/views/cars/index.html.erb</code> y actualiza <code>CarsController#index</code> para permitir filtrar vehículos según la marca o modelo introducido por el usuario.
+    </p>
+  </div>
+
+  <div class="box box-ejercicio">
+    <div class="box-title">EJERCICIO 3: NUEVA ENTIDAD "MECÁNICOS"</div>
+    <p>
+      Genera el modelo y controlador para gestionar los mecánicos del taller con los campos <code>name:string</code> y <code>specialty:string</code>. Agrega la nueva sección en la barra lateral (<code>sidebar</code>).
+    </p>
+  </div>
+</section>
+
+<!-- ==================== PIE DE PÁGINA Y SCRIPTS ==================== -->
+<footer>
+  <p>
+    Manual Académico de Ruby on Rails 8 — Sistema de Gestión de Taller Mecánico.<br>
+    Material pedagógico y técnico elaborado para Programación IV. Código fuente auditado y verificado.
+  </p>
+</footer>
+
+</main>
+
+<script>
+  // Sistema interactivo de progreso persistido en localStorage
+  (function () {
+    var KEY = 'manual_taller_mecanico_progreso';
+    var state;
+    try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { state = {}; }
+
+    function refresh() {
+      var checks = document.querySelectorAll('input[data-chapter]');
+      var done = 0;
+      checks.forEach(function (cb) {
+        var id = cb.getAttribute('data-chapter');
+        if (state[id]) { cb.checked = true; }
+        else { cb.checked = false; }
+      });
+      checks.forEach(function (cb) {
+        if (cb.checked) done++;
+      });
+      var total = checks.length;
+      var fill = document.getElementById('progfill');
+      var text = document.getElementById('progtext');
+      if (fill) fill.style.width = total ? Math.round((done / total) * 100) + '%' : '0%';
+      if (text) text.textContent = done + ' de ' + total + ' capítulos completados';
+    }
+
+    document.addEventListener('change', function (e) {
+      var cb = e.target;
+      if (cb && cb.matches('input[data-chapter]')) {
+        var id = cb.getAttribute('data-chapter');
+        state[id] = cb.checked;
+        try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (err) {}
+        refresh();
+      }
+    });
+
+    refresh();
+  })();
+</script>
+</body>
+</html>
+

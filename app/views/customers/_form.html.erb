@@ -1,0 +1,21 @@
+<%= form_with model: customer, url: url, class: "form-card" do |f| %>
+  <div class="form-fila">
+    <%= f.label :first_name, "Nombre" %>
+    <%= f.text_field :first_name, placeholder: "Juan" %>
+  </div>
+
+  <div class="form-fila">
+    <%= f.label :last_name, "Apellido" %>
+    <%= f.text_field :last_name, placeholder: "Pérez" %>
+  </div>
+
+  <div class="form-fila">
+    <%= f.label :phone, "Teléfono" %>
+    <%= f.telephone_field :phone, placeholder: "11 1234-5678" %>
+  </div>
+
+  <div class="form-acciones">
+    <%= link_to "Cancelar", clientes_path, class: "btn btn-secundario" %>
+    <%= f.submit "Guardar", class: "btn" %>
+  </div>
+<% end %>

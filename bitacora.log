@@ -1,0 +1,16 @@
+# BITÁCORA DE ACCIONES Y COMANDOS - TALLER MECÁNICO
+================================================================================
+Inicio de registro: 2026-11-19 22:36:00 -03:00
+
+[2026-11-19 22:18:00] CORRECCIÓN PAGY Y BÚSQUEDA EN CLIENTES
+- Modificado: app/controllers/customers_controller.rb (Se incluye siempre @pagy al buscar con filtro).
+- Modificado: app/views/customers/index.html.erb (Uso de ruta correcta clientes_path y @pagy.pages > 1).
+- Modificado: config/initializers/pagy.rb (Actualizado a Pagy::OPTIONS[:limit] = 5).
+- Modificado: app/assets/stylesheets/application.css (Estilos globales para paginación Pagy).
+- Ejecutado: ruby bin/rails test (8 tests, 0 fallos).
+
+[2026-11-19 22:36:30] PLANIFICACIÓN GLOBAL DEL PROYECTO
+- Leído: tentativa_schema.md
+- Creado: PlanDesdeSchema.md con el plan paso a paso detallado.
+- Creado: bitacora.log para registro continuo de cambios.
+================================================================================

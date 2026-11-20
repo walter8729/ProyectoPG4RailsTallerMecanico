@@ -1,0 +1,72 @@
+<div class="mb-8">
+  <h1 class="text-2xl font-bold text-gray-900">Bienvenido al Taller Mecánico</h1>
+  <p class="text-gray-500 mt-1">Panel general del sistema de gestión del taller.</p>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+  <div class="p-4 border border-gray-200 rounded-lg bg-white">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+      </div>
+      <div>
+        <p class="text-xl font-bold text-gray-900"><%= @customers_count %></p>
+        <p class="text-sm text-gray-500">Clientes registrados</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-4 border border-gray-200 rounded-lg bg-white">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V9l2-5h10l2 5v8M5 9h14"/></svg>
+      </div>
+      <div>
+        <p class="text-xl font-bold text-gray-900"><%= @cars_count %></p>
+        <p class="text-sm text-gray-500">Autos registrados</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div>
+  <h2 class="text-lg font-semibold text-gray-900 mb-3">Accesos rápidos</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <%= link_to clientes_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-teal-600 hover:bg-teal-50 transition-colors group" do %>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 group-hover:bg-teal-100 group-hover:text-teal-700">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+        </div>
+        <div>
+          <p class="font-medium text-gray-900">Clientes</p>
+          <p class="text-sm text-gray-500">Ver y administrar clientes</p>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to cars_path, class: "p-4 border border-gray-200 rounded-lg bg-white hover:border-teal-600 hover:bg-teal-50 transition-colors group" do %>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 group-hover:bg-teal-100 group-hover:text-teal-700">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V9l2-5h10l2 5v8M5 9h14"/></svg>
+        </div>
+        <div>
+          <p class="font-medium text-gray-900">Autos</p>
+          <p class="text-sm text-gray-500">Ver y administrar autos</p>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="p-4 border border-gray-200 border-dashed rounded-lg bg-gray-50">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.5 6h9m-9 6h9m-9 6h9M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg>
+        </div>
+        <div>
+          <p class="font-medium text-gray-500">Órdenes de trabajo</p>
+          <p class="text-sm text-gray-400">Próximamente</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

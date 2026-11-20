@@ -1,0 +1,45 @@
+<%= render "shared/page_header",
+      title: "Clientes",
+      button_text: "Agregar cliente",
+      button_url: new_cliente_path %>
+
+
+
+<%= form_with url: clientes_path, method: :get, local: true, class: "form-fila" do |form| %>
+  <div>
+    <!-- <%= form.label :q, "Buscar cliente: " %> -->
+    <%= form.text_field :q, value: params[:q], placeholder: "Escribir para buscar" %>
+    <%= form.submit "Buscar"%>
+    <% if params[:q].present? %>
+      <%= link_to "Ver todos", clientes_path %>
+    <% end %>
+  </div>
+<% end %>
+
+
+<div class="tabla-wrap">
+  <table class="tabla">
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Teléfono</th>
+      <th></th>
+    </tr>
+    <% @customers.each do |customer| %>
+      <tr>
+        <td><%= customer.first_name %></td>
+        <td><%= customer.last_name %></td>
+        <td><%= customer.phone %></td>
+        <td class="tabla-acciones">
+          <%= link_to "Editar", edit_cliente_path(customer), class: "tabla-link" %>
+          <%= button_to "Borrar", cliente_path(customer),
+                method: :delete,
+                class: "tabla-link tabla-link-borrar",
+                form: { onsubmit: "return confirm('¿Borrar este cliente?')" } %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+</div>
+
+<%== @pagy.series_nav if @pagy.pages > 1 %>

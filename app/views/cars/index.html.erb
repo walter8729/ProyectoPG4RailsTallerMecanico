@@ -1,0 +1,32 @@
+<%= render "shared/page_header",
+           title: "Autos",
+           button_text: "Agregar auto",
+           button_url: new_car_path %>
+
+<div class="tabla-wrap">
+  <table class="tabla">
+    <tr>
+      <th>Cliente</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Color</th>
+      <th></th>
+    </tr>
+    <% @cars.each do |car| %>
+      <tr>
+        <td><%= car.customer&.full_name %></td>
+        <td><%= car.brand %></td>
+        <td><%= car.model %></td>
+        <td><%= car.color %></td>
+        <td class="tabla-acciones">
+          <%= link_to "Editar", edit_car_path(car), class: "tabla-link" %>
+          <%= button_to "Borrar", car_path(car),
+                        method: :delete,
+                        class: "tabla-link tabla-link-borrar",
+                        form: { onsubmit: "return confirm('¿Borrar este car?')" } %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+

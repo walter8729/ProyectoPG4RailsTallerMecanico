@@ -1,0 +1,122 @@
+FLUJO CLIENTES (index / new / create / edit / update / destroy)
+Ayuda memoria - Prog4, Taller mecanico
+=================================================
+
+
+EL FLUJO
+-------------------------------------------------
+  index    GET    /clientes          lista
+  new      GET    /clientes/new      formulario
+  create   POST   /clientes          guarda y vuelve al listado
+  edit     GET    /clientes/:id/edit formulario con datos
+  update   PATCH  /clientes/:id      guarda cambios y vuelve al listado
+  destroy  DELETE /clientes/:id      borra y vuelve al listado
+
+  Agregar cliente  ->  new_cliente_path        ->  customers#new
+  Guardar (alta)   ->  POST clientes_path      ->  customers#create
+  Editar           ->  edit_cliente_path(id)   ->  customers#edit
+  Guardar (edicion)->  PATCH cliente_path(id)  ->  customers#update
+  Borrar           ->  DELETE cliente_path(id) ->  customers#destroy
+  Cancelar         ->  clientes_path           ->  customers#index
+
+
+RUTAS (sin resources)
+-------------------------------------------------
+  get    "clientes",          to: "customers#index",   as: :clientes
+  get    "clientes/new",      to: "customers#new",     as: :new_cliente
+  post   "clientes",          to: "customers#create"
+  get    "clientes/:id/edit", to: "customers#edit",    as: :edit_cliente
+  patch  "clientes/:id",      to: "customers#update",  as: :cliente
+  delete "clientes/:id",      to: "customers#destroy"
+
+  clientes_path         GET    /clientes        y tambien POST /clientes
+  new_cliente_path      GET    /clientes/new
+  edit_cliente_path(id) GET    /clientes/:id/edit
+  cliente_path(id)      PATCH  /clientes/:id
+  cliente_path(id)      DELETE /clientes/:id
+
+
+CONTROLLER
+-------------------------------------------------
+  index
+    @customers = Customer.order(:first_name, :last_name)
+
+  new
+    @customer = Customer.new
+
+  create
+    @customer = Customer.new(customer_params)
+    @customer.save
+    redirect_to clientes_path
+
+  edit
+    @customer = Customer.find(params[:id])
+
+  update
+    @customer = Customer.find(params[:id])
+    @customer.update(customer_params)
+    redirect_to clientes_path
+
+  destroy
+    @customer = Customer.find(params[:id])
+    @customer.destroy
+    redirect_to clientes_path
+
+  customer_params
+    permit :first_name, :last_name, :phone
+
+
+QUIEN MUESTRA QUE
+-------------------------------------------------
+  index.html.erb     page_header + tabla (Editar / Borrar)
+  new.html.erb       page_header + form
+  edit.html.erb      page_header + form
+
+
+COMPONENTES
+-------------------------------------------------
+  shared/_page_header
+    title, y opcional button_text + button_url
+    En new y edit solo se pasa el titulo.
+
+  customers/_form
+    Campos: nombre, apellido, telefono
+    Recibe url:
+      new  -> POST clientes_path
+      edit -> PATCH cliente_path(customer)
+
+
+REUTILIZAR
+-------------------------------------------------
+  index = header + tabla
+  new   = header + form
+  edit  = header + form
+
+  El header se reusa cambiando textos y la URL del boton.
+  El form se reusa cambiando la url.
+  cliente_path se reusa: PATCH actualiza, DELETE borra.
+
+
+ARCHIVOS
+-------------------------------------------------
+  config/routes.rb
+  app/controllers/customers_controller.rb
+  app/views/customers/index.html.erb
+  app/views/customers/new.html.erb
+  app/views/customers/edit.html.erb
+  app/views/customers/_form.html.erb
+  app/views/shared/_page_header.html.erb
+  app/assets/stylesheets/application.css
+
+
+RECORDAR
+-------------------------------------------------
+  Agregar cliente es un link a new, no un JS.
+  Editar es un link a edit, no un JS.
+  Borrar es un button_to DELETE con confirm del navegador.
+  new y edit son otras paginas: ahi vive el formulario.
+
+  No usamos resources. Cada ruta es un get, post, patch o delete.
+
+-------------------------------------------------
+Prog4 - Taller mecanico
