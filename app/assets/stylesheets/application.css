@@ -66,18 +66,21 @@
 .tabla td {
   padding: 14px 16px;
   text-align: left;
+  vertical-align: middle;
   border-bottom: 1px solid #e5e7eb;
   overflow-wrap: anywhere;
 }
 
 .tabla th {
   background: #f3f4f6;
+  vertical-align: middle;
 }
 
 .tabla th:last-child,
 .tabla td:last-child {
   width: 140px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .tabla-acciones {
@@ -85,6 +88,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
+  height: 100%;
 }
 
 .tabla-acciones form {
