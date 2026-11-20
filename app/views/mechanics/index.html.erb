@@ -31,6 +31,7 @@
           <td><%= mechanic.phone %></td>
           <td>
             <div class="tabla-acciones">
+              <%= link_to icon_eye, mechanic_path(mechanic), class: "btn-accion btn-accion-ver", title: "Ver detalle del mecánico" %>
               <%= link_to icon_pencil, edit_mechanic_path(mechanic), class: "btn-accion btn-accion-editar", title: "Editar mecánico" %>
               <%= button_to icon_trash, mechanic_path(mechanic),
                     method: :delete,

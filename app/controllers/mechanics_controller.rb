@@ -1,5 +1,5 @@
 class MechanicsController < ApplicationController
-  before_action :set_mechanic, only: %i[edit update destroy]
+  before_action :set_mechanic, only: %i[show edit update destroy]
 
   def index
     mechanics = Mechanic.ordered
@@ -15,19 +15,22 @@ class MechanicsController < ApplicationController
     @pagy, @mechanics = pagy(:offset, mechanics)
   end
 
+  def show
+    # @mechanic ya cargado con sus ordenes por before_action
+  end
+
   def new
     @mechanic = Mechanic.new
   end
 
   def edit
-    @mechanic = Mechanic.includes(orders: [:car, :customer]).find(params.expect(:id))
   end
 
   def create
     @mechanic = Mechanic.new(mechanic_params)
 
     if @mechanic.save
-      redirect_to mechanics_path, notice: "Mecánico registrado correctamente."
+      redirect_to mechanic_path(@mechanic), notice: "Mecánico registrado correctamente."
     else
       render :new, status: :unprocessable_content
     end
@@ -35,7 +38,7 @@ class MechanicsController < ApplicationController
 
   def update
     if @mechanic.update(mechanic_params)
-      redirect_to mechanics_path, notice: "Mecánico actualizado correctamente."
+      redirect_to mechanic_path(@mechanic), notice: "Mecánico actualizado correctamente."
     else
       render :edit, status: :unprocessable_content
     end
@@ -52,7 +55,7 @@ class MechanicsController < ApplicationController
   private
 
   def set_mechanic
-    @mechanic = Mechanic.find(params.expect(:id))
+    @mechanic = Mechanic.includes(orders: [:car, :customer]).find(params.expect(:id))
   end
 
   def mechanic_params

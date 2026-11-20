@@ -86,6 +86,23 @@
     <span style="font-size: 0.85rem; color: #6b7280;">Podés agregar y quitar servicios a esta orden usando el formulario inferior.</span>
   </div>
 
+  <% if @order.order_details.empty? %>
+    <!-- Banner guía (Ley de Tesler): orienta al usuario al paso 2 cuando no hay servicios -->
+    <div style="display: flex; align-items: flex-start; gap: 12px; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;">
+      <svg style="width: 20px; height: 20px; color: #d97706; flex-shrink: 0; margin-top: 2px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <p style="margin: 0 0 4px 0; font-weight: 600; color: #92400e; font-size: 0.95rem;">
+          Paso 2: Agregá los servicios realizados
+        </p>
+        <p style="margin: 0; color: #78350f; font-size: 0.875rem;">
+          La orden fue creada correctamente. Ahora usá el formulario de abajo para agregar los servicios del taller. El total se calcula automáticamente.
+        </p>
+      </div>
+    </div>
+  <% end %>
+
   <table class="tabla">
     <thead>
       <tr>

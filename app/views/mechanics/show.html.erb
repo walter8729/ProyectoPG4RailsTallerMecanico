@@ -1,0 +1,39 @@
+<%= render "shared/page_header",
+      title: @mechanic.full_name,
+      button_text: "Editar Mecánico",
+      button_url: edit_mechanic_path(@mechanic) %>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px;">
+
+  <!-- Tarjeta Datos del Mecánico -->
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">Datos del Mecánico</h3>
+    <p style="margin: 6px 0;"><strong>Nombre completo:</strong> <%= @mechanic.full_name %></p>
+    <p style="margin: 6px 0;">
+      <strong>Especialidad:</strong>
+      <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.9rem; margin-left: 4px;">
+        <%= @mechanic.specialty %>
+      </span>
+    </p>
+    <p style="margin: 6px 0;"><strong>Teléfono:</strong> <%= @mechanic.phone %></p>
+  </div>
+
+  <!-- Tarjeta Resumen de Órdenes -->
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">Resumen de Actividad</h3>
+    <p style="margin: 6px 0;"><strong>Total de órdenes asignadas:</strong> <%= @mechanic.orders.size %></p>
+    <% pendientes = @mechanic.orders.count { |o| o.status == "Pendiente" } %>
+    <% en_proceso = @mechanic.orders.count { |o| o.status == "En Proceso" } %>
+    <% completadas = @mechanic.orders.count { |o| o.status == "Completada" } %>
+    <p style="margin: 6px 0;"><strong>Pendientes:</strong> <%= pendientes %></p>
+    <p style="margin: 6px 0;"><strong>En Proceso:</strong> <%= en_proceso %></p>
+    <p style="margin: 6px 0;"><strong>Completadas:</strong> <%= completadas %></p>
+  </div>
+</div>
+
+<!-- Órdenes asignadas -->
+<%= render "mechanics/orders", mechanic: @mechanic %>
+
+<div style="margin-top: 24px; display: flex; gap: 10px;">
+  <%= link_to "Volver a Mecánicos", mechanics_path, class: "btn btn-secundario" %>
+</div>

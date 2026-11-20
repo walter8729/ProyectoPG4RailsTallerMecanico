@@ -18,8 +18,15 @@
             <td><%= car.brand %></td>
             <td><%= car.model %></td>
             <td><%= car.plate %></td>
-            <td class="tabla-acciones">
-              <%= link_to "Editar", edit_car_path(car), class: "tabla-link" %>
+            <td>
+              <div class="tabla-acciones">
+                <%= link_to edit_car_path(car), class: "btn-accion", title: "Editar auto" do %>
+                  <%= icon_pencil %>
+                <% end %>
+                <%= link_to new_order_path(car_id: car.id), class: "btn-accion", title: "Nueva orden para este auto" do %>
+                  <%= icon_order_add %>
+                <% end %>
+              </div>
             </td>
           </tr>
         <% end %>

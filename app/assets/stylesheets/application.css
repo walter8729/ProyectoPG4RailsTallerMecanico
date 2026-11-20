@@ -366,3 +366,35 @@ button.tabla-link {
 
 
 
+
+/* =========================================================
+   LEY DE FITTS — Separación visual del botón destructivo
+   El botón Eliminar tiene una separación clara respecto
+   a las acciones de edición/visualización, para evitar
+   clics accidentales.
+   ========================================================= */
+.btn-accion-borrar {
+  margin-left: 4px;
+  border-left: 1px solid #e5e7eb;
+  padding-left: 8px;
+}
+
+/* =========================================================
+   LEY DE MILLER — Agrupación de campos en formularios
+   Separador visual entre grupos de campos relacionados
+   para reducir la carga cognitiva del usuario.
+   ========================================================= */
+.form-grupo-separador {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+}
+
+.form-grupo-titulo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 16px 0 8px 0;
+}

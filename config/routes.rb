@@ -1,20 +1,21 @@
 Rails.application.routes.draw do
   root "home#index"
 
-  # Clientes
+  # Clientes (ruta show agregada para consistencia de patron Jakob)
   get "clientes", to: "customers#index", as: :clientes
   get "clientes/new", to: "customers#new", as: :new_cliente
   post "clientes", to: "customers#create"
+  get "clientes/:id", to: "customers#show", as: :cliente
   get "clientes/:id/edit", to: "customers#edit", as: :edit_cliente
-  patch "clientes/:id", to: "customers#update", as: :cliente
+  patch "clientes/:id", to: "customers#update"
   delete "clientes/:id", to: "customers#destroy"
 
   # Autos
   resources :cars, except: :show
 
-  # Servicios y Mecánicos
+  # Servicios y Mecánicos (show agregado a mecanicos para consistencia Jakob)
   resources :services, except: :show, path: "servicios"
-  resources :mechanics, except: :show, path: "mecanicos"
+  resources :mechanics, path: "mecanicos"
 
   # Órdenes de Trabajo y sus detalles de servicios anidados (100% Rails puro)
   resources :orders, path: "ordenes" do

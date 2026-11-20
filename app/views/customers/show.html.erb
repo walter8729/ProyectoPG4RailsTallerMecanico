@@ -1,0 +1,49 @@
+<%= render "shared/page_header",
+      title: "#{@customer.full_name}",
+      button_text: "Editar Cliente",
+      button_url: edit_cliente_path(@customer) %>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px;">
+
+  <!-- Tarjeta Datos del Cliente -->
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">Datos del Cliente</h3>
+
+    <p style="margin: 6px 0;">
+      <strong>Documento:</strong>
+      <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.9rem; margin-left: 4px;">
+        <%= @customer.document_type %>: <%= @customer.document_number %>
+      </span>
+    </p>
+    <p style="margin: 6px 0;"><strong>Nombre completo:</strong> <%= @customer.full_name %></p>
+    <p style="margin: 6px 0;"><strong>Teléfono:</strong> <%= @customer.phone %></p>
+    <% if @customer.email.present? %>
+      <p style="margin: 6px 0;"><strong>Email:</strong> <%= @customer.email %></p>
+    <% end %>
+    <% if @customer.address.present? %>
+      <p style="margin: 6px 0;"><strong>Dirección:</strong> <%= @customer.address %></p>
+    <% end %>
+  </div>
+
+  <!-- Tarjeta Resumen -->
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">Resumen</h3>
+    <p style="margin: 6px 0;"><strong>Autos registrados:</strong> <%= @customer.cars.count %></p>
+    <p style="margin: 6px 0;"><strong>Órdenes de trabajo:</strong>
+      <% total_orders = @customer.cars.joins(:orders).count rescue 0 %>
+      <%= total_orders %>
+    </p>
+  </div>
+</div>
+
+<!-- Autos del cliente -->
+<%= render "customers/cars", customer: @customer %>
+
+<div style="margin-top: 24px; display: flex; gap: 10px;">
+  <%= link_to "Volver a Clientes", clientes_path, class: "btn btn-secundario" %>
+  <%= button_to "Eliminar Cliente", cliente_path(@customer),
+        method: :delete,
+        class: "btn",
+        style: "background: #dc2626;",
+        form: { onsubmit: "return confirm('¿Eliminar este cliente y todos sus datos?')" } %>
+</div>

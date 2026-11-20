@@ -1,4 +1,6 @@
 class CustomersController < ApplicationController
+  before_action :set_customer, only: %i[show edit update destroy]
+
   def index
     customers = Customer.ordered
 
@@ -13,6 +15,10 @@ class CustomersController < ApplicationController
     @pagy, @customers = pagy(:offset, customers)
   end
 
+  def show
+    # @customer ya cargado con sus autos por before_action
+  end
+
   def new
     @customer = Customer.new
   end
@@ -20,27 +26,24 @@ class CustomersController < ApplicationController
   def create
     @customer = Customer.new(customer_params)
     if @customer.save
-      redirect_to clientes_path, notice: "Cliente registrado correctamente."
+      redirect_to cliente_path(@customer), notice: "Cliente registrado correctamente."
     else
       render :new, status: :unprocessable_content
     end
   end
 
   def edit
-    @customer = Customer.includes(:cars).find(params.expect(:id))
   end
 
   def update
-    @customer = Customer.find(params.expect(:id))
     if @customer.update(customer_params)
-      redirect_to clientes_path, notice: "Cliente actualizado correctamente."
+      redirect_to cliente_path(@customer), notice: "Cliente actualizado correctamente."
     else
       render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
-    @customer = Customer.find(params.expect(:id))
     if @customer.destroy
       redirect_to clientes_path, notice: "Cliente eliminado correctamente.", status: :see_other
     else
@@ -49,6 +52,10 @@ class CustomersController < ApplicationController
   end
 
   private
+
+  def set_customer
+    @customer = Customer.includes(:cars).find(params.expect(:id))
+  end
 
   def customer_params
     params.expect(customer: [ :first_name, :last_name, :phone, :document_type, :document_number, :email, :address ])

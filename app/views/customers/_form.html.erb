@@ -10,11 +10,9 @@
     </div>
   <% end %>
 
-  <!-- 
-    Campo Tipo de Documento:
-    Permite seleccionar entre CI (Cédula), RUC o Extranjero.
-    Es obligatorio (required: true).
-  -->
+  <%# --- Grupo 1: Identificación (Ley de Miller) --- %>
+  <p class="form-grupo-titulo">Identificación</p>
+
   <div class="form-fila">
     <%= f.label :document_type, "Tipo Doc. *" %>
     <%= f.select :document_type,
@@ -24,13 +22,7 @@
           required: true %>
   </div>
 
-  <!-- 
-    Campo Número de Documento:
-    - pattern: Expresión regular en frontend ^[A-Za-z0-9]+(-[A-Za-z0-9]+)?$
-      Acepta números (con o sin puntos), RUC con guión (ej: 80012345-6) y pasaportes alfanuméricos.
-      Evita que se envíen caracteres extraños, dobles guiones o guiones sueltos.
-    - title: Mensaje explicativo para el usuario al posar el mouse o si el formato no coincide.
-  -->
+  <%# pattern acepta CI (con/sin puntos), RUC con guión (80012345-6) y pasaportes alfanuméricos %>
   <div class="form-fila">
     <%= f.label :document_number, "Nro. Doc. *" %>
     <%= f.text_field :document_number,
@@ -41,6 +33,10 @@
           placeholder: "ej. 4589234 o 80012345-6",
           class: ("field-invalid" if customer.errors[:document_number].any?) %>
   </div>
+
+  <hr class="form-grupo-separador">
+  <%# --- Grupo 2: Datos Personales (Ley de Miller) --- %>
+  <p class="form-grupo-titulo">Datos Personales</p>
 
   <div class="form-fila">
     <%= f.label :first_name, "Nombre *" %>
@@ -56,6 +52,10 @@
     <%= f.label :phone, "Teléfono *" %>
     <%= f.telephone_field :phone, required: true, placeholder: "ej. 0981 123 456", class: ("field-invalid" if customer.errors[:phone].any?) %>
   </div>
+
+  <hr class="form-grupo-separador">
+  <%# --- Grupo 3: Contacto adicional (Ley de Miller) --- %>
+  <p class="form-grupo-titulo">Contacto (opcional)</p>
 
   <div class="form-fila">
     <%= f.label :email, "Email" %>

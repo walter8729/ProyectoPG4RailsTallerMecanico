@@ -3,18 +3,21 @@
       button_text: "Nueva orden de trabajo",
       button_url: new_order_path %>
 
-<%= form_with url: orders_path, method: :get, local: true, class: "barra-busqueda" do |form| %>
-  <%= form.text_field :q, value: params[:q], placeholder: "Buscar por placa, chasis, cliente u observaciones" %>
-  <% if params[:status].present? %>
-    <%= form.hidden_field :status, value: params[:status] %>
+<div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+  <%= form_with url: orders_path, method: :get, local: true, class: "barra-busqueda", style: "margin-bottom: 0; flex: 1;" do |form| %>
+    <%= form.text_field :q, value: params[:q], placeholder: "Buscar por placa, chasis, cliente u observaciones" %>
+    <% if params[:status].present? %>
+      <%= form.hidden_field :status, value: params[:status] %>
+    <% end %>
+    <%= form.submit "Buscar", class: "btn" %>
+    <% if params[:q].present? || params[:status].present? %>
+      <%= link_to "Limpiar filtros", orders_path, class: "link-limpiar" %>
+    <% end %>
   <% end %>
-  <%= form.submit "Buscar", class: "btn" %>
-  <% if params[:q].present? || params[:status].present? %>
-    <%= link_to "Limpiar filtros", orders_path, class: "link-limpiar" %>
-  <% end %>
-<% end %>
+</div>
 
-<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;">
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+  <span style="font-size: 0.85rem; font-weight: 600; color: #374151; white-space: nowrap;">Filtrar por estado:</span>
   <%= link_to "Todas", orders_path(q: params[:q]), class: "btn #{'btn-secundario' if params[:status].present?}" %>
   <%= link_to "Pendientes", orders_path(status: "Pendiente", q: params[:q]), class: "btn #{'btn-secundario' unless params[:status] == 'Pendiente'}" %>
   <%= link_to "En Proceso", orders_path(status: "En Proceso", q: params[:q]), class: "btn #{'btn-secundario' unless params[:status] == 'En Proceso'}" %>

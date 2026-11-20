@@ -27,7 +27,7 @@ class MechanicsControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to mechanics_url
+    assert_redirected_to mechanic_url(Mechanic.last)
   end
 
   test "should get edit" do
@@ -42,7 +42,7 @@ class MechanicsControllerTest < ActionDispatch::IntegrationTest
         specialty: "Jefe de Taller"
       }
     }
-    assert_redirected_to mechanics_url
+    assert_redirected_to mechanic_url(@mechanic)
   end
 
   test "should destroy mechanic" do
