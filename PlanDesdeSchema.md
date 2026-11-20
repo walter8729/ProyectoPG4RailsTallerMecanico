@@ -70,16 +70,16 @@ Cliente (1) ----< (N) Auto (1) ----< (N) Orden (1) ----< (N) DetalleOrden (N) >-
 ---
 
 ### Fase 4: Módulo Central de Órdenes de Trabajo (`orders`)
-- [ ] **Paso 4.1: Listado de Órdenes (`orders#index`)**
+- [x] **Paso 4.1: Listado de Órdenes (`orders#index`)**
   - Filtros: por texto (placa, chasis, cliente) y por estado (`Pendiente`, `En Proceso`, `Completada`).
   - Paginación Pagy y Badges visuales según estado.
-- [ ] **Paso 4.2: Formulario de Creación/Edición de Órdenes**
+- [x] **Paso 4.2: Formulario de Creación/Edición de Órdenes**
   - Selección de Auto y Cliente.
   - Fecha de orden y estimada de entrega.
   - Selección múltiple / anidada de Servicios con cantidad y precio sugerido.
   - Asignación de mecánico(s) responsable(s).
   - Validaciones front y back (fechas coherentes, al menos un auto seleccionado).
-- [ ] **Paso 4.3: Vista de Detalle de Orden (`orders#show`)**
+- [x] **Paso 4.3: Vista de Detalle de Orden (`orders#show`)**
   - Ficha imprimible/limpia con datos del cliente, auto, mecánicos asignados, desglose de ítems y total en Guaraníes.
   - Botones de acción rápida: cambiar estado (`En Proceso`, `Completada`).
 

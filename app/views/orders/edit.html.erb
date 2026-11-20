@@ -1,0 +1,6 @@
+<%= render "shared/page_header",
+      title: "Editar Orden de Trabajo ##{@order.id}",
+      button_text: "Ver Detalle",
+      button_url: order_path(@order) %>
+
+<%= render "form", order: @order %>

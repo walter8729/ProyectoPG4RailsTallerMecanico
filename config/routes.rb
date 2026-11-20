@@ -16,6 +16,13 @@ Rails.application.routes.draw do
   resources :services, except: :show, path: "servicios"
   resources :mechanics, except: :show, path: "mecanicos"
 
+  # Órdenes de Trabajo
+  resources :orders, path: "ordenes" do
+    member do
+      patch :update_status
+    end
+  end
+
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 end

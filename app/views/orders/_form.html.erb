@@ -1,0 +1,83 @@
+<%= form_with model: order, local: true, class: "form-card", style: "max-width: 720px;" do |form| %>
+  <% if order.errors.any? %>
+    <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+      <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
+      <ul style="margin: 0; padding-left: 20px;">
+        <% order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-fila">
+    <%= form.label :car_id, "Vehículo *" %>
+    <%= form.collection_select :car_id,
+          @cars,
+          :id,
+          ->(car) { "#{car.plate} - #{car.brand} #{car.model} (#{car.customer&.full_name})" },
+          { prompt: "Seleccioná el vehículo del cliente" },
+          { required: true, class: ("field-invalid" if order.errors[:car_id].any?) } %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :order_date, "Fecha Ingreso *" %>
+    <%= form.date_field :order_date, required: true, value: (order.order_date || Date.current) %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :delivery_date, "Fecha Entrega" %>
+    <%= form.date_field :delivery_date, placeholder: "Estimada o final" %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :status, "Estado *" %>
+    <%= form.select :status, Order::STATUSES, {}, required: true %>
+  </div>
+
+  <div class="form-fila">
+    <%= form.label :notes, "Observaciones" %>
+    <%= form.text_area :notes, rows: 3, placeholder: "Falla reportada por el cliente, diagnóstico preliminar...", style: "width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px;" %>
+  </div>
+
+  <!-- Mecánicos asignados -->
+  <div style="margin: 20px 0; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1e3a8a; margin-bottom: 12px;">Mecánicos Asignados</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+      <% @mechanics.each do |mechanic| %>
+        <label style="display: flex; align-items: center; gap: 8px; background: #f9fafb; padding: 8px 12px; border-radius: 6px; border: 1px solid #e5e7eb; cursor: pointer;">
+          <%= check_box_tag "mechanic_ids[]", mechanic.id, order.mechanic_ids.include?(mechanic.id), id: "mechanic_#{mechanic.id}" %>
+          <span style="font-size: 0.9rem;"><strong><%= mechanic.full_name %></strong> <small style="color: #6b7280;">(<%= mechanic.specialty %>)</small></span>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Servicios aplicados -->
+  <div style="margin: 20px 0; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1e3a8a; margin-bottom: 8px;">Servicios a Realizar</h3>
+    <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 12px;">Seleccioná los servicios y la cantidad. El subtotal y total en Guaraníes se calcularán automáticamente.</p>
+
+    <div id="servicios-contenedor">
+      <% existing_details = order.order_details.presence || [OrderDetail.new(quantity: 1)] %>
+      <% existing_details.each_with_index do |detail, idx| %>
+        <div class="servicio-fila" style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+          <div style="flex: 2;">
+            <%= select_tag "order_services[#{idx}][service_id]",
+                  options_from_collection_for_select(@services, :id, ->(s) { "#{s.name} - ₲ #{number_with_delimiter(s.price)}" }, detail.service_id),
+                  prompt: "Seleccionar servicio...",
+                  style: "width: 100%; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px;" %>
+          </div>
+          <div style="flex: 1; max-width: 110px;">
+            <%= number_field_tag "order_services[#{idx}][quantity]", detail.quantity || 1, min: 1, placeholder: "Cant.", style: "width: 100%; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px;" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-acciones">
+    <%= link_to "Cancelar", orders_path, class: "btn btn-secundario" %>
+    <%= form.submit order.persisted? ? "Guardar Cambios" : "Crear Orden de Trabajo", class: "btn" %>
+  </div>
+<% end %>

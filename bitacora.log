@@ -57,3 +57,15 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Paginación Pagy añadida a CarsController#index y vista.
   * Buscador potente implementado por placa, chasis, marca, modelo o nombre/apellido del cliente.
 - Test suites pasando al 100% (20/20 tests en verde).
+
+[2026-11-19 22:59:00] FASE 4: MÓDULO CENTRAL DE ÓRDENES DE TRABAJO COMPLETADA
+- Rutas RESTful configuradas en config/routes.rb:
+  * resources :orders, path: "ordenes" con member do patch :update_status end
+- Controlador de Órdenes (OrdersController):
+  * index: Buscador general (placa, chasis, cliente, observaciones) + filtro por estado (Pendiente, En Proceso, Completada) + paginación Pagy.
+  * new/create: Formulario integrado con selección de vehículo, fecha de ingreso, estado, asignación múltiple de mecánicos y detalles de servicios con cantidad.
+  * show: Ficha técnica completa de la orden con datos del vehículo, propietario, mecánicos, observaciones, desglose de servicios con cálculo en Guaraníes (₲) y botones para cambio rápido de estado.
+  * update_status: Acción para transicionar estados rápidamente con registro de fecha de entrega automática al completar.
+- Helper OrdersHelper para renderizar badges visuales de estado.
+- Barra lateral (Sidebar) actualizada con acceso directo a Órdenes.
+- Tests unitarios y de integración para órdenes creados y pasando al 100% (28/28 tests en total).

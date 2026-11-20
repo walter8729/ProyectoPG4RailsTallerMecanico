@@ -1,0 +1,125 @@
+<div class="page-header">
+  <div>
+    <h1>Orden de Trabajo #<%= @order.id %></h1>
+    <div style="margin-top: 6px;">
+      <%= order_status_badge(@order.status) %>
+      <span style="color: #6b7280; font-size: 0.9rem; margin-left: 8px;">
+        Fecha de Ingreso: <%= @order.order_date.strftime("%d/%m/%Y") %>
+        <% if @order.delivery_date.present? %>
+          | Fecha Entrega: <%= @order.delivery_date.strftime("%d/%m/%Y") %>
+        <% end %>
+      </span>
+    </div>
+  </div>
+  <div style="display: flex; gap: 8px;">
+    <%= link_to "Editar Orden", edit_order_path(@order), class: "btn" %>
+    <%= link_to "Volver al Listado", orders_path, class: "btn btn-secundario" %>
+  </div>
+</div>
+
+<!-- Acciones de Cambio de Estado Rápido -->
+<div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 18px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+  <span style="font-size: 0.9rem; font-weight: 600; color: #334155;">Cambiar estado rápidamente:</span>
+  <div style="display: flex; gap: 8px;">
+    <% Order::STATUSES.each do |st| %>
+      <% unless @order.status == st %>
+        <%= button_to "Marcar #{st}", update_status_order_path(@order, status: st),
+              method: :patch,
+              class: "btn btn-secundario",
+              style: "font-size: 0.85rem; padding: 6px 12px; height: auto;" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 24px;">
+  <!-- Tarjeta Datos del Vehículo y Cliente -->
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">Datos del Vehículo</h3>
+    <p style="margin: 6px 0;"><strong>Placa:</strong> <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-weight: 700;"><%= @order.car.plate %></span></p>
+    <p style="margin: 6px 0;"><strong>Marca y Modelo:</strong> <%= @order.car.brand %> <%= @order.car.model %> (<%= @order.car.year %>)</p>
+    <p style="margin: 6px 0;"><strong>Chasis:</strong> <code><%= @order.car.chassis %></code></p>
+    <p style="margin: 6px 0;"><strong>Kilometraje:</strong> <%= number_with_delimiter(@order.car.mileage) %> km</p>
+    <% if @order.car.color.present? %>
+      <p style="margin: 6px 0;"><strong>Color:</strong> <%= @order.car.color %></p>
+    <% end %>
+
+    <hr style="margin: 16px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">Propietario / Cliente</h3>
+    <p style="margin: 6px 0;"><strong>Nombre:</strong> <%= @order.customer&.full_name %></p>
+    <p style="margin: 6px 0;"><strong>Documento:</strong> <%= @order.customer&.document_type %>: <%= @order.customer&.document_number %></p>
+    <p style="margin: 6px 0;"><strong>Teléfono:</strong> <%= @order.customer&.phone %></p>
+    <% if @order.customer&.email.present? %>
+      <p style="margin: 6px 0;"><strong>Email:</strong> <%= @order.customer&.email %></p>
+    <% end %>
+  </div>
+
+  <!-- Tarjeta Mecánicos y Diagnóstico -->
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-top: 0; margin-bottom: 12px;">Mecánicos Asignados</h3>
+    <% if @order.mechanics.any? %>
+      <ul style="padding-left: 18px; margin: 0 0 16px 0;">
+        <% @order.mechanics.each do |mechanic| %>
+          <li style="margin-bottom: 6px;">
+            <strong><%= mechanic.full_name %></strong> - <%= mechanic.specialty %> (Tel: <%= mechanic.phone %>)
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p style="color: #9ca3af; font-style: italic;">No hay mecánicos asignados a esta orden.</p>
+    <% end %>
+
+    <hr style="margin: 16px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">Diagnóstico / Observaciones</h3>
+    <p style="background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; color: #374151; min-height: 60px;">
+      <%= @order.notes.presence || "Sin observaciones registradas." %>
+    </p>
+  </div>
+</div>
+
+<!-- Desglose de Servicios y Montos -->
+<div class="tabla-wrap">
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 12px;">Servicios Realizados</h3>
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Servicio</th>
+        <th style="width: 120px; text-align: center;">Cantidad</th>
+        <th style="width: 180px; text-align: right;">Precio Unitario</th>
+        <th style="width: 180px; text-align: right;">Subtotal (PYG)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @order.order_details.each do |detail| %>
+        <tr>
+          <td>
+            <strong><%= detail.service.name %></strong>
+            <% if detail.service.description.present? %>
+              <div style="font-size: 0.85rem; color: #6b7280;"><%= detail.service.description %></div>
+            <% end %>
+          </td>
+          <td style="text-align: center;"><%= detail.quantity %></td>
+          <td style="text-align: right;">₲ <%= number_with_delimiter(detail.unit_price) %></td>
+          <td style="text-align: right;"><strong>₲ <%= number_with_delimiter(detail.subtotal) %></strong></td>
+        </tr>
+      <% end %>
+      <% if @order.order_details.empty? %>
+        <tr>
+          <td colspan="4" style="text-align: center; color: #6b7280; padding: 24px;">
+            No se han registrado servicios en esta orden.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr style="background: #f8fafc; font-size: 1.15rem;">
+        <td colspan="3" style="text-align: right; font-weight: 700; padding: 16px;">TOTAL ORDEN:</td>
+        <td style="text-align: right; font-weight: 800; color: #1e3a8a; padding: 16px;">
+          ₲ <%= number_with_delimiter(@order.total) %>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
