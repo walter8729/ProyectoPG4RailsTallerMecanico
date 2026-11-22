@@ -88,14 +88,6 @@
             </div>
           </div>
         </div>
-
-        <div id="car_selected_feedback" style="margin-top: 6px; font-size: 0.8rem; min-height: 18px;">
-          <% if current_car %>
-            <span style="color: #059669; font-weight: 500;">✓ Seleccionado: <%= current_label %></span>
-          <% else %>
-            <span style="color: #6b7280;">Hacé clic o escribí para buscar en la lista de autos.</span>
-          <% end %>
-        </div>
       </div>
 
       <hr class="form-grupo-separador">
@@ -141,9 +133,6 @@
         <span style="font-size: 0.8rem; color: #6b7280;">Seleccioná uno o más</span>
       </div>
 
-      <p style="font-size: 0.85rem; color: #4b5563; margin-top: 0; margin-bottom: 16px;">
-        Marcá los mecánicos que estarán a cargo de los trabajos en esta orden:
-      </p>
 
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
         <%# Campo oculto vacío para asegurar que mechanic_ids viaje siempre en el request aunque no haya checkboxes marcados %>
@@ -224,14 +213,12 @@
 
       if (q === "") {
         document.getElementById("order_car_id_real").value = "";
-        document.getElementById("car_selected_feedback").innerHTML = "<span style='color: #6b7280;'>Hacé clic o escribí para buscar en la lista de autos.</span>";
       }
     }
 
     function seleccionarAuto(id, label) {
       document.getElementById("order_car_id_real").value = id;
       document.getElementById("car_search_input").value = label;
-      document.getElementById("car_selected_feedback").innerHTML = "<span style='color: #059669; font-weight: 500;'>✓ Seleccionado: " + label + "</span>";
       cerrarDropdownAutos();
     }
 

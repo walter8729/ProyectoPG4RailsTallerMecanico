@@ -270,3 +270,8 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * La tarjeta de Vehículo y detalles ahora tiene el triple de ancho y protagonismo respecto a Mecánicos.
   * Removido el número de teléfono de los mecánicos para dejar una tarjeta compacta, limpia y enfocada solo en nombre y especialidad.
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:46:00] ELIMINACIÓN DE TEXTO DE FEEDBACK REDUNDANTE EN SELECTOR DE VEHÍCULO
+- app/views/orders/_form.html.erb:
+  * Removido el contenedor #car_selected_feedback ("✓ Seleccionado: ...") que duplicaba innecesariamente la información ya visible en el input de selección.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
