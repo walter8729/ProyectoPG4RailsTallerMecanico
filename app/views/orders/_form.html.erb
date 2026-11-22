@@ -1,8 +1,8 @@
 <%= form_with model: order, local: true, class: "order-form-container", style: "width: 100%; max-width: 1100px;" do |form| %>
   <% if order.errors.any? %>
-    <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-      <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
-      <ul style="margin: 0; padding-left: 20px;">
+    <div class="form-errores">
+      <h3>Se encontraron errores:</h3>
+      <ul>
         <% order.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -20,13 +20,13 @@
       <div>
         <p class="form-grupo-titulo" style="margin-top: 0;">Vehículo</p>
 
-        <!-- Selector de Vehículo -->
-        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <label for="car_search_input" style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a; margin: 0;">
+        <!-- Selector de Vehículo con componente picker -->
+        <div class="picker-box">
+          <div class="picker-header">
+            <label for="car_search_input">
               Vehículo del Cliente *
             </label>
-            <%= link_to "Ver lista de autos →", cars_path, style: "font-size: 0.8rem; color: #1e3a8a; text-decoration: underline;" %>
+            <%= link_to "Ver lista de autos →", cars_path %>
           </div>
 
           <% 
@@ -50,12 +50,11 @@
                      value="<%= current_label %>"
                      onfocus="abrirDropdownAutos()"
                      oninput="filtrarOpcionesAutos(this.value)"
-                     class="<%= 'field-invalid' if order.errors[:car_id].any? %>"
-                     style="width: 100%; height: 44px; padding: 10px 38px 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
+                     class="picker-input <%= 'field-invalid' if order.errors[:car_id].any? %>">
               
               <button type="button"
                       onclick="toggleDropdownAutos()"
-                      style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center;"
+                      class="picker-toggle-btn"
                       title="Desplegar vehículos">
                 <svg style="width: 18px; height: 18px;" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                   <path d="M5 7.5L10 12.5L15 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -63,22 +62,20 @@
               </button>
             </div>
 
-            <div id="car_dropdown_menu"
-                 style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; max-height: 250px; overflow-y: auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); z-index: 50;">
+            <div id="car_dropdown_menu" class="picker-dropdown">
               <div id="car_options_list">
                 <% @cars.each do |car| %>
                   <% cliente_doc = car.customer ? " [Doc: #{car.customer.document_number}]" : "" %>
                   <% text_label = "#{car.plate} - #{car.brand} #{car.model} #{car.year} (#{car.customer&.full_name}#{cliente_doc})" %>
                   <% search_terms = "#{car.plate} #{car.brand} #{car.model} #{car.year} #{car.chassis} #{car.customer&.full_name} #{car.customer&.document_number}".downcase %>
-                  <div class="car-option-item"
+                  <div class="picker-item"
                        data-id="<%= car.id %>"
                        data-label="<%= text_label %>"
                        data-search="<%= search_terms %>"
-                       onclick="seleccionarAuto('<%= car.id %>', '<%= j text_label %>')"
-                       style="padding: 10px 14px; font-size: 0.88rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.1s ease;">
+                       onclick="seleccionarAuto('<%= car.id %>', '<%= j text_label %>')">
                     <div style="display: flex; justify-content: space-between; align-items: baseline;">
                       <span style="font-weight: 600; color: #1e3a8a;"><%= car.plate %> - <%= car.brand %> <%= car.model %> (<%= car.year %>)</span>
-                      <span style="font-size: 0.78rem; color: #6b7280;"><%= car.customer&.document_number %></span>
+                      <span class="badge-doc"><%= car.customer&.document_number %></span>
                     </div>
                     <div style="font-size: 0.8rem; color: #4b5563; margin-top: 2px;">
                       Cliente: <strong><%= car.customer&.full_name %></strong>
@@ -86,7 +83,7 @@
                   </div>
                 <% end %>
               </div>
-              <div id="car_no_results" style="display: none; padding: 14px; text-align: center; color: #9ca3af; font-size: 0.85rem;">
+              <div id="car_no_results" class="picker-no-results">
                 No se encontraron vehículos coincidentes.
               </div>
             </div>
@@ -171,10 +168,6 @@
         padding-top: 20px !important;
       }
     }
-    .car-option-item:hover {
-      background-color: #eff6ff !important;
-      color: #1e3a8a !important;
-    }
   </style>
 
   <script>
@@ -201,7 +194,7 @@
     function filtrarOpcionesAutos(query) {
       abrirDropdownAutos();
       var q = query.toLowerCase().trim();
-      var items = document.querySelectorAll(".car-option-item");
+      var items = document.querySelectorAll(".picker-item");
       var visibleCount = 0;
 
       items.forEach(function(item) {

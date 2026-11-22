@@ -1,8 +1,8 @@
 <%= form_with model: mechanic, local: true, class: "form-card" do |form| %>
   <% if mechanic.errors.any? %>
-    <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-      <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
-      <ul style="margin: 0; padding-left: 20px;">
+    <div class="form-errores">
+      <h3>Se encontraron errores:</h3>
+      <ul>
         <% mechanic.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -22,12 +22,12 @@
 
   <div class="form-fila">
     <%= form.label :specialty, "Especialidad *" %>
-    <%= form.text_field :specialty, required: true, placeholder: "ej. Mecánica General, Electricidad, Frenos", class: ("field-invalid" if mechanic.errors[:specialty].any?) %>
+    <%= form.text_field :specialty, required: true, placeholder: "ej. Frenos y Suspensión", class: ("field-invalid" if mechanic.errors[:specialty].any?) %>
   </div>
 
   <div class="form-fila">
     <%= form.label :phone, "Teléfono *" %>
-    <%= form.telephone_field :phone, required: true, placeholder: "ej. 0981 123 456", class: ("field-invalid" if mechanic.errors[:phone].any?) %>
+    <%= form.telephone_field :phone, required: true, placeholder: "ej. 0981 654 321", class: ("field-invalid" if mechanic.errors[:phone].any?) %>
   </div>
 
   <div class="form-acciones">

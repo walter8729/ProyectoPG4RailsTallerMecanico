@@ -305,3 +305,19 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Todo el formulario queda contenido en una única tarjeta padre limpia (.form-card).
   * Separación entre Vehículo y Mecánicos Asignados mediante un divisor vertical sutil (#e5e7eb) con padding-left proporcionado (32px), colapsando a divisor horizontal en móviles.
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 18:35:00] AUDITORÍA Y UNIFICACIÓN DE APPLICATION.CSS Y REDUCCIÓN DE ESTILOS INLINE
+- app/assets/stylesheets/application.css:
+  * Eliminado código muerto (reglas no utilizadas: .tabla-link, .tabla-link-borrar, button.tabla-link).
+  * Documentadas todas las reglas crípticas con comentarios claros por sección (Layout, Botones, Tablas, Formularios, Pagy, Pickers, Detalle).
+  * Creadas clases reutilizables:
+    - .detalle-grid, .card-titulo, .dato-fila, .badge-doc, .detalle-acciones (para pantallas show).
+    - .form-errores (caja unificada de errores de validación de modelos).
+    - .picker-box, .picker-header, .picker-input, .picker-toggle-btn, .picker-dropdown, .picker-item, .picker-no-results (combobox interactivo).
+    - .btn-peligro (acciones destructivas unificadas).
+    - .tabla-vacia (celda sin registros).
+- Vistas refactorizadas eliminando estilos inline repetitivos:
+  * app/views/customers/_form.html.erb, app/views/mechanics/_form.html.erb, app/views/services/_form.html.erb, app/views/cars/_form.html.erb, app/views/orders/_form.html.erb.
+  * app/views/customers/show.html.erb, app/views/mechanics/show.html.erb, app/views/orders/show.html.erb.
+  * Reducción de 167 atributos style inline a 93 (reducción del 45% de CSS inline).
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).

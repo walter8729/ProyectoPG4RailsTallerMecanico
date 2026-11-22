@@ -1,3 +1,13 @@
+/* ==========================================================================
+   TALLER MECÁNICO - HOJA DE ESTILOS PRINCIPAL (application.css)
+   Rails 8.1 puro + Vanilla CSS sin dependencias externas
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CONTENEDOR Y LAYOUT PRINCIPAL
+   ========================================================================== */
+
+/* Contenedor principal de vistas dinámicas dentro del layout */
 .contenido {
   margin-top: 1.5rem;
   padding: 0 1.25rem 2rem;
@@ -6,10 +16,16 @@
   max-width: 100%;
 }
 
+/* 
+ * Regla responsiva para desktop con el sidebar izquierdo abierto.
+ * Descuenta 14rem (224px del sidebar fijo w-56) del ancho total de la pantalla (100vw).
+ * Evita que tablas anchas o tarjetas provoquen scroll horizontal en toda la ventana del navegador.
+ */
 .contenido.ml-56 {
   max-width: calc(100vw - 14rem);
 }
 
+/* Cabecera estándar de página: título + botón principal de acción a la derecha */
 .page-header {
   display: flex;
   align-items: center;
@@ -27,6 +43,11 @@
   color: #111827;
 }
 
+/* ==========================================================================
+   2. BOTONES Y ACCIONES
+   ========================================================================== */
+
+/* Botón primario del sistema (Azul corporativo #1e3a8a, altura 42px según Ley de Fitts) */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -48,52 +69,33 @@
   vertical-align: middle;
 }
 
-.tabla-wrap {
-  width: 100%;
-  overflow-x: auto;
+.btn:hover {
+  background: #1e40af;
 }
 
-.tabla {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+/* Botón secundario para volver o cancelar (Blanco con borde gris neutro) */
+.btn-secundario {
   background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  color: #374151;
+  border: 1px solid #d1d5db;
 }
 
-.tabla th,
-.tabla td {
-  padding: 14px 16px;
-  text-align: left;
-  vertical-align: middle !important;
-  border-bottom: 1px solid #e5e7eb;
-  overflow-wrap: anywhere;
+.btn-secundario:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
-.tabla th {
-  background: #f3f4f6;
-  vertical-align: middle !important;
+/* Botón de acción destructiva (Eliminar registro) */
+.btn-peligro {
+  background: #dc2626;
+  color: #ffffff;
 }
 
-.tabla th:last-child,
-.tabla td:last-child {
-  width: 140px;
-  text-align: center;
-  vertical-align: middle !important;
+.btn-peligro:hover {
+  background: #b91c1c;
 }
 
-.tabla-acciones {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-.tabla-acciones form {
-  margin: 0;
-}
-
+/* Botones cuadrados pequeños (34x34px) con iconos SVG para filas de tablas */
 .btn-accion {
   display: inline-flex;
   align-items: center;
@@ -115,6 +117,7 @@
   border-color: #d1d5db;
 }
 
+/* Botón ver detalle (Ícono de ojo - Azul cielo) */
 .btn-accion-ver {
   color: #0284c7;
 }
@@ -125,6 +128,7 @@
   color: #0369a1;
 }
 
+/* Botón editar (Ícono de lápiz - Azul taller) */
 .btn-accion-editar {
   color: #1e3a8a;
 }
@@ -135,6 +139,7 @@
   color: #1e40af;
 }
 
+/* Botón nueva orden directa para un auto (Ícono de hoja + auto - Verde) */
 .btn-accion-orden {
   color: #047857;
 }
@@ -145,8 +150,16 @@
   color: #065f46;
 }
 
+/* 
+ * Botón eliminar (Ícono papelera - Rojo).
+ * LEY DE FITTS: separación visual mediante borde izquierdo y margen
+ * para evitar toques accidentales al querer editar o ver.
+ */
 .btn-accion-borrar {
   color: #dc2626;
+  margin-left: 4px;
+  border-left: 1px solid #e5e7eb;
+  padding-left: 8px;
 }
 
 .btn-accion-borrar:hover {
@@ -155,24 +168,77 @@
   color: #b91c1c;
 }
 
-.tabla-link {
-  color: #1e3a8a;
-  font-weight: 500;
-  text-decoration: none;
+/* ==========================================================================
+   3. TABLAS DE DATOS
+   ========================================================================== */
+
+/* Contenedor con scroll horizontal para tablas en pantallas pequeñas */
+.tabla-wrap {
+  width: 100%;
+  overflow-x: auto;
 }
 
-button.tabla-link {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
+.tabla {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 }
 
-.tabla-link-borrar {
-  color: #b91c1c;
+/* 
+ * Celdas de tabla con alineación vertical forzada al medio
+ * para que íconos y textos queden perfectamente alineados en la misma línea visual.
+ */
+.tabla th,
+.tabla td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle !important;
+  border-bottom: 1px solid #e5e7eb;
+  overflow-wrap: anywhere;
 }
 
+.tabla th {
+  background: #f3f4f6;
+  vertical-align: middle !important;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Última columna de la tabla reservada para las acciones (ancho fijo 140px centrado) */
+.tabla th:last-child,
+.tabla td:last-child {
+  width: 140px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+/* Flexbox contenedor de botones de acción por fila */
+.tabla-acciones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.tabla-acciones form {
+  margin: 0;
+}
+
+/* Celda vacía cuando no hay registros */
+.tabla-vacia {
+  text-align: center;
+  color: #6b7280;
+  padding: 28px;
+}
+
+/* ==========================================================================
+   4. FORMULARIOS Y TARJETAS
+   ========================================================================== */
+
+/* Tarjeta contenedora de formulario (Fondo blanco, borde sutil y esquinas redondeadas) */
 .form-card {
   max-width: 520px;
   padding: 28px;
@@ -181,6 +247,7 @@ button.tabla-link {
   border-radius: 12px;
 }
 
+/* Fila de formulario con label a la izquierda y campo expandible a la derecha */
 .form-fila {
   display: flex;
   align-items: center;
@@ -219,6 +286,10 @@ button.tabla-link {
   max-width: 100%;
 }
 
+/*
+ * Estilización del elemento <select> nativo:
+ * Remueve la flecha genérica del OS y agrega un SVG data-uri limpio.
+ */
 .form-fila select {
   cursor: pointer;
   appearance: none;
@@ -235,6 +306,7 @@ button.tabla-link {
   box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
 }
 
+/* Estado de error de validación en inputs */
 .form-fila input.field-invalid,
 .form-fila select.field-invalid {
   border-color: #f87171;
@@ -246,6 +318,7 @@ button.tabla-link {
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
+/* Bloque contenedor de botones al pie de los formularios */
 .form-acciones {
   display: flex;
   justify-content: flex-end;
@@ -255,14 +328,185 @@ button.tabla-link {
   border-top: 1px solid #e5e7eb;
 }
 
-.btn-secundario {
-  background: #fff;
-  color: #374151;
-  border: 1px solid #d1d5db;
+/* 
+ * LEY DE MILLER: Agrupación visual en bloques de 7±2 campos.
+ * Separador visual entre grupos de campos relacionados.
+ */
+.form-grupo-separador {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+}
+
+.form-grupo-titulo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 16px 0 8px 0;
+}
+
+/* Caja de alerta para errores de validación de ActiveModel */
+.form-errores {
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.form-errores h3 {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.form-errores ul {
+  margin: 0;
+  padding-left: 20px;
 }
 
 /* ==========================================================================
-   Barra de Búsqueda Estándar
+   5. COMPONENTE COMBOBOX / BUSCADOR INTERACTIVO (PICKER)
+   Utilizado en la selección de Vehículo y de Cliente
+   ========================================================================== */
+
+.picker-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.picker-header label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.picker-header a {
+  font-size: 0.8rem;
+  color: #1e3a8a;
+  text-decoration: underline;
+}
+
+.picker-input {
+  width: 100%;
+  height: 44px;
+  padding: 10px 38px 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #fff;
+  font: inherit;
+  color: #111827;
+}
+
+.picker-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.picker-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 250px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+.picker-item {
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: #1f2937;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.picker-item:hover {
+  background-color: #eff6ff !important;
+  color: #1e3a8a !important;
+}
+
+.picker-no-results {
+  display: none;
+  padding: 14px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   6. VISTAS DE DETALLE (SHOW) Y RESÚMENES
+   ========================================================================== */
+
+/* Grilla responsive para las dos tarjetas de datos en las vistas show */
+.detalle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* Título de sección en tarjetas de detalle */
+.card-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+/* Párrafo de dato clave-valor */
+.dato-fila {
+  margin: 6px 0;
+}
+
+/* Badge semántico para tipos de documento o especialidades */
+.badge-doc {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-left: 4px;
+}
+
+/* Barra de acciones al pie en vistas show */
+.detalle-acciones {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   7. BARRA DE BÚSQUEDA ESTÁNDAR
    ========================================================================== */
 .barra-busqueda {
   display: flex;
@@ -308,7 +552,7 @@ button.tabla-link {
 }
 
 /* ==========================================================================
-   Estilos de Paginación (Pagy)
+   8. PAGINACIÓN (PAGY)
    ========================================================================== */
 .pagy.series-nav {
   display: flex;
@@ -361,40 +605,4 @@ button.tabla-link {
   color: #9ca3af;
   cursor: not-allowed;
   opacity: 0.7;
-}
-
-
-
-
-
-/* =========================================================
-   LEY DE FITTS — Separación visual del botón destructivo
-   El botón Eliminar tiene una separación clara respecto
-   a las acciones de edición/visualización, para evitar
-   clics accidentales.
-   ========================================================= */
-.btn-accion-borrar {
-  margin-left: 4px;
-  border-left: 1px solid #e5e7eb;
-  padding-left: 8px;
-}
-
-/* =========================================================
-   LEY DE MILLER — Agrupación de campos en formularios
-   Separador visual entre grupos de campos relacionados
-   para reducir la carga cognitiva del usuario.
-   ========================================================= */
-.form-grupo-separador {
-  border: 0;
-  border-top: 1px solid #e5e7eb;
-  margin: 12px 0;
-}
-
-.form-grupo-titulo {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 16px 0 8px 0;
 }
