@@ -246,3 +246,11 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
     2. "Detalles y Fechas" (fechas de ingreso y entrega optimizadas en 2 columnas lado a lado, estado y observaciones alineadas).
     3. "Mecánicos Asignados" (tarjetas interactivas con checkbox más cómodo y legible).
 - Suite de tests: 31 tests con 55 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:25:00] REDISEÑO EN 2 COLUMNAS DE NUEVA ORDEN DE TRABAJO
+- app/views/orders/_form.html.erb:
+  * Eliminado el banner redundante superior "Paso 1 de 2".
+  * Implementado layout en 2 columnas (grid responsivo repeat(auto-fit, minmax(360px, 1fr))) eliminando el espacio vacío al costado derecho.
+  * Columna Izquierda: Tarjeta con selección de Vehículo, Fechas (Ingreso y Entrega lado a lado), Estado y Observaciones.
+  * Columna Derecha: Tarjeta dedicada a Mecánicos Asignados visible de inmediato sin scroll, junto a los botones de acción ("Cancelar" y "Continuar a Servicios").
+- Suite de tests: 31 tests con 55 assertions pasando al 100% (0 fallos).
