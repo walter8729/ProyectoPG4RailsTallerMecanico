@@ -13,11 +13,11 @@
   <!-- TARJETA PADRE (Contenedor principal unificado con estilo form-card) -->
   <div class="form-card" style="max-width: 100%; padding: 28px;">
 
-    <!-- Contenedor interno en 2 Columnas (Tarjetas Hijas) -->
-    <div class="order-form-grid" style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 24px; align-items: start;">
+    <!-- Contenedor interno en 2 Columnas con divisor sutil vertical -->
+    <div class="order-form-grid" style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 32px; align-items: start;">
       
-      <!-- TARJETA HIJA 1: Vehículo y Datos de la Orden -->
-      <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px;">
+      <!-- SECCIÓN IZQUIERDA: Vehículo y Datos de la Orden (sin borde extra) -->
+      <div>
         <p class="form-grupo-titulo" style="margin-top: 0;">Vehículo</p>
 
         <!-- Selector de Vehículo -->
@@ -129,8 +129,8 @@
         </div>
       </div>
 
-      <!-- TARJETA HIJA 2: Mecánicos Asignados -->
-      <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px;">
+      <!-- SECCIÓN DERECHA: Mecánicos Asignados con separador vertical a la izquierda -->
+      <div class="order-form-mechanics-col" style="border-left: 1px solid #e5e7eb; padding-left: 32px;">
         <p class="form-grupo-titulo" style="margin-top: 0; margin-bottom: 16px;">Mecánicos Asignados</p>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -162,6 +162,13 @@
     @media (max-width: 900px) {
       .order-form-grid {
         grid-template-columns: 1fr !important;
+        gap: 20px !important;
+      }
+      .order-form-mechanics-col {
+        border-left: none !important;
+        border-top: 1px solid #e5e7eb !important;
+        padding-left: 0 !important;
+        padding-top: 20px !important;
       }
     }
     .car-option-item:hover {

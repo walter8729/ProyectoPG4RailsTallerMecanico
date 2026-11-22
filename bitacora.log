@@ -298,3 +298,10 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - app/views/orders/show.html.erb:
   * Eliminado el banner amarillo redundante "Paso 2: Agregá los servicios realizados", manteniendo la vista limpia y directa a la tabla de servicios y formulario.
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 01:05:00] DISEÑO INTEGRADO DE TARJETA CON DIVISOR VERTICAL SUTIL
+- app/views/orders/_form.html.erb:
+  * Removidos los bordes dobles y paddings redundantes de las tarjetas hijas dentro de la tarjeta padre.
+  * Todo el formulario queda contenido en una única tarjeta padre limpia (.form-card).
+  * Separación entre Vehículo y Mecánicos Asignados mediante un divisor vertical sutil (#e5e7eb) con padding-left proporcionado (32px), colapsando a divisor horizontal en móviles.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
