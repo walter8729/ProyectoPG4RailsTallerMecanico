@@ -263,3 +263,10 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - test/controllers/orders_controller_test.rb:
   * Agregada prueba unitaria test_should_remove_all_mechanics_from_order.
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:40:00] PROPORCIÓN 3:1 EN FORMULARIO DE ÓRDENES Y LIMPIEZA DE DATOS
+- app/views/orders/_form.html.erb:
+  * Modificada la distribución de columnas a proporción 3 a 1 (grid-template-columns: 3fr 1.2fr con clase .order-form-grid y fallback responsivo para móviles @media max-width: 900px).
+  * La tarjeta de Vehículo y detalles ahora tiene el triple de ancho y protagonismo respecto a Mecánicos.
+  * Removido el número de teléfono de los mecánicos para dejar una tarjeta compacta, limpia y enfocada solo en nombre y especialidad.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).

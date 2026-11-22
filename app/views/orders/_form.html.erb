@@ -10,8 +10,8 @@
     </div>
   <% end %>
 
-  <!-- Layout en 2 Columnas: aprovecha todo el ancho de pantalla -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; align-items: start;">
+  <!-- Layout en 2 Columnas con proporción 3 a 1 (Vehículo y detalles 3fr, Mecánicos 1fr) -->
+  <div class="order-form-grid" style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 24px; align-items: start;">
     
     <!-- COLUMNA IZQUIERDA: Vehículo, Fechas, Estado y Observaciones -->
     <div class="form-card" style="max-width: 100%;">
@@ -155,9 +155,6 @@
               <span style="font-size: 0.92rem; font-weight: 600; color: #111827;"><%= mechanic.full_name %></span>
               <div style="font-size: 0.8rem; color: #0284c7; font-weight: 500;"><%= mechanic.specialty %></div>
             </div>
-            <% if mechanic.phone.present? %>
-              <span style="font-size: 0.78rem; color: #6b7280;"><%= mechanic.phone %></span>
-            <% end %>
           </label>
         <% end %>
       </div>
@@ -172,6 +169,11 @@
   </div>
 
   <style>
+    @media (max-width: 900px) {
+      .order-form-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
     .car-option-item:hover {
       background-color: #eff6ff !important;
       color: #1e3a8a !important;
