@@ -1,4 +1,12 @@
-<%= form_with model: order, local: true, class: "form-card", style: "max-width: 720px;" do |form| %>
+<%= form_with model: order, local: true, class: "form-card", style: "max-width: 650px;" do |form| %>
+  <%# Banner informativo del flujo de trabajo (Ley de Tesler) %>
+  <% unless order.persisted? %>
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 0.88rem; display: flex; align-items: center; gap: 10px;">
+      <span style="background: #1e3a8a; color: #fff; border-radius: 9999px; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0;">1</span>
+      <span><strong>Paso 1 de 2:</strong> Registrá el vehículo, las fechas y los mecánicos. En el siguiente paso cargarás los servicios y repuestos.</span>
+    </div>
+  <% end %>
+
   <% if order.errors.any? %>
     <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
       <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
@@ -9,6 +17,9 @@
       </ul>
     </div>
   <% end %>
+
+  <%# --- Grupo 1: Vehículo del Cliente (Ley de Miller) --- %>
+  <p class="form-grupo-titulo" style="margin-top: 0;">Vehículo</p>
 
   <!-- Buscador y selector de Vehículo con desplegable hacia abajo y estilo del sistema -->
   <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
@@ -143,7 +154,6 @@
         noResults.style.display = visibleCount === 0 ? "block" : "none";
       }
 
-      // Si el usuario borra todo, vaciamos el ID oculto
       if (q === "") {
         document.getElementById("order_car_id_real").value = "";
         document.getElementById("car_selected_feedback").innerHTML = "<span style='color: #6b7280;'>Hacé clic o escribí para buscar en la lista de autos.</span>";
@@ -157,7 +167,6 @@
       cerrarDropdownAutos();
     }
 
-    // Cerrar al hacer clic fuera del componente
     document.addEventListener("click", function(e) {
       var container = document.getElementById("car_picker_container");
       if (container && !container.contains(e.target)) {
@@ -166,23 +175,30 @@
     });
   </script>
 
-  <div class="form-fila">
-    <%= form.label :order_date, "Fecha Ingreso *" %>
-    <%= form.date_field :order_date,
-          id: "order_order_date",
-          required: true,
-          value: (order.order_date || Date.current),
-          onchange: "actualizarMinFechaEntrega()",
-          class: ("field-invalid" if order.errors[:order_date].any?) %>
-  </div>
+  <hr class="form-grupo-separador">
+  <%# --- Grupo 2: Datos y Fechas del Servicio (Ley de Miller + Fitts) --- %>
+  <p class="form-grupo-titulo">Detalles y Fechas</p>
 
-  <div class="form-fila">
-    <%= form.label :delivery_date, "Fecha Entrega" %>
-    <%= form.date_field :delivery_date,
-          id: "order_delivery_date",
-          placeholder: "Estimada o final",
-          onchange: "validarFechasOrden()",
-          class: ("field-invalid" if order.errors[:delivery_date].any?) %>
+  <!-- Fechas en dos columnas lado a lado para optimizar espacio vertical -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 18px;">
+    <div class="form-fila" style="margin-bottom: 0;">
+      <%= form.label :order_date, "Ingreso *" %>
+      <%= form.date_field :order_date,
+            id: "order_order_date",
+            required: true,
+            value: (order.order_date || Date.current),
+            onchange: "actualizarMinFechaEntrega()",
+            class: ("field-invalid" if order.errors[:order_date].any?) %>
+    </div>
+
+    <div class="form-fila" style="margin-bottom: 0;">
+      <%= form.label :delivery_date, "Entrega" %>
+      <%= form.date_field :delivery_date,
+            id: "order_delivery_date",
+            placeholder: "Estimada o final",
+            onchange: "validarFechasOrden()",
+            class: ("field-invalid" if order.errors[:delivery_date].any?) %>
+    </div>
   </div>
 
   <!-- Script nativo para validación en Frontend de Fecha de Entrega >= Fecha Ingreso -->
@@ -192,10 +208,8 @@
       var entregaInput = document.getElementById("order_delivery_date");
       if (!ingresoInput || !entregaInput) return;
 
-      // La fecha de entrega mínima permitida es el mismo día de ingreso
       entregaInput.min = ingresoInput.value;
 
-      // Si la fecha de entrega cargada es estrictamente anterior, alertar
       if (entregaInput.value && entregaInput.value < ingresoInput.value) {
         entregaInput.setCustomValidity("La fecha de entrega no puede ser anterior a la fecha de ingreso.");
       } else {
@@ -216,7 +230,6 @@
       }
     }
 
-    // Inicializar al cargar la página
     document.addEventListener("DOMContentLoaded", actualizarMinFechaEntrega);
     if (document.readyState === "complete" || document.readyState === "interactive") {
       actualizarMinFechaEntrega();
@@ -228,22 +241,25 @@
     <%= form.select :status, Order::STATUSES, {}, required: true %>
   </div>
 
-  <div class="form-fila">
-    <%= form.label :notes, "Observaciones" %>
-    <%= form.text_area :notes, rows: 3, placeholder: "Falla reportada por el cliente, diagnóstico preliminar...", style: "width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px;" %>
+  <div class="form-fila" style="align-items: flex-start;">
+    <%= form.label :notes, "Notas", style: "padding-top: 8px;" %>
+    <%= form.text_area :notes, rows: 3, placeholder: "Falla reportada por el cliente, diagnóstico preliminar...", style: "flex: 1; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 14px; font: inherit;" %>
   </div>
 
-  <!-- Mecánicos asignados -->
-  <div style="margin: 20px 0; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-    <h3 style="font-size: 1.1rem; font-weight: 600; color: #1e3a8a; margin-bottom: 12px;">Mecánicos Asignados</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
-      <% @mechanics.each do |mechanic| %>
-        <label style="display: flex; align-items: center; gap: 8px; background: #f9fafb; padding: 8px 12px; border-radius: 6px; border: 1px solid #e5e7eb; cursor: pointer;">
-          <%= check_box_tag "mechanic_ids[]", mechanic.id, order.mechanic_ids.include?(mechanic.id), id: "mechanic_#{mechanic.id}" %>
-          <span style="font-size: 0.9rem;"><strong><%= mechanic.full_name %></strong> <small style="color: #6b7280;">(<%= mechanic.specialty %>)</small></span>
-        </label>
-      <% end %>
-    </div>
+  <hr class="form-grupo-separador">
+  <%# --- Grupo 3: Asignación de Mecánicos (Ley de Miller) --- %>
+  <p class="form-grupo-titulo">Mecánicos Asignados</p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 24px;">
+    <% @mechanics.each do |mechanic| %>
+      <label style="display: flex; align-items: center; gap: 10px; background: #f9fafb; padding: 10px 14px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.15s ease;">
+        <%= check_box_tag "mechanic_ids[]", mechanic.id, order.mechanic_ids.include?(mechanic.id), id: "mechanic_#{mechanic.id}", style: "width: 18px; height: 18px; cursor: pointer; accent-color: #1e3a8a;" %>
+        <span style="font-size: 0.9rem; line-height: 1.25;">
+          <strong style="color: #111827;"><%= mechanic.full_name %></strong><br>
+          <small style="color: #6b7280;"><%= mechanic.specialty %></small>
+        </span>
+      </label>
+    <% end %>
   </div>
 
   <div class="form-acciones">

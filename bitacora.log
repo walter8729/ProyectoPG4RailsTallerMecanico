@@ -236,3 +236,13 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - test/controllers/cars_controller_test.rb:
   * Agregado test específico test_should_not_destroy_car_with_associated_orders.
 - Suite de tests: 31 tests con 55 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:18:00] ARMONIZACIÓN VISUAL Y DISTRIBUCIÓN DEL FORMULARIO DE ÓRDENES
+- app/views/orders/_form.html.erb:
+  * Ajustado el ancho a max-width: 650px (consistente con el formulario de autos y demás vistas).
+  * Incorporado banner visual de flujo (Ley de Tesler): "Paso 1 de 2: Registrá el vehículo, las fechas y los mecánicos...".
+  * Agrupación por secciones con .form-grupo-titulo y separadores .form-grupo-separador (Ley de Miller):
+    1. "Vehículo" (buscador interactivo con dropdown del sistema).
+    2. "Detalles y Fechas" (fechas de ingreso y entrega optimizadas en 2 columnas lado a lado, estado y observaciones alineadas).
+    3. "Mecánicos Asignados" (tarjetas interactivas con checkbox más cómodo y legible).
+- Suite de tests: 31 tests con 55 assertions pasando al 100% (0 fallos).
