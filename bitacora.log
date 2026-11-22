@@ -321,3 +321,10 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * app/views/customers/show.html.erb, app/views/mechanics/show.html.erb, app/views/orders/show.html.erb.
   * Reducción de 167 atributos style inline a 93 (reducción del 45% de CSS inline).
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 18:44:00] FIX DE SUPERPOSICIÓN DEL BOTÓN HAMBURGUESA AL COLAPSAR SIDEBAR
+- app/assets/stylesheets/application.css:
+  * Agregada regla .contenido:not(.ml-56) { padding-left: 3.75rem; } (60px) para que al colapsar el menú lateral, el contenido respete el espacio del botón hamburguesa fijo sin tapar los títulos ni textos principales.
+- app/views/layouts/application.html.erb:
+  * Agregada transición suave transition-all duration-200 en el <main>.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).

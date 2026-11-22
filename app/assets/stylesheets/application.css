@@ -16,6 +16,15 @@
   max-width: 100%;
 }
 
+/*
+ * Cuando el sidebar está colapsado (no tiene .ml-56),
+ * dejamos padding izquierdo suficiente (58px) para que el botón flotante hamburguesa
+ * no tape nunca los títulos h1 ni el contenido de la página.
+ */
+.contenido:not(.ml-56) {
+  padding-left: 3.75rem; /* 60px */
+}
+
 /* 
  * Regla responsiva para desktop con el sidebar izquierdo abierto.
  * Descuenta 14rem (224px del sidebar fijo w-56) del ancho total de la pantalla (100vw).
