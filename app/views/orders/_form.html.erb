@@ -146,6 +146,8 @@
       </p>
 
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+        <%# Campo oculto vacío para asegurar que mechanic_ids viaje siempre en el request aunque no haya checkboxes marcados %>
+        <%= hidden_field_tag "mechanic_ids[]", "" %>
         <% @mechanics.each do |mechanic| %>
           <label style="display: flex; align-items: center; gap: 12px; background: #f9fafb; padding: 12px 14px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.15s ease;">
             <%= check_box_tag "mechanic_ids[]", mechanic.id, order.mechanic_ids.include?(mechanic.id), id: "mechanic_#{mechanic.id}", style: "width: 18px; height: 18px; cursor: pointer; accent-color: #1e3a8a;" %>

@@ -254,3 +254,12 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Columna Izquierda: Tarjeta con selección de Vehículo, Fechas (Ingreso y Entrega lado a lado), Estado y Observaciones.
   * Columna Derecha: Tarjeta dedicada a Mecánicos Asignados visible de inmediato sin scroll, junto a los botones de acción ("Cancelar" y "Continuar a Servicios").
 - Suite de tests: 31 tests con 55 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:32:00] CORRECCIÓN DE DESASIGNACIÓN TOTAL DE MECÁNICOS EN ÓRDENES
+- app/views/orders/_form.html.erb:
+  * Agregado hidden_field_tag "mechanic_ids[]", "" antes de los checkboxes para garantizar que la clave viaje en el request HTTP incluso si el usuario desmarca todos los mecánicos.
+- app/controllers/orders_controller.rb:
+  * En OrdersController#sync_associations se reforzó la condición: si params[:mechanic_ids] viene pero sin IDs válidos seleccionados (selected_ids.empty?), ejecuta @order.assignments.destroy_all.
+- test/controllers/orders_controller_test.rb:
+  * Agregada prueba unitaria test_should_remove_all_mechanics_from_order.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).

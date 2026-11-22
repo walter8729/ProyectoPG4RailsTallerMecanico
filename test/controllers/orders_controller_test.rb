@@ -57,6 +57,18 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to order_url(@order)
   end
 
+  test "should remove all mechanics from order" do
+    assert_includes @order.mechanics, @mechanic
+
+    patch order_url(@order), params: {
+      order: { status: @order.status },
+      mechanic_ids: [""]
+    }
+
+    assert_redirected_to order_url(@order)
+    assert_empty @order.reload.mechanics
+  end
+
   test "should update status via action" do
     patch update_status_order_url(@order), params: { status: "Completada" }
     assert_redirected_to order_url(@order)

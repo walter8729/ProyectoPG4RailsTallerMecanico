@@ -100,9 +100,13 @@ class OrdersController < ApplicationController
     # Sincronizar mecánicos asignados
     if params[:mechanic_ids].present?
       selected_ids = params[:mechanic_ids].reject(&:blank?).map(&:to_i)
-      @order.assignment_ids = []
-      selected_ids.each do |m_id|
-        @order.assignments.find_or_create_by(mechanic_id: m_id, assigned_at: @order.order_date || Date.current)
+      if selected_ids.any?
+        @order.assignment_ids = []
+        selected_ids.each do |m_id|
+          @order.assignments.find_or_create_by(mechanic_id: m_id, assigned_at: @order.order_date || Date.current)
+        end
+      else
+        @order.assignments.destroy_all
       end
     elsif params.key?(:mechanic_ids)
       @order.assignments.destroy_all
