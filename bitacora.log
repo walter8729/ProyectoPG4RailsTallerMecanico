@@ -280,3 +280,9 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
 - app/views/orders/_form.html.erb:
   * Eliminado el texto redundante "Seleccioná uno o más", manteniendo un encabezado limpio y directo con "Mecánicos Asignados".
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:53:00] REUBICACIÓN GLOBAL DE BOTONES DE ACCIÓN EN FORMULARIO DE ÓRDENES
+- app/views/orders/_form.html.erb:
+  * Extraídos los botones de acción ("Cancelar" y "Continuar a Servicios") fuera de la tarjeta de Mecánicos Asignados.
+  * Se ubicaron al pie del formulario general con un separador superior y alineación al ancho completo, indicando con claridad que guardan la totalidad de la orden.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
