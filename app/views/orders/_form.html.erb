@@ -1,4 +1,4 @@
-<%= form_with model: order, local: true, class: "order-form-container", style: "width: 100%;" do |form| %>
+<%= form_with model: order, local: true, class: "order-form-container", style: "width: 100%; max-width: 1100px;" do |form| %>
   <% if order.errors.any? %>
     <div style="background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
       <h3 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: 600;">Se encontraron errores:</h3>
@@ -10,147 +10,152 @@
     </div>
   <% end %>
 
-  <!-- Layout en 2 Columnas con proporción 3 a 1 (Vehículo y detalles 3fr, Mecánicos 1fr) -->
-  <div class="order-form-grid" style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 24px; align-items: start;">
-    
-    <!-- COLUMNA IZQUIERDA: Vehículo, Fechas, Estado y Observaciones -->
-    <div class="form-card" style="max-width: 100%;">
-      <p class="form-grupo-titulo" style="margin-top: 0;">Vehículo</p>
+  <!-- TARJETA PADRE (Contenedor principal unificado con estilo form-card) -->
+  <div class="form-card" style="max-width: 100%; padding: 28px;">
 
-      <!-- Selector de Vehículo -->
-      <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <label for="car_search_input" style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a; margin: 0;">
-            Vehículo del Cliente *
-          </label>
-          <%= link_to "Ver lista de autos →", cars_path, style: "font-size: 0.8rem; color: #1e3a8a; text-decoration: underline;" %>
-        </div>
+    <!-- Contenedor interno en 2 Columnas (Tarjetas Hijas) -->
+    <div class="order-form-grid" style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 24px; align-items: start;">
+      
+      <!-- TARJETA HIJA 1: Vehículo y Datos de la Orden -->
+      <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px;">
+        <p class="form-grupo-titulo" style="margin-top: 0;">Vehículo</p>
 
-        <% 
-          current_car = @cars.find { |c| c.id == order.car_id }
-          current_label = if current_car
-            cliente_doc = current_car.customer ? " [Doc: #{current_car.customer.document_number}]" : ""
-            "#{current_car.plate} - #{current_car.brand} #{current_car.model} (#{current_car.customer&.full_name}#{cliente_doc})"
-          else
-            ""
-          end
-        %>
-
-        <%= form.hidden_field :car_id, id: "order_car_id_real", value: order.car_id, required: true %>
-
-        <div style="position: relative;" id="car_picker_container">
-          <div style="position: relative; display: flex; align-items: center;">
-            <input type="text"
-                   id="car_search_input"
-                   autocomplete="off"
-                   placeholder="Buscar por placa, marca, modelo, año, CI o cliente..."
-                   value="<%= current_label %>"
-                   onfocus="abrirDropdownAutos()"
-                   oninput="filtrarOpcionesAutos(this.value)"
-                   class="<%= 'field-invalid' if order.errors[:car_id].any? %>"
-                   style="width: 100%; height: 44px; padding: 10px 38px 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
-            
-            <button type="button"
-                    onclick="toggleDropdownAutos()"
-                    style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center;"
-                    title="Desplegar vehículos">
-              <svg style="width: 18px; height: 18px;" viewBox="0 0 20 20" fill="none" stroke="currentColor">
-                <path d="M5 7.5L10 12.5L15 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+        <!-- Selector de Vehículo -->
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label for="car_search_input" style="font-weight: 600; font-size: 0.9rem; color: #1e3a8a; margin: 0;">
+              Vehículo del Cliente *
+            </label>
+            <%= link_to "Ver lista de autos →", cars_path, style: "font-size: 0.8rem; color: #1e3a8a; text-decoration: underline;" %>
           </div>
 
-          <div id="car_dropdown_menu"
-               style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; max-height: 250px; overflow-y: auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); z-index: 50;">
-            <div id="car_options_list">
-              <% @cars.each do |car| %>
-                <% cliente_doc = car.customer ? " [Doc: #{car.customer.document_number}]" : "" %>
-                <% text_label = "#{car.plate} - #{car.brand} #{car.model} #{car.year} (#{car.customer&.full_name}#{cliente_doc})" %>
-                <% search_terms = "#{car.plate} #{car.brand} #{car.model} #{car.year} #{car.chassis} #{car.customer&.full_name} #{car.customer&.document_number}".downcase %>
-                <div class="car-option-item"
-                     data-id="<%= car.id %>"
-                     data-label="<%= text_label %>"
-                     data-search="<%= search_terms %>"
-                     onclick="seleccionarAuto('<%= car.id %>', '<%= j text_label %>')"
-                     style="padding: 10px 14px; font-size: 0.88rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.1s ease;">
-                  <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                    <span style="font-weight: 600; color: #1e3a8a;"><%= car.plate %> - <%= car.brand %> <%= car.model %> (<%= car.year %>)</span>
-                    <span style="font-size: 0.78rem; color: #6b7280;"><%= car.customer&.document_number %></span>
-                  </div>
-                  <div style="font-size: 0.8rem; color: #4b5563; margin-top: 2px;">
-                    Cliente: <strong><%= car.customer&.full_name %></strong>
-                  </div>
-                </div>
-              <% end %>
+          <% 
+            current_car = @cars.find { |c| c.id == order.car_id }
+            current_label = if current_car
+              cliente_doc = current_car.customer ? " [Doc: #{current_car.customer.document_number}]" : ""
+              "#{current_car.plate} - #{current_car.brand} #{current_car.model} (#{current_car.customer&.full_name}#{cliente_doc})"
+            else
+              ""
+            end
+          %>
+
+          <%= form.hidden_field :car_id, id: "order_car_id_real", value: order.car_id, required: true %>
+
+          <div style="position: relative;" id="car_picker_container">
+            <div style="position: relative; display: flex; align-items: center;">
+              <input type="text"
+                     id="car_search_input"
+                     autocomplete="off"
+                     placeholder="Buscar por placa, marca, modelo, año, CI o cliente..."
+                     value="<%= current_label %>"
+                     onfocus="abrirDropdownAutos()"
+                     oninput="filtrarOpcionesAutos(this.value)"
+                     class="<%= 'field-invalid' if order.errors[:car_id].any? %>"
+                     style="width: 100%; height: 44px; padding: 10px 38px 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #fff; font: inherit; color: #111827;">
+              
+              <button type="button"
+                      onclick="toggleDropdownAutos()"
+                      style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #6b7280; padding: 4px; display: flex; align-items: center;"
+                      title="Desplegar vehículos">
+                <svg style="width: 18px; height: 18px;" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
             </div>
-            <div id="car_no_results" style="display: none; padding: 14px; text-align: center; color: #9ca3af; font-size: 0.85rem;">
-              No se encontraron vehículos coincidentes.
+
+            <div id="car_dropdown_menu"
+                 style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; max-height: 250px; overflow-y: auto; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); z-index: 50;">
+              <div id="car_options_list">
+                <% @cars.each do |car| %>
+                  <% cliente_doc = car.customer ? " [Doc: #{car.customer.document_number}]" : "" %>
+                  <% text_label = "#{car.plate} - #{car.brand} #{car.model} #{car.year} (#{car.customer&.full_name}#{cliente_doc})" %>
+                  <% search_terms = "#{car.plate} #{car.brand} #{car.model} #{car.year} #{car.chassis} #{car.customer&.full_name} #{car.customer&.document_number}".downcase %>
+                  <div class="car-option-item"
+                       data-id="<%= car.id %>"
+                       data-label="<%= text_label %>"
+                       data-search="<%= search_terms %>"
+                       onclick="seleccionarAuto('<%= car.id %>', '<%= j text_label %>')"
+                       style="padding: 10px 14px; font-size: 0.88rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.1s ease;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                      <span style="font-weight: 600; color: #1e3a8a;"><%= car.plate %> - <%= car.brand %> <%= car.model %> (<%= car.year %>)</span>
+                      <span style="font-size: 0.78rem; color: #6b7280;"><%= car.customer&.document_number %></span>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #4b5563; margin-top: 2px;">
+                      Cliente: <strong><%= car.customer&.full_name %></strong>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div id="car_no_results" style="display: none; padding: 14px; text-align: center; color: #9ca3af; font-size: 0.85rem;">
+                No se encontraron vehículos coincidentes.
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <hr class="form-grupo-separador">
-      <p class="form-grupo-titulo">Detalles del Servicio</p>
+        <hr class="form-grupo-separador">
+        <p class="form-grupo-titulo">Detalles del Servicio</p>
 
-      <!-- Fechas Ingreso y Entrega lado a lado -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 18px;">
-        <div class="form-fila" style="margin-bottom: 0;">
-          <%= form.label :order_date, "Ingreso *" %>
-          <%= form.date_field :order_date,
-                id: "order_order_date",
-                required: true,
-                value: (order.order_date || Date.current),
-                onchange: "actualizarMinFechaEntrega()",
-                class: ("field-invalid" if order.errors[:order_date].any?) %>
+        <!-- Fechas Ingreso y Entrega lado a lado -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 18px;">
+          <div class="form-fila" style="margin-bottom: 0;">
+            <%= form.label :order_date, "Ingreso *" %>
+            <%= form.date_field :order_date,
+                  id: "order_order_date",
+                  required: true,
+                  value: (order.order_date || Date.current),
+                  onchange: "actualizarMinFechaEntrega()",
+                  class: ("field-invalid" if order.errors[:order_date].any?) %>
+          </div>
+
+          <div class="form-fila" style="margin-bottom: 0;">
+            <%= form.label :delivery_date, "Entrega" %>
+            <%= form.date_field :delivery_date,
+                  id: "order_delivery_date",
+                  placeholder: "Estimada o final",
+                  onchange: "validarFechasOrden()",
+                  class: ("field-invalid" if order.errors[:delivery_date].any?) %>
+          </div>
         </div>
 
-        <div class="form-fila" style="margin-bottom: 0;">
-          <%= form.label :delivery_date, "Entrega" %>
-          <%= form.date_field :delivery_date,
-                id: "order_delivery_date",
-                placeholder: "Estimada o final",
-                onchange: "validarFechasOrden()",
-                class: ("field-invalid" if order.errors[:delivery_date].any?) %>
+        <div class="form-fila">
+          <%= form.label :status, "Estado *" %>
+          <%= form.select :status, Order::STATUSES, {}, required: true %>
+        </div>
+
+        <div class="form-fila" style="align-items: flex-start; margin-bottom: 0;">
+          <%= form.label :notes, "Notas", style: "padding-top: 8px;" %>
+          <%= form.text_area :notes, rows: 3, placeholder: "Falla reportada por el cliente, diagnóstico preliminar...", style: "flex: 1; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 14px; font: inherit;" %>
         </div>
       </div>
 
-      <div class="form-fila">
-        <%= form.label :status, "Estado *" %>
-        <%= form.select :status, Order::STATUSES, {}, required: true %>
+      <!-- TARJETA HIJA 2: Mecánicos Asignados -->
+      <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px;">
+        <p class="form-grupo-titulo" style="margin-top: 0; margin-bottom: 16px;">Mecánicos Asignados</p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <%# Campo oculto vacío para asegurar que mechanic_ids viaje siempre en el request aunque no haya checkboxes marcados %>
+          <%= hidden_field_tag "mechanic_ids[]", "" %>
+          <% @mechanics.each do |mechanic| %>
+            <label style="display: flex; align-items: center; gap: 12px; background: #f9fafb; padding: 12px 14px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.15s ease;">
+              <%= check_box_tag "mechanic_ids[]", mechanic.id, order.mechanic_ids.include?(mechanic.id), id: "mechanic_#{mechanic.id}", style: "width: 18px; height: 18px; cursor: pointer; accent-color: #1e3a8a;" %>
+              <div style="flex: 1; line-height: 1.3;">
+                <span style="font-size: 0.92rem; font-weight: 600; color: #111827;"><%= mechanic.full_name %></span>
+                <div style="font-size: 0.8rem; color: #0284c7; font-weight: 500;"><%= mechanic.specialty %></div>
+              </div>
+            </label>
+          <% end %>
+        </div>
       </div>
 
-      <div class="form-fila" style="align-items: flex-start;">
-        <%= form.label :notes, "Notas", style: "padding-top: 8px;" %>
-        <%= form.text_area :notes, rows: 3, placeholder: "Falla reportada por el cliente, diagnóstico preliminar...", style: "flex: 1; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 14px; font: inherit;" %>
-      </div>
     </div>
 
-    <!-- COLUMNA DERECHA: Mecánicos Asignados a la vista sin scroll -->
-    <div class="form-card" style="max-width: 100%;">
-      <p class="form-grupo-titulo" style="margin-top: 0; margin-bottom: 16px;">Mecánicos Asignados</p>
-
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <%# Campo oculto vacío para asegurar que mechanic_ids viaje siempre en el request aunque no haya checkboxes marcados %>
-        <%= hidden_field_tag "mechanic_ids[]", "" %>
-        <% @mechanics.each do |mechanic| %>
-          <label style="display: flex; align-items: center; gap: 12px; background: #f9fafb; padding: 12px 14px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.15s ease;">
-            <%= check_box_tag "mechanic_ids[]", mechanic.id, order.mechanic_ids.include?(mechanic.id), id: "mechanic_#{mechanic.id}", style: "width: 18px; height: 18px; cursor: pointer; accent-color: #1e3a8a;" %>
-            <div style="flex: 1; line-height: 1.3;">
-              <span style="font-size: 0.92rem; font-weight: 600; color: #111827;"><%= mechanic.full_name %></span>
-              <div style="font-size: 0.8rem; color: #0284c7; font-weight: 500;"><%= mechanic.specialty %></div>
-            </div>
-          </label>
-        <% end %>
-      </div>
+    <!-- BOTONES DE ACCIÓN DE LA TARJETA PADRE -->
+    <div class="form-acciones" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px;">
+      <%= link_to "Cancelar", orders_path, class: "btn btn-secundario" %>
+      <%= form.submit order.persisted? ? "Guardar Cambios" : "Continuar a Servicios", class: "btn" %>
     </div>
 
-  </div>
-
-  <!-- Botones de Acción globales: fuera de las tarjetas para abarcar todo el formulario -->
-  <div class="form-acciones" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px;">
-    <%= link_to "Cancelar", orders_path, class: "btn btn-secundario" %>
-    <%= form.submit order.persisted? ? "Guardar Cambios" : "Continuar a Servicios", class: "btn" %>
   </div>
 
   <style>

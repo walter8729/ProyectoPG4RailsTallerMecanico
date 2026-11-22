@@ -286,3 +286,10 @@ Inicio de registro: 2026-11-19 22:36:00 -03:00
   * Extraídos los botones de acción ("Cancelar" y "Continuar a Servicios") fuera de la tarjeta de Mecánicos Asignados.
   * Se ubicaron al pie del formulario general con un separador superior y alineación al ancho completo, indicando con claridad que guardan la totalidad de la orden.
 - Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
+
+[2026-11-22 00:57:00] ESTRUCTURA DE TARJETA PADRE E HIJAS EN FORMULARIO DE ÓRDENES
+- app/views/orders/_form.html.erb:
+  * Implementada la estructura jerárquica con una tarjeta padre (.form-card con borde suave y sombra unificada).
+  * En su interior, contiene las 2 tarjetas hijas (Vehículo y detalles a la izquierda en 3fr; Mecánicos a la derecha en 1.2fr).
+  * Los botones de acción ahora pertenecen formalmente al contenedor padre al pie, con línea de separación interna armónica y diseño 100% cohesionado.
+- Suite de tests: 32 tests con 60 assertions pasando al 100% (0 fallos).
