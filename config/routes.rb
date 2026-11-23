@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   delete "clientes/:id", to: "customers#destroy"
 
   # Autos
-  resources :cars, except: :show
+  resources :cars, except: :show, path: "autos"
 
   # Servicios y Mecánicos (show agregado a mecanicos para consistencia Jakob)
   resources :services, except: :show, path: "servicios"
