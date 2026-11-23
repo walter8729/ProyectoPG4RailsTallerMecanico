@@ -22,6 +22,7 @@ es:
       customer: "Cliente"
       mechanic: "Mecánico"
       service: "Servicio"
+      order_detail: "Detalle de Orden"
     attributes:
       order:
         car: "Vehículo"
@@ -30,6 +31,11 @@ es:
         status: "Estado"
         total: "Total"
         notes: "Observaciones"
+      order_detail:
+        quantity: "Cantidad"
+        unit_price: "Precio unitario"
+        subtotal: "Subtotal"
+        service: "Servicio"
     errors:
       messages:
         required: "debe ser seleccionado"

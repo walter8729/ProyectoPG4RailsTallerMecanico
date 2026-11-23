@@ -2,9 +2,11 @@ class OrderDetail < ApplicationRecord
   belongs_to :order
   belongs_to :service
 
-  validates :quantity, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :quantity, presence: true,
+                       numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 100,
+                                       message: "debe ser un valor entre 1 y 100" }
   validates :unit_price, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :subtotal, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :subtotal, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 2_000_000_000 }
 
   before_validation :set_unit_price_from_service, on: :create
   before_validation :calculate_subtotal
