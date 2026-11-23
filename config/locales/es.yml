@@ -15,3 +15,22 @@ es:
         precision: 0
         significant: false
         strip_insignificant_zeros: false
+  activerecord:
+    models:
+      order: "Orden de Trabajo"
+      car: "Vehículo"
+      customer: "Cliente"
+      mechanic: "Mecánico"
+      service: "Servicio"
+    attributes:
+      order:
+        car: "Vehículo"
+        order_date: "Fecha de ingreso"
+        delivery_date: "Fecha de entrega"
+        status: "Estado"
+        total: "Total"
+        notes: "Observaciones"
+    errors:
+      messages:
+        required: "debe ser seleccionado"
+        blank: "no puede estar en blanco"

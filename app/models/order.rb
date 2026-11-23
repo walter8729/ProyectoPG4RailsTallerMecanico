@@ -2,6 +2,7 @@ class Order < ApplicationRecord
   STATUSES = %w[Pendiente En\ Proceso Completada].freeze
 
   belongs_to :car
+  validates :car, presence: { message: "debe ser seleccionado antes de guardar la orden" }
   has_one :customer, through: :car
 
   has_many :order_details, dependent: :destroy

@@ -1,4 +1,4 @@
-<%= form_with model: order, local: true, class: "order-form-container", style: "width: 100%; max-width: 1100px;" do |form| %>
+<%= form_with model: order, local: true, class: "order-form-container", style: "width: 100%; max-width: 1100px;", html: { onsubmit: "return validarFormularioOrden(event)" } do |form| %>
   <% if order.errors.any? %>
     <div class="form-errores">
       <h3>Se encontraron errores:</h3>
@@ -217,9 +217,33 @@
       }
     }
 
+    function validarFormularioOrden(event) {
+      var carIdInput = document.getElementById("order_car_id_real");
+      var carSearchInput = document.getElementById("car_search_input");
+
+      if (!carIdInput || !carIdInput.value.trim()) {
+        if (event) event.preventDefault();
+        if (carSearchInput) {
+          carSearchInput.focus();
+          carSearchInput.setCustomValidity("Debe elegir un vehículo antes de guardar la orden.");
+          carSearchInput.reportValidity();
+          abrirDropdownAutos();
+        }
+        return false;
+      } else if (carSearchInput) {
+        carSearchInput.setCustomValidity("");
+      }
+
+      return true;
+    }
+
     function seleccionarAuto(id, label) {
       document.getElementById("order_car_id_real").value = id;
-      document.getElementById("car_search_input").value = label;
+      var searchInput = document.getElementById("car_search_input");
+      if (searchInput) {
+        searchInput.value = label;
+        searchInput.setCustomValidity("");
+      }
       cerrarDropdownAutos();
     }
 
