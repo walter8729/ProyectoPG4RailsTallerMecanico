@@ -27,7 +27,14 @@
 
   <div class="form-fila">
     <%= form.label :phone, "Teléfono *" %>
-    <%= form.telephone_field :phone, required: true, placeholder: "ej. 0981 654 321", class: ("field-invalid" if mechanic.errors[:phone].any?) %>
+    <%= form.telephone_field :phone,
+          required: true,
+          inputmode: "numeric",
+          pattern: "[0-9]+",
+          title: "Ingrese únicamente números (sin letras, espacios ni guiones)",
+          placeholder: "ej. 0981654321",
+          oninput: "this.value = this.value.replace(/[^0-9]/g, '')",
+          class: ("field-invalid" if mechanic.errors[:phone].any?) %>
   </div>
 
   <div class="form-acciones">

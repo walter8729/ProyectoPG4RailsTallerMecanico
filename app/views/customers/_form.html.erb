@@ -50,7 +50,14 @@
 
   <div class="form-fila">
     <%= f.label :phone, "Teléfono *" %>
-    <%= f.telephone_field :phone, required: true, placeholder: "ej. 0981 123 456", class: ("field-invalid" if customer.errors[:phone].any?) %>
+    <%= f.telephone_field :phone,
+          required: true,
+          inputmode: "numeric",
+          pattern: "[0-9]+",
+          title: "Ingrese únicamente números (sin letras, espacios ni guiones)",
+          placeholder: "ej. 0981123456",
+          oninput: "this.value = this.value.replace(/[^0-9]/g, '')",
+          class: ("field-invalid" if customer.errors[:phone].any?) %>
   </div>
 
   <hr class="form-grupo-separador">
